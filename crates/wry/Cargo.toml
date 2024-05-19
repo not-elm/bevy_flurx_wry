@@ -1,0 +1,18 @@
+[package]
+name = "bevy_flurx_wry"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = { version = "0.13.2", default-features = false, features = [
+    "bevy_winit",
+    "bevy_render",
+] }
+wry = { version = "0.39.5" }
+bevy_flurx_ipc = { path = "../ipc" }
+bevy_flurx = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+bevy = "0.13.2"
