@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 id="message">0</h1>
+
+<script>
+    window.__FLURX__.listen("count", (countEvent) => {
+        document.getElementById("message").innerText = `Hello ${countEvent.count}`;
+    });
+</script>
+
+</body>
+</html>

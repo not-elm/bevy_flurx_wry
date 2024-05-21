@@ -35,14 +35,19 @@ impl IpcHandlers {
     /// ```
     pub fn new(handler: impl Into<IpcHandler>) -> Self {
         let me = Self::default();
-        me.register(handler)
+        me.with(handler)
     }
 
     /// Add a [`IpcHandler`].
-    pub fn register(mut self, handler: impl Into<IpcHandler>) -> Self {
+    pub fn with(mut self, handler: impl Into<IpcHandler>) -> Self {
+        self.register(handler);
+        self
+    }
+    
+     /// Add a [`IpcHandler`].
+    pub fn register(&mut self, handler: impl Into<IpcHandler>) {
         let handler = handler.into();
         self.0.insert(handler.id.clone(), handler);
-        self
     }
 
     /// Returns the [`ActionSeed`] if exists related to `id`.
@@ -61,7 +66,7 @@ impl From<Vec<IpcHandler>> for IpcHandlers {
     fn from(value: Vec<IpcHandler>) -> Self {
         let mut handlers = Self::default();
         for handler in value {
-            handlers = handlers.register(handler);
+            handlers.register(handler);
         }
         handlers
     }

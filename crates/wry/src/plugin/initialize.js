@@ -1,6 +1,7 @@
 ;(function () {
     let resolveIdCount = 0;
-    const pendingHandlers = {}
+    const pendingHandlers = {};
+    const eventHandlers = {};
 
     Object.defineProperty(window, "__FLURX__", {
         value: {}
@@ -33,4 +34,23 @@
             })
         }
     );
+
+    Object.defineProperty(window.__FLURX__, "listen", {
+            value: Object.freeze((eventId, f) => {
+                eventHandlers[eventId] = f;
+                return () => {
+                    delete eventHandlers[eventId];
+                };
+            })
+        }
+    );
+
+    Object.defineProperty(window.__FLURX__, "emitEvent", {
+            value: Object.freeze((eventId, payload) => {
+                eventHandlers[eventId]?.(payload);
+            })
+        }
+    );
+
+    console.log(window.__FLURX__)
 })();

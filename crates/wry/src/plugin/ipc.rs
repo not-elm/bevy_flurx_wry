@@ -12,7 +12,7 @@ impl Plugin for WryIpcPlugin {
         if !app.is_plugin_added::<FlurxIpcPlugin>() {
             app.add_plugins(FlurxIpcPlugin);
         }
-        
+
         app.add_systems(Update, resolve_event);
     }
 }
@@ -31,3 +31,4 @@ fn resolve_event(
         }
     }
 }
+

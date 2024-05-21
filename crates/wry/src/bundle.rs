@@ -1,10 +1,10 @@
-use bevy::app::{App, Plugin};
 use bevy::prelude::Bundle;
-use bevy_flurx_ipc::prelude::IpcHandlers;
 
 pub use auto_play::AutoPlay;
 pub use background::Background;
+use bevy_flurx_ipc::prelude::IpcHandlers;
 pub use enable_clipboard::EnableClipboard;
+pub use event_emitter::EventEmitter;
 pub use is_open_devtools::IsOpenDevtools;
 pub use on_page_load::{Location, OnPageLoad};
 pub use theme::Theme;
@@ -23,6 +23,7 @@ mod webview_uninitialized;
 mod visible;
 mod uri;
 mod is_open_devtools;
+mod event_emitter;
 
 
 #[derive(Bundle, Default)]
@@ -57,27 +58,10 @@ pub struct WryWebViewBundle {
     ///  The ipc invoke handlers.
     pub ipc_handlers: IpcHandlers,
 
+    pub event_emitter: EventEmitter,
+
     /// This is a marker component that indicates a webview is in a uninitialized state.
     pub request_initialize: WebviewUninitialized,
 }
 
 
-/// Plugin related to [`WryWebViewBundle`].
-///
-/// This plugin registers components that implement [`Reflect`](bevy::prelude::Reflect).
-pub struct WebViewBundlePlugin;
-
-impl Plugin for WebViewBundlePlugin {
-    fn build(&self, app: &mut App) {
-        app
-            .register_type::<AutoPlay>()
-            .register_type::<Background>()
-            .register_type::<EnableClipboard>()
-            .register_type::<Uri>()
-            .register_type::<UseDevtools>()
-            .register_type::<IsOpenDevtools>()
-            .register_type::<Visible>()
-            .register_type::<Theme>()
-            .register_type::<WebviewUninitialized>();
-    }
-}

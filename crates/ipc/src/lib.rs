@@ -43,7 +43,7 @@ macro_rules! ipc_handlers {
     () => ($crate::prelude::IpcHandlers::default());
     ($functor: expr $(,$others: expr)* $(,)?) => ({
         $crate::prelude::IpcHandlers::new($functor)
-            $(.register($others))*
+            $(.with($others))*
     });
 }
 

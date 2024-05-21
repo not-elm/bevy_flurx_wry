@@ -11,5 +11,5 @@ fn hello() -> ActionSeed{
 fn main(){
     IpcHandlers::new(hello);
     IpcHandlers::default()
-        .register(hello);
+        .with(hello);
 }
