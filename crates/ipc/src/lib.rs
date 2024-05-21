@@ -15,7 +15,7 @@ pub mod prelude{
         ipc_handlers,
         component::*,
         plugin::{IpcResolveEvent, FlurxIpcPlugin},
-        ipc_command_queue::IpcCommandQueue
+        ipc_command_queue::IpcCommands
     };
 }
 

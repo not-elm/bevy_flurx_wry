@@ -8,7 +8,7 @@ use bevy_flurx::prelude::{Map, once, Pipe, Reactor};
 use serde::{Deserialize, Serialize};
 
 use crate::component::IpcHandlers;
-use crate::ipc_command_queue::IpcCommandQueue;
+use crate::ipc_command_queue::IpcCommands;
 
 
 /// The event signals the end of ipc processing. 
@@ -36,23 +36,23 @@ impl Plugin for FlurxIpcPlugin {
 
         app
             .add_event::<IpcResolveEvent>()
-            .init_resource::<IpcCommandQueue>()
+            .init_resource::<IpcCommands>()
             .add_systems(Update, receive_ipc_commands);
     }
 }
 
 fn receive_ipc_commands(
     mut commands: Commands,
-    queue: Res<IpcCommandQueue>,
+    queue: Res<IpcCommands>,
     handlers: Query<&IpcHandlers>,
 ) {
     for ipc in queue.take_commands() {
         let Ok(invoke) = handlers.get(ipc.entity) else {
             continue;
         };
-        if let Some(seed) = invoke.get_action_seed(&ipc.body.id, ipc.body.params) {
+        if let Some(seed) = invoke.get_action_seed(&ipc.payload.id, ipc.payload.params) {
             let entity = ipc.entity;
-            let resolve_id = ipc.body.resolve_id;
+            let resolve_id = ipc.payload.resolve_id;
             commands.spawn(Reactor::schedule(move |task| async move {
                 task.will(Update, seed
                     .map(move |output| (entity, resolve_id, output))

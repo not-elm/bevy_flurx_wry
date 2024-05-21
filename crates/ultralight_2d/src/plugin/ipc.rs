@@ -2,7 +2,7 @@ use bevy::app::App;
 use bevy::prelude::{EventReader, NonSendMut, Plugin, Update};
 use tiny_http::{Response, StatusCode};
 
-use bevy_flurx_ipc::ipc_command_queue::{IpcCommand, IpcCommandQueue};
+use bevy_flurx_ipc::ipc_command_queue::{IpcCommand, IpcCommands};
 use bevy_flurx_ipc::plugin::IpcResolveEvent;
 
 use crate::plugin::UlViewMap;
@@ -11,14 +11,14 @@ pub struct IpcPlugin;
 
 impl Plugin for IpcPlugin {
     fn build(&self, app: &mut App) {
-        let queue = app.world.resource::<IpcCommandQueue>().clone();
+        let queue = app.world.resource::<IpcCommands>().clone();
         launch_server(queue);
 
         app.add_systems(Update, resolve_event);
     }
 }
 
-fn launch_server(queue: IpcCommandQueue) {
+fn launch_server(queue: IpcCommands) {
     std::thread::spawn(move || {
         let server = tiny_http::Server::http("0.0.0.0:9900").unwrap();
         for mut req in server.incoming_requests() {

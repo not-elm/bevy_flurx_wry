@@ -7,13 +7,12 @@ use serde::Deserialize;
 
 /// The ipc command queue that exists only one in the [`World`](bevy::prelude::World).
 #[derive(Resource, Clone, Default)]
-pub struct IpcCommandQueue(Arc<Mutex<Vec<IpcCommand>>>);
+pub struct IpcCommands(Arc<Mutex<Vec<IpcCommand>>>);
 
-impl IpcCommandQueue {
+impl IpcCommands {
     /// Push the [`IpcCommand`] into queue.
     ///
     /// The pushed command is automatically executed and output as [`IpcResolveEvent`](crate::prelude::IpcResolveEvent).
-    ///
     #[inline(always)]
     pub fn push(&self, command: IpcCommand) {
         self.0.lock().unwrap().push(command);
@@ -35,13 +34,13 @@ pub struct IpcCommand {
     pub entity: Entity,
 
     /// The command info passed from `javascript`.
-    pub body: IpcCommandBody,
+    pub payload: Payload,
 }
 
 
 /// The command info passed from `javascript`.
 #[derive(Deserialize)]
-pub struct IpcCommandBody {
+pub struct Payload {
     /// Ipc id
     pub id: String,
 

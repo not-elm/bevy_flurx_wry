@@ -8,7 +8,7 @@ use bevy_flurx::prelude::Reactor;
 use wry::{http, WebView, WebViewBuilder, WebViewBuilderExtWindows};
 use wry::http::header::CONTENT_TYPE;
 use wry::http::Response;
-use bevy_flurx_ipc::ipc_command_queue::{IpcCommand, IpcCommandQueue};
+use bevy_flurx_ipc::ipc_command_queue::{IpcCommand, IpcCommands};
 
 use crate::bundle::{AutoPlay, Background, EnableClipboard, Theme, Uri, UseDevtools, Visible, WebviewUninitialized};
 use crate::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
@@ -34,7 +34,7 @@ fn setup_new_windows(
         &Background,
         &Theme,
     ), (With<WebviewUninitialized>, With<Window>)>,
-    ipc_queue: Res<IpcCommandQueue>,
+    ipc_queue: Res<IpcCommands>,
     load_queue: Res<PageLoadEventQueue>,
     windows: NonSend<WinitWindows>,
 ) {
@@ -71,7 +71,7 @@ fn setup_new_windows(
                 .with_ipc_handler(move |request| {
                     ipc_queue.push(IpcCommand {
                         entity,
-                        body: serde_json::from_str(request.body()).unwrap(),
+                        payload: serde_json::from_str(request.body()).unwrap(),
                     });
                 })
         };
