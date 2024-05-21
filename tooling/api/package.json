@@ -1,7 +1,8 @@
 {
-  "name": "bevy_flurx_wry_core",
+  "name": "@bevy_flurx_wry/api",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -9,10 +10,15 @@
   ],
   "scripts": {
     "tsc": "tsc --init",
-    "build": "tsc"
+    "build": "rollup -c --configPlugin typescript"
   },
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@types/node": "^20.12.12",
+    "fast-glob": "^3.3.2",
     "rollup": "^4.17.2",
+    "tslib": "^2.6.2",
     "typescript": "^5.4.5"
   }
 }

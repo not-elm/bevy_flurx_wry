@@ -1,6 +1,6 @@
 use bevy::app::{App, Startup};
 use bevy::DefaultPlugins;
-use bevy::prelude::{Camera2dBundle, ClearColor, Color, Commands, Entity, Query, ResMut, Resource, With};
+use bevy::prelude::{Commands, Entity, Query, ResMut, Resource, With};
 use bevy::utils::default;
 use bevy::window::PrimaryWindow;
 use bevy_flurx::action::once;
@@ -17,20 +17,11 @@ fn main() {
             DefaultPlugins,
             FlurxWryPlugin
         ))
-        .insert_resource(ClearColor(Color::NONE))
         .insert_resource(Count(0))
-        .add_systems(Startup, (
-            spawn_camera,
-            spawn_webview
-        ))
+        .add_systems(Startup, spawn_webview)
         .run();
 }
 
-fn spawn_camera(
-    mut commands: Commands
-) {
-    commands.spawn(Camera2dBundle::default());
-}
 
 fn spawn_webview(
     mut commands: Commands,
@@ -39,6 +30,8 @@ fn spawn_webview(
     commands.entity(primary_window.single()).insert(WryWebViewBundle {
         // show assets/ui/count_up/index.html
         uri: Uri::LocalRoot("count_up".to_string()),
+        use_devtools: UseDevtools(true),
+        is_open_devtools: IsOpenDevtools(true),
         ipc_handlers: ipc_handlers![
             count_up
         ],

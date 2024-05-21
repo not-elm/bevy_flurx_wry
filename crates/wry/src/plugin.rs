@@ -3,7 +3,8 @@ use bevy::prelude::{Deref, DerefMut, Entity};
 use bevy::utils::HashMap;
 use bevy_flurx::FlurxPlugin;
 
-use crate::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, IsOpenDevtools, Theme, Uri, UseDevtools, Visible, WebviewUninitialized};
+use crate::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, IsOpenDevtools, Theme, Uri, UseDevtools, Visible};
+use crate::plugin::api::ApiPlugin;
 use crate::plugin::create_webview::CreateWebviewPlugin;
 use crate::plugin::devtools::DevtoolsPlugin;
 use crate::plugin::event::EventEmitterPlugin;
@@ -15,6 +16,7 @@ mod ipc;
 mod devtools;
 mod create_webview;
 mod event;
+mod api;
 
 
 #[derive(Deref, DerefMut, Default)]
@@ -39,13 +41,13 @@ impl Plugin for FlurxWryPlugin {
             .register_type::<IsOpenDevtools>()
             .register_type::<Visible>()
             .register_type::<Theme>()
-            .register_type::<WebviewUninitialized>()
             .add_plugins((
                 CreateWebviewPlugin,
                 DevtoolsPlugin,
                 EventEmitterPlugin,
                 OnPageLoadPlugin,
                 WryIpcPlugin,
+                ApiPlugin
             ))
             .init_non_send_resource::<WebviewMap>();
     }

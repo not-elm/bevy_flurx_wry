@@ -1,13 +1,18 @@
 //! Defines a handler that executes the [`Action`](bevy_flurx::prelude::Action) of the command.
 
-use std::any::type_name;
+use std::future::Future;
+use std::pin::Pin;
 
-use bevy::prelude::Component;
+use bevy::app::Update;
+use bevy::prelude::{Component, Entity, EventWriter, In};
 use bevy::utils::HashMap;
-use bevy_flurx::action::Action;
-use bevy_flurx::prelude::{ActionSeed, Map, OmitInput};
-use serde::{Deserialize, Serialize};
+use bevy_flurx::action::{Action, once};
+use bevy_flurx::task::ReactiveTask;
 use serde::de::DeserializeOwned;
+use serde::Serialize;
+
+use crate::ipc_commands::IpcCommand;
+use crate::plugin::IpcResolveEvent;
 
 /// The ipc invoke handlers.
 ///
@@ -43,8 +48,8 @@ impl IpcHandlers {
         self.register(handler);
         self
     }
-    
-     /// Add a [`IpcHandler`].
+
+    /// Add a [`IpcHandler`].
     pub fn register(&mut self, handler: impl Into<IpcHandler>) {
         let handler = handler.into();
         self.0.insert(handler.id.clone(), handler);
@@ -55,10 +60,8 @@ impl IpcHandlers {
     /// ## Panics
     ///
     /// Panics if args types incorrect.
-    pub fn get_action_seed(&self, id: &str, args: Vec<String>) -> Option<ActionSeed<(), String>> {
-        self.0.get(id).map(move |handler| {
-            (handler.handle)(args)
-        })
+    pub fn get(&self, id: &str) -> Option<IpcFn> {
+        self.0.get(id).map(|handler| (handler.handle)())
     }
 }
 
@@ -72,35 +75,32 @@ impl From<Vec<IpcHandler>> for IpcHandlers {
     }
 }
 
+type IpcHandle = Box<dyn Fn() -> IpcFn + Send + Sync>;
+type IpcFn = Box<dyn FnOnce(ReactiveTask, IpcCommand) -> IpcFuture>;
+type IpcFuture = Pin<Box<dyn Future<Output=()>>>;
 
 /// The ipc invoke handler.
 ///
-/// Usually created via [`invoke_handlers!`](crate::invoke_handlers).
+/// Usually created via [`ipc_handlers!`](crate::ipc_handlers).
 pub struct IpcHandler {
     id: String,
-    handle: Box<dyn Fn(Vec<String>) -> ActionSeed<(), String> + Send + Sync>,
+    handle: IpcHandle,
 }
 
 impl IpcHandler {
     /// Create a new handler.
     ///
     /// The `id` is used when invoking from javascript.
-    pub fn new<JsInput, I, O>(
+    pub fn new<Marker>(
         id: impl Into<String>,
-        f: impl Functor<JsInput, I, O> + Send + Sync + 'static,
+        f: impl Functor<Marker> + Send + Sync + 'static,
     ) -> Self
         where
-            JsInput: 'static,
-            I: 'static,
-            O: Serialize + Send + 'static
+            Marker: 'static
     {
         Self {
             id: id.into(),
-            handle: Box::new(move |args| {
-                f.func(args.into_iter())
-                    .map(|output| serde_json::to_string(&output).unwrap())
-                    .omit_input()
-            }),
+            handle: Box::new(move || f.func()),
         }
     }
 }
@@ -113,47 +113,168 @@ impl<F> From<F> for IpcHandler
     }
 }
 
+#[repr(transparent)]
+#[derive(Component, Copy, Clone)]
+pub struct WebviewEntity(pub Entity);
+
 
 /// Convert the inputs from renderer process to an action.
 ///
 /// This trait has been implemented internally in the library.
-pub trait Functor<JsInput, I, O> {
+pub trait Functor<Marker> {
     /// Convert the inputs from renderer process to an action.
-    fn func(&self, input: impl Iterator<Item=String>) -> Action<I, O>;
+    fn func(&self) -> IpcFn;
 }
 
 macro_rules! impl_functor {
-    ($($input: ident,)*) => {
-        impl<I, O, F, A, $($input,)* > Functor<($($input,)*), I, O> for F
+    ($($input: ident)?) => {
+        #[allow(unused)]
+        impl<A, I, O, FI, FO, $($input)?> Functor<(i8, A, I, O, $($input)?)> for FI
             where
-                F: Fn($($input,)*) -> A,
-                A: Into<Action<I, O>>,
-                $($input: DeserializeOwned,)*
+                FI: Fn() -> FO,
+                FO: Fn($(bevy::prelude::In<$input>,)? WebviewEntity) -> A + 'static,
+                A: Into<Action<I, O>> + 'static,
+                I: 'static,
+                O: Serialize + 'static,
+                $($input: DeserializeOwned)?
         {
-            #[allow(non_snake_case, unused)]
-            fn func(&self, mut input: impl Iterator<Item=String>) -> Action<I, O> {
-                (self)($({
-                    let arg = serde_json::from_str::<Arg<$input>>(&input.next().unwrap()).expect(&format!("failed deserialize ipc args type: {}", type_name::<$input>()));
-                    arg.arg
-                },)*).into()
+            fn func(&self) -> IpcFn{
+               let f = (self)();
+               ipc_action_fn(move |cmd| {
+                   f(
+                       $(cmd.payload.deserialize_param::<$input>(),)?
+                       WebviewEntity(cmd.entity)
+                   )
+               })
+            }
+        }
+
+        #[allow(unused)]
+        impl<A, I, O, FI, FO, $($input)?> Functor<(i16, A, I, O, $($input)?)> for FI
+            where
+                FI: Fn() -> FO,
+                FO: Fn($(bevy::prelude::In<$input>,)?) -> A + 'static,
+                A: Into<Action<I, O>> + 'static,
+                I: 'static,
+                O: Serialize + 'static,
+                $($input: DeserializeOwned)?
+        {
+            fn func(&self) -> IpcFn{
+               let f = (self)();
+               ipc_action_fn(move |cmd| {
+                   f($(cmd.payload.deserialize_param::<$input>())?)
+               })
             }
         }
     };
 }
 
-#[derive(Deserialize, Debug)]
-struct Arg<D> {
-    arg: D,
+macro_rules! impl_async_functor {
+    ($($input: ident)?) => {
+        #[allow(unused)]
+        impl<Fut, FI, FO, $($input)?> Functor<(u8, $($input)?)> for FI
+            where
+                FI: Fn() -> FO,
+                FO: Fn($(bevy::prelude::In<$input>,)? WebviewEntity, ReactiveTask) -> Fut + 'static,
+                Fut: Future,
+                Fut::Output: Serialize,
+                $($input: DeserializeOwned)?
+        {
+            fn func(&self) -> IpcFn{
+               let f = (self)();
+               ipc_fn(move |task, cmd| {
+                   f(
+                       $(cmd.payload.deserialize_param::<$input>(),)?
+                       WebviewEntity(cmd.entity),
+                       task,
+                   )
+               })
+            }
+        }
+
+        #[allow(unused)]
+        impl<Fut, FI, FO, $($input)?> Functor<(u16, $($input)?)> for FI
+            where
+                FI: Fn() -> FO,
+                FO: Fn($(bevy::prelude::In<$input>,)? ReactiveTask) -> Fut + 'static,
+                Fut: Future,
+                Fut::Output: Serialize,
+                $($input: DeserializeOwned)?
+        {
+            fn func(&self) -> IpcFn{
+               let f = (self)();
+               ipc_fn(move |task, cmd| {
+                   f(
+                       $(cmd.payload.deserialize_param::<$input>(),)?
+                       task,
+                   )
+               })
+            }
+        }
+
+        #[allow(unused)]
+        impl<Fut, FI, FO, $($input)?> Functor<(u32, $($input)?)> for FI
+            where
+                FI: Fn() -> FO,
+                FO: Fn($(bevy::prelude::In<$input>)?) -> Fut + 'static,
+                Fut: Future,
+                Fut::Output: Serialize,
+                $($input: DeserializeOwned)?
+        {
+            fn func(&self) -> IpcFn{
+               let f = (self)();
+               ipc_fn(move |task, cmd| {
+                   f(
+                       $(cmd.payload.deserialize_param::<$input>())?
+                   )
+               })
+            }
+        }
+    };
 }
 
+
+
 impl_functor!();
-impl_functor!(I1,);
-impl_functor!(I1, I2,);
-impl_functor!(I1, I2, I3,);
-impl_functor!(I1, I2, I3, I4,);
-impl_functor!(I1, I2, I3, I4, I5,);
-impl_functor!(I1, I2, I3, I4, I5, I6,);
-impl_functor!(I1, I2, I3, I4, I5, I6, I7,);
-impl_functor!(I1, I2, I3, I4, I5, I6, I7, I8,);
-impl_functor!(I1, I2, I3, I4, I5, I6, I7, I8, I9,);
-impl_functor!(I1, I2, I3, I4, I5, I6, I7, I8, I9, I10,);
+impl_functor!(Input);
+impl_async_functor!();
+impl_async_functor!(Input);
+
+
+fn ipc_action_fn<I, O, A>(f: impl Fn(IpcCommand) -> A + 'static) -> IpcFn
+    where
+        A: Into<Action<I, O>> + 'static,
+        I: 'static,
+        O: Serialize + 'static
+{
+    ipc_fn(move |task, command| {
+        task.will(Update, f(command))
+    })
+}
+
+
+fn ipc_fn<Fut>(f: impl Fn(ReactiveTask, IpcCommand) -> Fut + 'static) -> IpcFn
+    where
+        Fut: Future,
+        Fut::Output: Serialize
+{
+    Box::new(move |task: ReactiveTask, cmd: IpcCommand| Box::pin(async move {
+        let entity = cmd.entity;
+        let resolve_id = cmd.payload.resolve_id;
+        let output = f(task.clone(), cmd).await;
+        let output = serde_json::to_string(&output).unwrap();
+        task.will(Update, once::run(resolve).with((entity, resolve_id, output))).await;
+    }))
+}
+
+
+fn resolve(
+    In((entity, resolve_id, output)): In<(Entity, usize, String)>,
+    mut ew: EventWriter<IpcResolveEvent>,
+) {
+    ew.send(IpcResolveEvent {
+        entity,
+        resolve_id,
+        output,
+    });
+}

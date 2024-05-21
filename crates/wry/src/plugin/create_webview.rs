@@ -1,16 +1,18 @@
 use std::path::PathBuf;
 
 use bevy::app::{App, Plugin, PreUpdate, Update};
-use bevy::prelude::{Commands, Entity, In, NonSend, NonSendMut, Query, Res, Window, With};
+use bevy::prelude::{Commands, Component, Entity, In, NonSend, NonSendMut, Query, Reflect, Res, Window, With, Without, ReflectDefault, ReflectComponent};
 use bevy::winit::WinitWindows;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Reactor;
+use serde::{Deserialize, Serialize};
 use wry::{http, WebView, WebViewBuilder, WebViewBuilderExtWindows};
 use wry::http::header::CONTENT_TYPE;
 use wry::http::Response;
-use bevy_flurx_ipc::ipc_command_queue::{IpcCommand, IpcCommands};
 
-use crate::bundle::{AutoPlay, Background, EnableClipboard, Theme, Uri, UseDevtools, Visible, WebviewUninitialized};
+use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
+
+use crate::bundle::{AutoPlay, Background, EnableClipboard, Theme, Uri, UseDevtools, Visible, };
 use crate::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
 use crate::plugin::WebviewMap;
 
@@ -18,9 +20,15 @@ pub struct CreateWebviewPlugin;
 
 impl Plugin for CreateWebviewPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PreUpdate, setup_new_windows);
+        app
+            .register_type::<WebviewInitialized>()
+            .add_systems(PreUpdate, setup_new_windows);
     }
 }
+
+#[derive(Component, Default, Reflect, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
+#[reflect(Component, Default)]
+pub(crate) struct WebviewInitialized;
 
 fn setup_new_windows(
     mut commands: Commands,
@@ -33,7 +41,7 @@ fn setup_new_windows(
         &Visible,
         &Background,
         &Theme,
-    ), (With<WebviewUninitialized>, With<Window>)>,
+    ), (Without<WebviewInitialized>, With<Window>)>,
     ipc_queue: Res<IpcCommands>,
     load_queue: Res<PageLoadEventQueue>,
     windows: NonSend<WinitWindows>,
@@ -54,8 +62,8 @@ fn setup_new_windows(
             };
             let ipc_queue = ipc_queue.clone();
             let load_queue = load_queue.0.clone();
-            wry::WebViewBuilder::new(window)
-                .with_initialization_script(include_str!("./initialize.js"))
+            WebViewBuilder::new(window)
+                .with_initialization_script(include_str!("../../scripts/api.js"))
                 .with_devtools(use_devtools.0)
                 .with_autoplay(auto_play.0)
                 .with_clipboard(enable_clipboard.0)
@@ -101,8 +109,8 @@ fn setup_new_windows(
         };
 
         let webview = builder.build().unwrap();
-     
-        commands.entity(entity).remove::<WebviewUninitialized>();
+
+        commands.entity(entity).insert(WebviewInitialized);
         commands.spawn(Reactor::schedule(move |task| async move {
             task.will(Update, once::run(insert_webview).with((entity, webview))).await;
         }));

@@ -3,7 +3,8 @@ members = [
     "crates/*",
 ]
 exclude = [
-    "tooling"
+    "tooling",
+    "crates/ultralight_2d"
 ]
 
 [workspace.dependencies]

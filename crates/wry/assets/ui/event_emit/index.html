@@ -8,9 +8,10 @@
 <h1 id="message">0</h1>
 
 <script>
-    window.__FLURX__.listen("count", (countEvent) => {
-        document.getElementById("message").innerText = `Hello ${countEvent.count}`;
-    });
+    setTimeout(() => {
+        window.__FLURX__.api.app.show();
+    }, 1000)
+
 </script>
 
 </body>

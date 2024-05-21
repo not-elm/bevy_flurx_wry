@@ -1,11 +1,11 @@
 use std::time::Duration;
 
-use bevy::app::{App, Startup};
+use bevy::app::{App, PluginGroup, Startup};
 use bevy::DefaultPlugins;
 use bevy::prelude::{Commands, Entity, Local, Query, Res, ResMut, Resource, Update, With};
 use bevy::time::{Time, Timer, TimerMode};
 use bevy::utils::default;
-use bevy::window::PrimaryWindow;
+use bevy::window::{PrimaryWindow, Window, WindowPlugin};
 use serde_json::json;
 
 use bevy_flurx_wry::prelude::*;
@@ -16,7 +16,13 @@ struct CountTimer(Timer);
 fn main() {
     App::new()
         .add_plugins((
-            DefaultPlugins,
+            DefaultPlugins.set(WindowPlugin{
+                primary_window: Some(Window{
+                    visible: false,
+                    ..default()
+                }),
+                ..default()
+            }),
             FlurxWryPlugin
         ))
         .insert_resource(CountTimer(Timer::new(Duration::from_secs(1), TimerMode::Repeating)))

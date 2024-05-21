@@ -11,7 +11,6 @@ pub use theme::Theme;
 pub use uri::Uri;
 pub use use_devtools::UseDevtools;
 pub use visible::Visible;
-pub use webview_uninitialized::WebviewUninitialized;
 
 mod auto_play;
 mod background;
@@ -19,7 +18,6 @@ mod enable_clipboard;
 mod on_page_load;
 mod theme;
 mod use_devtools;
-mod webview_uninitialized;
 mod visible;
 mod uri;
 mod is_open_devtools;
@@ -59,9 +57,6 @@ pub struct WryWebViewBundle {
     pub ipc_handlers: IpcHandlers,
 
     pub event_emitter: EventEmitter,
-
-    /// This is a marker component that indicates a webview is in a uninitialized state.
-    pub request_initialize: WebviewUninitialized,
 }
 
 

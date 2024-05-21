@@ -1,15 +1,7 @@
-declare global {
-    interface Window {
-        __FLURX__: {
-            invoke: <Out>(id: string, args: any[]) => Promise<Out>,
-        }
-    }
-}
+import * as core from "./core";
+import * as app from "./app";
 
-export const invoke = <Out>(
-    id: string,
-    ...args: any[]
-): Promise<Out> => {
-    return window.__FLURX__.invoke(id, [...args]);
+export {
+    core,
+    app
 }
-

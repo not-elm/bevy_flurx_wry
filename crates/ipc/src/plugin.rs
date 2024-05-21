@@ -1,17 +1,17 @@
 //! Defines the plugin to apply ipc communication.
 
 
+
 use bevy::app::{App, Update};
-use bevy::prelude::{Commands, Entity, Event, EventWriter, In, Plugin, Query, Reflect, Res};
+use bevy::prelude::{Commands, Entity, Event, Plugin, Query, Reflect, Res};
 use bevy_flurx::FlurxPlugin;
-use bevy_flurx::prelude::{Map, once, Pipe, Reactor};
+use bevy_flurx::prelude::Reactor;
 use serde::{Deserialize, Serialize};
 
 use crate::component::IpcHandlers;
-use crate::ipc_command_queue::IpcCommands;
+use crate::ipc_commands::IpcCommands;
 
-
-/// The event signals the end of ipc processing. 
+/// The event signals the end of ipc processing.
 #[derive(Event, Eq, PartialEq, Clone, Serialize, Deserialize, Reflect)]
 pub struct IpcResolveEvent {
     /// The entity attached to [`IpcHandlers`](bevy::prelude::IpcHandlers) that execute ipc.
@@ -43,33 +43,18 @@ impl Plugin for FlurxIpcPlugin {
 
 fn receive_ipc_commands(
     mut commands: Commands,
-    queue: Res<IpcCommands>,
+    ipc_commands: Res<IpcCommands>,
     handlers: Query<&IpcHandlers>,
 ) {
-    for ipc in queue.take_commands() {
-        let Ok(invoke) = handlers.get(ipc.entity) else {
+    for cmd in ipc_commands.take_commands() {
+        let Ok(handlers) = handlers.get(cmd.entity) else {
             continue;
         };
-        if let Some(seed) = invoke.get_action_seed(&ipc.payload.id, ipc.payload.params) {
-            let entity = ipc.entity;
-            let resolve_id = ipc.payload.resolve_id;
+        if let Some(ipc_fn) = handlers.get(&cmd.payload.id) {
             commands.spawn(Reactor::schedule(move |task| async move {
-                task.will(Update, seed
-                    .map(move |output| (entity, resolve_id, output))
-                    .pipe(once::run(resolve)),
-                ).await;
+                ipc_fn(task, cmd).await;
             }));
         }
     }
 }
 
-fn resolve(
-    In((entity, resolve_id, output)): In<(Entity, usize, String)>,
-    mut ew: EventWriter<IpcResolveEvent>,
-) {
-    ew.send(IpcResolveEvent {
-        entity,
-        resolve_id,
-        output,
-    });
-}

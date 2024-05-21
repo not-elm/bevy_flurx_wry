@@ -5,7 +5,7 @@ pub use bevy_flurx_ipc_macro::command;
 
 pub mod component;
 pub mod plugin;
-pub mod ipc_command_queue;
+pub mod ipc_commands;
 
 
 #[allow(missing_docs)]
@@ -15,7 +15,7 @@ pub mod prelude{
         ipc_handlers,
         component::*,
         plugin::{IpcResolveEvent, FlurxIpcPlugin},
-        ipc_command_queue::IpcCommands
+        ipc_commands::IpcCommands
     };
 }
 
