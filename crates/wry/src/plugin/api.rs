@@ -1,9 +1,10 @@
 use bevy::app::App;
-use bevy::prelude::{Added, Plugin, Query, Update};
+use bevy::prelude::{Added, Plugin, Query, Res, Update};
 
 use bevy_flurx_ipc::prelude::{IpcHandler, IpcHandlers};
 
-use crate::plugin::create_webview::WebviewInitialized;
+use crate::api::{ApiAllows, AppApiAllows};
+use crate::plugin::load::WebviewInitialized;
 
 mod app_window;
 mod app;
@@ -19,22 +20,36 @@ impl Plugin for ApiPlugin {
 }
 
 fn register_api_handlers(
-    mut handlers: Query<&mut IpcHandlers, Added<WebviewInitialized>>
+    mut handlers: Query<&mut IpcHandlers, Added<WebviewInitialized>>,
+    allows: Res<ApiAllows>,
 ) {
     for mut h in handlers.iter_mut() {
         h.register(IpcHandler::new("FLURX|app_window::hide", || {
             app_window::hide
         }));
+        
+        setup_app(&mut h, &allows.app);
+    }
+}
 
-        h.register(IpcHandler::new("FLURX|app::get_name", || {
+fn setup_app(
+    handler: &mut IpcHandlers,
+    app: &AppApiAllows,
+) {
+    if app.get_name {
+        handler.register(IpcHandler::new("FLURX|app::get_name", || {
             app::get_name
         }));
-        
-        h.register(IpcHandler::new("FLURX|app::get_version", || {
+    }
+
+    if app.get_version {
+        handler.register(IpcHandler::new("FLURX|app::get_version", || {
             app::get_version
         }));
+    }
 
-        h.register(IpcHandler::new("FLURX|app::exit", || {
+    if app.exit {
+        handler.register(IpcHandler::new("FLURX|app::exit", || {
             app::exit
         }));
     }

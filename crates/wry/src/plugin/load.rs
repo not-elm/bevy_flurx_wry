@@ -1,3 +1,5 @@
+mod protocol;
+
 use std::path::PathBuf;
 
 use bevy::app::{App, Plugin, PreUpdate, Update};
@@ -13,12 +15,13 @@ use wry::http::Response;
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
 use crate::bundle::{AutoPlay, Background, EnableClipboard, Theme, Uri, UseDevtools, Visible, };
+use crate::plugin::load::protocol::set_protocol;
 use crate::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
 use crate::plugin::WebviewMap;
 
-pub struct CreateWebviewPlugin;
+pub struct LoadWebviewPlugin;
 
-impl Plugin for CreateWebviewPlugin {
+impl Plugin for LoadWebviewPlugin {
     fn build(&self, app: &mut App) {
         app
             .register_type::<WebviewInitialized>()
@@ -42,7 +45,7 @@ fn setup_new_windows(
         &Background,
         &Theme,
     ), (Without<WebviewInitialized>, With<Window>)>,
-    ipc_queue: Res<IpcCommands>,
+    ipc_commands: Res<IpcCommands>,
     load_queue: Res<PageLoadEventQueue>,
     windows: NonSend<WinitWindows>,
 ) {
@@ -60,9 +63,9 @@ fn setup_new_windows(
             let Some(window) = windows.get_window(entity) else {
                 continue;
             };
-            let ipc_queue = ipc_queue.clone();
+            let ipc_commands = ipc_commands.clone();
             let load_queue = load_queue.0.clone();
-            WebViewBuilder::new(window)
+            WebViewBuilder::new_as_child(window)
                 .with_initialization_script(include_str!("../../scripts/api.js"))
                 .with_devtools(use_devtools.0)
                 .with_autoplay(auto_play.0)
@@ -77,36 +80,20 @@ fn setup_new_windows(
                     });
                 })
                 .with_ipc_handler(move |request| {
-                    ipc_queue.push(IpcCommand {
+                    ipc_commands.push(IpcCommand {
                         entity,
                         payload: serde_json::from_str(request.body()).unwrap(),
                     });
                 })
+                .with_bounds(wry::Rect{
+                    size: wry::dpi::LogicalSize::new(300., 300.).into(),
+                    position: wry::dpi::LogicalPosition::new(100., 100.).into()
+                })
+                .with_url("https://google.com")
         };
 
-        let builder = feed_background(builder, background);
-
-        let builder = match uri {
-            Uri::LocalRoot(content_root_dir) => {
-                let content_root_dir = content_root_dir.clone();
-                builder
-                    .with_url("wry://localhost/".to_string())
-                    .with_custom_protocol("wry".to_string(), move |request| {
-                        match get_wry_response(request, &content_root_dir) {
-                            Ok(r) => r.map(Into::into),
-                            Err(e) => http::Response::builder()
-                                .header(CONTENT_TYPE, "text/plain")
-                                .status(500)
-                                .body(e.to_string().as_bytes().to_vec())
-                                .unwrap()
-                                .map(Into::into),
-                        }
-                    })
-            }
-            Uri::Remote(uri) => {
-                builder.with_url(uri)
-            }
-        };
+        let builder = set_background(builder, background);
+        // let builder = set_protocol(builder, uri);
 
         let webview = builder.build().unwrap();
 
@@ -117,7 +104,7 @@ fn setup_new_windows(
     }
 }
 
-fn feed_background<'a>(builder: WebViewBuilder<'a>, background: &Background) -> WebViewBuilder<'a> {
+fn set_background<'a>(builder: WebViewBuilder<'a>, background: &Background) -> WebViewBuilder<'a> {
     match background {
         Background::Unspecified => builder,
         Background::Transparent => builder.with_transparent(true),
@@ -126,67 +113,6 @@ fn feed_background<'a>(builder: WebViewBuilder<'a>, background: &Background) -> 
             builder.with_background_color((rgba[0], rgba[1], rgba[2], rgba[3]))
         }
     }
-}
-
-fn get_wry_response(
-    request: wry::http::Request<Vec<u8>>,
-    content_root_dir: &str,
-) -> Result<http::Response<Vec<u8>>, Box<dyn std::error::Error>> {
-    let path = request.uri().path();
-    let root = PathBuf::from("assets/ui").join(content_root_dir);
-    let path = if path == "/" {
-        "index.html"
-    } else {
-        &path[1..]
-    };
-    let content = std::fs::read(std::fs::canonicalize(root.join(path))?)?;
-
-    let mimetype = if path.ends_with(".html") || path == "/" {
-        "text/html"
-    } else if path.ends_with(".txt") {
-        "text/plain"
-    } else if path.ends_with(".css") {
-        "text/css"
-    } else if path.ends_with(".csv") {
-        "text/csv"
-    } else if path.ends_with(".js") {
-        "text/javascript"
-    } else if path.ends_with(".jpeg") {
-        "image/jpeg"
-    } else if path.ends_with(".png") {
-        "image/png"
-    } else if path.ends_with(".gif") {
-        "image/gif"
-    } else if path.ends_with(".bmp") {
-        "image/bmp"
-    } else if path.ends_with(".svg") {
-        "image/svg+xml"
-    } else if path.ends_with(".json") {
-        "application/json"
-    } else if path.ends_with(".pdf") {
-        "application/pdf"
-    } else if path.ends_with(".zip") {
-        "application/zip"
-    } else if path.ends_with(".lzh") {
-        "application/x-lzh"
-    } else if path.ends_with(".tar") {
-        "application/x-tar"
-    } else if path.ends_with(".wasm") {
-        "application/wasm"
-    } else if path.ends_with(".mp3") {
-        "audio/mp3g"
-    } else if path.ends_with(".mp4") {
-        "video/mp4"
-    } else if path.ends_with(".mpeg") {
-        "video/mpeg"
-    } else {
-        panic!("not implemented content type {path}");
-    };
-
-    Response::builder()
-        .header(CONTENT_TYPE, mimetype)
-        .body(content)
-        .map_err(Into::into)
 }
 
 fn insert_webview(

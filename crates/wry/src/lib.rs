@@ -5,6 +5,7 @@ pub use bevy_flurx_ipc::{command, ipc_handlers};
 
 pub mod plugin;
 pub mod bundle;
+mod api;
 
 #[allow(missing_docs)]
 pub mod prelude {
