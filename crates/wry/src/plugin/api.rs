@@ -3,10 +3,10 @@ use bevy::prelude::{Added, Plugin, Query, Update};
 
 use bevy_flurx_ipc::prelude::IpcHandlers;
 
-use crate::plugin::api::window::plugin_window_show;
+use crate::plugin::api::app_window::plugin_app_window_hide;
 use crate::plugin::create_webview::WebviewInitialized;
 
-mod window;
+mod app_window;
 
 pub struct ApiPlugin;
 
@@ -21,6 +21,6 @@ fn register_api_handlers(
     mut handlers: Query<&mut IpcHandlers, Added<WebviewInitialized>>
 ) {
     for mut h in handlers.iter_mut() {
-        h.register(plugin_window_show());
+        h.register(plugin_app_window_hide());
     }
 }

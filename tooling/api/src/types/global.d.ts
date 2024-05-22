@@ -1,4 +1,4 @@
-import * as core from "../core";
+import {appWindow, core} from "../index";
 
 export {};
 
@@ -8,7 +8,8 @@ declare global {
             postMessage: (message: string) => void;
         },
         __FLURX__: {
-            core: typeof core
+            core: typeof core,
+            appWindow: typeof appWindow
         }
     }
 }

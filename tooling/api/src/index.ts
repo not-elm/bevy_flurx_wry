@@ -1,7 +1,7 @@
 import * as core from "./core";
-import * as app from "./app";
+import * as appWindow from "./appWindow";
 
 export {
     core,
-    app
+    appWindow
 }
