@@ -1,23 +1,21 @@
-mod protocol;
-
-use std::path::PathBuf;
 
 use bevy::app::{App, Plugin, PreUpdate, Update};
-use bevy::prelude::{Commands, Component, Entity, In, NonSend, NonSendMut, Query, Reflect, Res, Window, With, Without, ReflectDefault, ReflectComponent};
+use bevy::prelude::{Commands, Component, Entity, In, NonSend, NonSendMut, Or, Query, Reflect, ReflectComponent, ReflectDefault, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Reactor;
 use serde::{Deserialize, Serialize};
-use wry::{http, WebView, WebViewBuilder, WebViewBuilderExtWindows};
-use wry::http::header::CONTENT_TYPE;
-use wry::http::Response;
+use wry::{WebView, WebViewBuilder, WebViewBuilderExtWindows};
 
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
-use crate::bundle::{AutoPlay, Background, EnableClipboard, Theme, Uri, UseDevtools, Visible, };
+use crate::as_child::{Bounds, ParentWindow};
+use crate::bundle::{AutoPlay, Background, EnableClipboard, Theme, Uri, UseDevtools, Visible};
 use crate::plugin::load::protocol::set_protocol;
 use crate::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
 use crate::plugin::WebviewMap;
+
+mod protocol;
 
 pub struct LoadWebviewPlugin;
 
@@ -44,7 +42,9 @@ fn setup_new_windows(
         &Visible,
         &Background,
         &Theme,
-    ), (Without<WebviewInitialized>, With<Window>)>,
+        Option<&ParentWindow>,
+        Option<&Bounds>
+    ), (Without<WebviewInitialized>, Or<(With<Window>, With<ParentWindow>)>)>,
     ipc_commands: Res<IpcCommands>,
     load_queue: Res<PageLoadEventQueue>,
     windows: NonSend<WinitWindows>,
@@ -58,14 +58,16 @@ fn setup_new_windows(
         visible,
         background,
         theme,
+        parent_window,
+        bounds
     ) in views.iter() {
         let builder = {
-            let Some(window) = windows.get_window(entity) else {
+            let Some(builder) = new_builder(entity, &parent_window, &bounds, &windows) else {
                 continue;
             };
             let ipc_commands = ipc_commands.clone();
             let load_queue = load_queue.0.clone();
-            WebViewBuilder::new_as_child(window)
+            builder
                 .with_initialization_script(include_str!("../../scripts/api.js"))
                 .with_devtools(use_devtools.0)
                 .with_autoplay(auto_play.0)
@@ -85,17 +87,16 @@ fn setup_new_windows(
                         payload: serde_json::from_str(request.body()).unwrap(),
                     });
                 })
-                .with_bounds(wry::Rect{
-                    size: wry::dpi::LogicalSize::new(300., 300.).into(),
-                    position: wry::dpi::LogicalPosition::new(100., 100.).into()
-                })
-                .with_url("https://google.com")
         };
 
         let builder = set_background(builder, background);
-        // let builder = set_protocol(builder, uri);
+        let builder = set_protocol(builder, uri);
 
         let webview = builder.build().unwrap();
+        if let Some(bounds) = bounds{
+            // For some reason, `WebViewBuilder::with_bounds` alone doesn't render
+            webview.set_bounds(bounds.as_wry_rect()).unwrap();
+        }
 
         commands.entity(entity).insert(WebviewInitialized);
         commands.spawn(Reactor::schedule(move |task| async move {
@@ -103,6 +104,24 @@ fn setup_new_windows(
         }));
     }
 }
+
+fn new_builder<'a>(
+    entity: Entity,
+    parent_window: &Option<&ParentWindow>,
+    bounds: &Option<&Bounds>,
+    windows: &'a WinitWindows,
+) -> Option<WebViewBuilder<'a>> {
+    if let Some(ParentWindow(parent_entity)) = parent_window {
+        let mut builder = WebViewBuilder::new_as_child(windows.get_window(*parent_entity)?);
+        if let Some(bounds) = bounds {
+            builder = builder.with_bounds(bounds.as_wry_rect());
+        }
+        Some(builder)
+    } else {
+        Some(WebViewBuilder::new(windows.get_window(entity)?))
+    }
+}
+
 
 fn set_background<'a>(builder: WebViewBuilder<'a>, background: &Background) -> WebViewBuilder<'a> {
     match background {

@@ -3,6 +3,7 @@ use bevy::prelude::{Deref, DerefMut, Entity};
 use bevy::utils::HashMap;
 use bevy_flurx::FlurxPlugin;
 use crate::api::ApiAllows;
+use crate::as_child::AsChildPlugin;
 
 use crate::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, IsOpenDevtools, Theme, Uri, UseDevtools, Visible};
 use crate::plugin::api::ApiPlugin;
@@ -21,7 +22,7 @@ mod api;
 
 
 #[derive(Deref, DerefMut, Default)]
-struct WebviewMap(HashMap<Entity, wry::WebView>);
+pub(crate) struct WebviewMap(pub HashMap<Entity, wry::WebView>);
 
 
 pub struct FlurxWryPlugin;
@@ -49,7 +50,8 @@ impl Plugin for FlurxWryPlugin {
                 EventEmitterPlugin,
                 OnPageLoadPlugin,
                 WryIpcPlugin,
-                ApiPlugin
+                ApiPlugin,
+                AsChildPlugin
             ))
             .init_non_send_resource::<WebviewMap>();
     }

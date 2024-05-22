@@ -1,9 +1,11 @@
 use bevy::app::{App, Startup};
 use bevy::DefaultPlugins;
 use bevy::input::ButtonInput;
-use bevy::prelude::{Commands, Component, default, KeyCode, Query, Res, Update, Window, With};
-use bevy::window::WindowResolution;
+use bevy::math::Vec2;
+use bevy::prelude::{Commands, Component, default, Entity, KeyCode, Query, Res, Update, Window, With};
+use bevy::window::PrimaryWindow;
 
+use bevy_flurx_wry::as_child::{AsChild, Bounds, ParentWindow};
 use bevy_flurx_wry::prelude::*;
 
 fn main() {
@@ -21,18 +23,22 @@ fn main() {
 struct WebviewWindow;
 
 fn spawn_webview(
-    mut commands: Commands
+    mut commands: Commands,
+    primary_window: Query<Entity, With<PrimaryWindow>>,
 ) {
     commands.spawn((
         WebviewWindow,
-        Window{
-            resolution: WindowResolution::new(200., 200.),
-            ..default()
-        },
         WryWebViewBundle {
             uri: Uri::LocalRoot("api".to_string()),
             ..default()
-        }
+        },
+        AsChild {
+            parent: ParentWindow(primary_window.single()),
+            bounds: Bounds {
+                position: Vec2::new(100., 100.),
+                size: Vec2::new(500., 500.),
+            },
+        },
     ));
 }
 
