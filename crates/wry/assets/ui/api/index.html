@@ -6,9 +6,29 @@
 </head>
 <body>
 
+<style>
+    .flex{
+        display: flex;
+    }
+</style>
+
 <button id="hide-button">hide</button>
+<div class="flex">
+    <p>appName:</p>
+    <p id="appName"></p>
+</div>
+
+<div class="flex">
+    <p>appVersion:</p>
+    <p id="appVersion"></p>
+</div>
 
 <script>
+    (async () => {
+
+        document.getElementById("appName").innerText = await window.__FLURX__.app.getName();
+        document.getElementById("appVersion").innerText = await window.__FLURX__.app.getVersion();
+    })();
     document.getElementById("hide-button").onclick = async () => {
         await window.__FLURX__.appWindow.hide();
     };

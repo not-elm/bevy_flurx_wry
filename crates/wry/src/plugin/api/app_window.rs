@@ -5,10 +5,7 @@ use bevy_flurx::prelude::ActionSeed;
 
 use bevy_flurx_ipc::prelude::WebviewEntity;
 
-use crate::command;
-
-#[command]
-pub fn plugin_app_window_hide(
+pub fn hide(
     WebviewEntity(entity): WebviewEntity
 ) -> ActionSeed {
     once::run(move |mut window: Query<&mut Window>| {

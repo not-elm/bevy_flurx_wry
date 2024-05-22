@@ -1,4 +1,4 @@
-import {appWindow, core} from "../index";
+import {app, appWindow, core} from "../index";
 
 export {};
 
@@ -9,6 +9,7 @@ declare global {
         },
         __FLURX__: {
             core: typeof core,
+            app: typeof app,
             appWindow: typeof appWindow
         }
     }
