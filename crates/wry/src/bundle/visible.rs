@@ -2,7 +2,7 @@ use bevy::prelude::{Component, Plugin, Reflect, ReflectComponent, ReflectDefault
 use serde::{Deserialize, Serialize};
 
 
-/// Represents whether the webview should be visible. 
+/// Please see [`wry::WebViewBuilder::with_visible`].
 #[derive(Component, Clone, Debug, Eq, PartialEq, Hash, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default)]
 pub struct Visible(pub bool);

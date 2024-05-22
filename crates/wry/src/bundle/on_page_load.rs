@@ -11,7 +11,7 @@ use wry::PageLoadEvent;
 pub struct Location(pub String);
 
 
-/// The handler to process page loading events.
+/// Please see [`wry::WebViewBuilder::with_on_page_load_handler`].
 #[derive(Component, Default)]
 pub struct OnPageLoad(pub(crate) Option<Box<dyn Fn(PageLoadEvent, String) -> ActionSeed + Send + Sync>>);
 

@@ -9,10 +9,11 @@ use wry::{WebView, WebViewBuilder, WebViewBuilderExtWindows};
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
 use crate::as_child::{Bounds, ParentWindow};
-use crate::bundle::{AutoPlay, Background, EnableClipboard, Theme, Uri, UseDevtools, UserAgent, Visible};
+use crate::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, HttpsScheme, Incognito, Theme, Uri, UseDevtools, UserAgent, Visible};
 use crate::plugin::load::protocol::set_protocol;
 use crate::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
 use crate::plugin::WebviewMap;
+use crate::prelude::InitializeFocused;
 
 mod protocol;
 
@@ -30,18 +31,32 @@ impl Plugin for LoadWebviewPlugin {
 #[reflect(Component, Default)]
 pub(crate) struct WebviewInitialized;
 
+
+type Configs1<'a> = (
+    &'a UseDevtools,
+    &'a AutoPlay,
+    &'a EnableClipboard,
+    &'a Visible,
+    &'a Background,
+    &'a Theme,
+    &'a Incognito,
+    &'a BrowserAcceleratorKeys,
+    &'a HttpsScheme
+);
+
+type Configs2<'a> = (
+    &'a InitializeFocused,
+    &'a HotkeysZoom,
+    &'a UserAgent,
+    &'a Uri,
+);
+
 fn setup_new_windows(
     mut commands: Commands,
     views: Query<(
         Entity,
-        &Uri,
-        &UseDevtools,
-        &AutoPlay,
-        &EnableClipboard,
-        &Visible,
-        &Background,
-        &Theme,
-        &UserAgent,
+        Configs1,
+        Configs2,
         Option<&ParentWindow>,
         Option<&Bounds>
     ), (Without<WebviewInitialized>, Or<(With<Window>, With<ParentWindow>)>)>,
@@ -51,14 +66,8 @@ fn setup_new_windows(
 ) {
     for (
         entity,
-        uri,
-        use_devtools,
-        auto_play,
-        enable_clipboard,
-        visible,
-        background,
-        theme,
-        user_agent,
+        configs1,
+        configs2,
         parent_window,
         bounds
     ) in views.iter() {
@@ -70,11 +79,6 @@ fn setup_new_windows(
             let load_queue = load_queue.0.clone();
             builder
                 .with_initialization_script(include_str!("../../scripts/api.js"))
-                .with_devtools(use_devtools.0)
-                .with_autoplay(auto_play.0)
-                .with_clipboard(enable_clipboard.0)
-                .with_visible(visible.0)
-                .with_theme(theme.as_wry_theme())
                 .with_on_page_load_handler(move |event, uri| {
                     load_queue.lock().unwrap().push(OnPageArgs {
                         event,
@@ -89,10 +93,8 @@ fn setup_new_windows(
                     });
                 })
         };
-
-        let builder = set_user_agent(builder, user_agent);
-        let builder = set_background(builder, background);
-        let builder = set_protocol(builder, uri);
+        let builder = feed_configs1(builder, configs1);
+        let builder = feed_configs2(builder, configs2);
 
         let webview = builder.build().unwrap();
         if let Some(bounds) = bounds {
@@ -124,15 +126,30 @@ fn new_builder<'a>(
     }
 }
 
-fn set_user_agent<'a>(builder: WebViewBuilder<'a>, user_agent: &UserAgent) -> WebViewBuilder<'a>{
-    if let Some(user_agent) = user_agent.0.as_ref(){
-        builder.with_user_agent(user_agent)
-    }else{
-        builder
-    }
-}
+fn feed_configs1<'a>(
+    builder: WebViewBuilder<'a>,
+    (
+        dev_tools,
+        auto_play,
+        enable_clipboard,
+        visible,
+        background,
+        theme,
+        incognito,
+        browser_accelerator_keys,
+        https_scheme
+    ): Configs1,
+) -> WebViewBuilder<'a> {
+    let builder = builder
+        .with_devtools(dev_tools.0)
+        .with_autoplay(auto_play.0)
+        .with_clipboard(enable_clipboard.0)
+        .with_visible(visible.0)
+        .with_theme(theme.as_wry_theme())
+        .with_incognito(incognito.0)
+        .with_browser_accelerator_keys(browser_accelerator_keys.0)
+        .with_https_scheme(https_scheme.0);
 
-fn set_background<'a>(builder: WebViewBuilder<'a>, background: &Background) -> WebViewBuilder<'a> {
     match background {
         Background::Unspecified => builder,
         Background::Transparent => builder.with_transparent(true),
@@ -141,6 +158,26 @@ fn set_background<'a>(builder: WebViewBuilder<'a>, background: &Background) -> W
             builder.with_background_color((rgba[0], rgba[1], rgba[2], rgba[3]))
         }
     }
+}
+
+fn feed_configs2<'a>(
+    builder: WebViewBuilder<'a>,
+    (
+        focused,
+        hotkeys_zoom,
+        user_agent,
+        uri,
+    ): Configs2,
+) -> WebViewBuilder<'a> {
+    let mut builder = builder
+        .with_focused(focused.0)
+        .with_hotkeys_zoom(hotkeys_zoom.0);
+
+    if let Some(user_agent) = user_agent.0.as_ref() {
+        builder = builder.with_user_agent(user_agent);
+    }
+
+    set_protocol(builder, uri)
 }
 
 fn insert_webview(

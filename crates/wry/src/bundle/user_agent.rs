@@ -1,7 +1,7 @@
 use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
 
 
-/// Custom user-agent for the webview.
+/// Please see [`wry::WebViewBuilder::with_user_agent`].
 #[repr(transparent)]
 #[derive(Component, Debug, Clone, Eq, PartialEq, Hash, Default, Reflect)]
 #[reflect(Component, Default)]
