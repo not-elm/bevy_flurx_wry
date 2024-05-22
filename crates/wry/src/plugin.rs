@@ -12,6 +12,7 @@ use crate::plugin::devtools::DevtoolsPlugin;
 use crate::plugin::event::EventEmitterPlugin;
 use crate::plugin::ipc::WryIpcPlugin;
 use crate::plugin::on_page_load::OnPageLoadPlugin;
+use crate::plugin::visible::VisiblePlugin;
 
 mod on_page_load;
 mod ipc;
@@ -19,6 +20,7 @@ mod devtools;
 mod load;
 mod event;
 mod api;
+mod visible;
 
 
 #[derive(Deref, DerefMut, Default)]
@@ -53,6 +55,7 @@ impl Plugin for FlurxWryPlugin {
                 ApiPlugin,
                 AsChildPlugin
             ))
+            .add_plugins(VisiblePlugin)
             .init_non_send_resource::<WebviewMap>();
     }
 }

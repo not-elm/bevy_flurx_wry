@@ -11,6 +11,7 @@ pub use theme::Theme;
 pub use uri::Uri;
 pub use use_devtools::UseDevtools;
 pub use visible::Visible;
+pub use user_agent::UserAgent;
 
 mod auto_play;
 mod background;
@@ -22,6 +23,7 @@ mod visible;
 mod uri;
 mod is_open_devtools;
 mod event_emitter;
+mod user_agent;
 
 
 #[derive(Bundle, Default)]
@@ -47,6 +49,9 @@ pub struct WryWebViewBundle {
     /// Represents the webview background. 
     pub background: Background,
 
+    /// Custom user-agent for the webview.
+    pub user_agent: UserAgent,
+    
     /// Represents a webview theme.
     pub theme: Theme,
 

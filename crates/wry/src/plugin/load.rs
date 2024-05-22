@@ -1,4 +1,3 @@
-
 use bevy::app::{App, Plugin, PreUpdate, Update};
 use bevy::prelude::{Commands, Component, Entity, In, NonSend, NonSendMut, Or, Query, Reflect, ReflectComponent, ReflectDefault, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
@@ -10,7 +9,7 @@ use wry::{WebView, WebViewBuilder, WebViewBuilderExtWindows};
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
 use crate::as_child::{Bounds, ParentWindow};
-use crate::bundle::{AutoPlay, Background, EnableClipboard, Theme, Uri, UseDevtools, Visible};
+use crate::bundle::{AutoPlay, Background, EnableClipboard, Theme, Uri, UseDevtools, UserAgent, Visible};
 use crate::plugin::load::protocol::set_protocol;
 use crate::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
 use crate::plugin::WebviewMap;
@@ -42,6 +41,7 @@ fn setup_new_windows(
         &Visible,
         &Background,
         &Theme,
+        &UserAgent,
         Option<&ParentWindow>,
         Option<&Bounds>
     ), (Without<WebviewInitialized>, Or<(With<Window>, With<ParentWindow>)>)>,
@@ -58,6 +58,7 @@ fn setup_new_windows(
         visible,
         background,
         theme,
+        user_agent,
         parent_window,
         bounds
     ) in views.iter() {
@@ -89,11 +90,12 @@ fn setup_new_windows(
                 })
         };
 
+        let builder = set_user_agent(builder, user_agent);
         let builder = set_background(builder, background);
         let builder = set_protocol(builder, uri);
 
         let webview = builder.build().unwrap();
-        if let Some(bounds) = bounds{
+        if let Some(bounds) = bounds {
             // For some reason, `WebViewBuilder::with_bounds` alone doesn't render
             webview.set_bounds(bounds.as_wry_rect()).unwrap();
         }
@@ -122,6 +124,13 @@ fn new_builder<'a>(
     }
 }
 
+fn set_user_agent<'a>(builder: WebViewBuilder<'a>, user_agent: &UserAgent) -> WebViewBuilder<'a>{
+    if let Some(user_agent) = user_agent.0.as_ref(){
+        builder.with_user_agent(user_agent)
+    }else{
+        builder
+    }
+}
 
 fn set_background<'a>(builder: WebViewBuilder<'a>, background: &Background) -> WebViewBuilder<'a> {
     match background {
