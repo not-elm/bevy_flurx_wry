@@ -1,4 +1,4 @@
-use bevy::prelude::{Component, Plugin, Reflect, ReflectComponent, ReflectDefault};
+use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
 use serde::{Deserialize, Serialize};
 
 

@@ -5,7 +5,7 @@ use bevy::math::Vec2;
 use bevy::prelude::{Commands, Component, default, Entity, KeyCode, Query, Res, Update, Window, With};
 use bevy::window::PrimaryWindow;
 
-use bevy_flurx_wry::as_child::{AsChild, Bounds, ParentWindow};
+use bevy_flurx_wry::as_child::{AsChild, bounds::Bounds, ParentWindow, Resizable};
 use bevy_flurx_wry::prelude::*;
 
 fn main() {
@@ -38,6 +38,7 @@ fn spawn_webview(
                 position: Vec2::new(100., 100.),
                 size: Vec2::new(500., 500.),
             },
+            resizable: Resizable(true)
         },
     ));
 }

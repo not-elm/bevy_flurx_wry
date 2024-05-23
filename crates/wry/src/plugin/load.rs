@@ -8,7 +8,7 @@ use wry::{WebView, WebViewBuilder, WebViewBuilderExtWindows};
 
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
-use crate::as_child::{Bounds, ParentWindow};
+use crate::as_child::{bounds::Bounds, ParentWindow};
 use crate::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, HttpsScheme, Incognito, Theme, Uri, UseDevtools, UserAgent, Visible};
 use crate::plugin::load::protocol::set_protocol;
 use crate::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
