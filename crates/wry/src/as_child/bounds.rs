@@ -15,18 +15,18 @@ impl Bounds {
     #[inline(always)]
     pub(crate) fn maybe_resizable(&self, cursor_pos: Vec2) -> Option<ResizeMode> {
         const MARGIN: f32 = 10.;
-        let margin = Vec2::splat(10.);
-        let o = self.position - margin;
-        let s = self.size + 2. * margin;
-        let rect = Rect::new(o.x, o.y, o.x + s.x, o.y + s.y);
-        if !rect.contains(cursor_pos) {
+        const MARGIN_VEC: Vec2 = Vec2::splat(10.);
+
+        let o = self.position - MARGIN_VEC;
+        let s = self.size + 2. * MARGIN_VEC;
+        if !Rect::new(o.x, o.y, o.x + s.x, o.y + s.y).contains(cursor_pos) {
             return None;
         }
         let o = self.position;
         let s = self.size;
         let rect = Rect::new(o.x, o.y, o.x + s.x, o.y + s.y);
 
-        if (cursor_pos.x - rect.min.x).abs() <= MARGIN {
+        if cursor_pos.x <= rect.min.x {
             return if cursor_pos.y <= rect.min.y {
                 Some(ResizeMode::TopLeft)
             } else if rect.max.y <= cursor_pos.y {
@@ -35,7 +35,7 @@ impl Bounds {
                 Some(ResizeMode::Left)
             };
         }
-        if (rect.max.x - cursor_pos.x).abs() <= MARGIN {
+        if rect.max.x <= cursor_pos.x {
             return if cursor_pos.y <= rect.min.y {
                 Some(ResizeMode::TopRight)
             } else if rect.max.y <= cursor_pos.y {

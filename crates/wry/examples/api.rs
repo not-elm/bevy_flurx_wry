@@ -30,6 +30,8 @@ fn spawn_webview(
         WebviewWindow,
         WryWebViewBundle {
             uri: Uri::LocalRoot("api".to_string()),
+            use_devtools: UseDevtools(true),
+            is_open_devtools: IsOpenDevtools(true),
             ..default()
         },
         AsChild {

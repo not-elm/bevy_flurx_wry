@@ -78,7 +78,10 @@ fn setup_new_windows(
             let ipc_commands = ipc_commands.clone();
             let load_queue = load_queue.0.clone();
             builder
-                .with_initialization_script(include_str!("../../scripts/api.js"))
+                .with_initialization_script(&format!("{}{}",
+                include_str!("../../scripts/api.js"),
+                    include_str!("../../scripts/childWindow.js")
+                ))
                 .with_on_page_load_handler(move |event, uri| {
                     load_queue.lock().unwrap().push(OnPageArgs {
                         event,
