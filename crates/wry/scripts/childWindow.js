@@ -1,18 +1,22 @@
 ;(() => {
     window.addEventListener('DOMContentLoaded', () => {
         const root = document.createElement('div');
-        root.style.display = "flex";
-        root.style.flexDirection = "column";
+        root.style.position = "absolute";
 
-        document.body.parentNode.insertBefore(root, document.body);
-
-        const toolbar = document.createElement("div");
-        toolbar.onmousedown = async() => {
-            await window.__FLURX__.core.invoke("FLURX|mouse::webview_move_start");
+        document.body.parentElement.insertBefore(root, document.body);
+        document.body.style.transform = "translateY(20px)";
+        const toolbar = document.createElement("header");
+        toolbar.onmousedown = async (e) => {
+            await window.__FLURX__.core.invoke("FLURX|mouse::webview_move_start", {
+                x: e.clientX,
+                y: e.clientY
+            });
         };
         toolbar.style.height = "20px";
-        toolbar.style.display = "flex";
-        toolbar.style.background = "red";
+        toolbar.style.width = "100%";
+        toolbar.style.position = "fixed";
+        toolbar.style.top = "0";
+        toolbar.style.zIndex = "calc(infinity)";
 
         root.appendChild(toolbar);
         root.appendChild(document.body);
@@ -22,11 +26,5 @@
         document.onmouseup = async (e) => {
             await window.__FLURX__.core.invoke("FLURX|mouse::up")
         }
-        document.onmousemove = (e) => {
-            window.__FLURX__.core.invoke("FLURX|mouse::move", {
-                x: e.movementX,
-                y: e.movementY
-            })
-        };
     });
 })();

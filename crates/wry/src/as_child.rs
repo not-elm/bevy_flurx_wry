@@ -1,8 +1,10 @@
-use bevy::app::App;
+use bevy::app::{App, PostUpdate};
 use bevy::input::common_conditions::{input_just_released, input_pressed};
-use bevy::input::mouse::MouseMotion;
-use bevy::prelude::{Bundle, Changed, Commands, Component, Entity, EventReader, IntoSystemConfigs, MouseButton, NonSend, not, Plugin, Query, Reflect, ReflectComponent, Update, With, Without};
+use bevy::math::{IVec2, Vec2};
+use bevy::prelude::{Bundle, Changed, Commands, Component, Entity, IntoSystemConfigs, MouseButton, NonSend, not, Plugin, Query, Reflect, ReflectComponent, Update, With, Without};
 use bevy::window::{CursorIcon, Window};
+use bevy::winit::WinitWindows;
+use mouse_rs::Mouse;
 
 use crate::as_child::bounds::Bounds;
 use crate::as_child::resize_mode::ResizeMode;
@@ -39,7 +41,7 @@ impl Default for Resizable {
 }
 
 #[derive(Component)]
-pub(crate) struct DragMove;
+pub(crate) struct DragMove(pub Vec2);
 
 
 pub struct AsChildPlugin;
@@ -54,10 +56,10 @@ impl Plugin for AsChildPlugin {
             .add_systems(Update, (
                 resize.run_if(input_pressed(MouseButton::Left)),
                 change_mouse_cursor_icon.run_if(not(input_pressed(MouseButton::Left))),
-                set_bounds,
                 move_webview,
                 remove_drag_move.run_if(input_just_released(MouseButton::Left))
-            ));
+            ))
+            .add_systems(PostUpdate, set_bounds);
     }
 }
 
@@ -115,13 +117,24 @@ fn set_bounds(
 }
 
 fn move_webview(
-    mut er: EventReader<MouseMotion>,
-    mut views: Query<&mut Bounds, With<DragMove>>,
+    mut views: Query<(&mut Bounds, &ParentWindow, &DragMove), With<DragMove>>,
+    windows: NonSend<WinitWindows>,
 ) {
-    for e in er.read() {
-        for mut bounds in views.iter_mut() {
-            bounds.position += e.delta;
-        }
+    let mouse = Mouse::new();
+    let pos = mouse.get_position().unwrap();
+    let pos = IVec2::new(pos.x, pos.y).as_vec2();
+
+    for (mut bounds, parent, DragMove(d)) in views.iter_mut() {
+        let Some(window) = windows.get_window(parent.0) else {
+            continue;
+        };
+        let Ok(window_position) = window.inner_position() else {
+            continue;
+        };
+        let window_position = window_position.cast::<f32>();
+        let window_position = Vec2::new(window_position.x, window_position.y);
+        let cursor_pos = pos - window_position;
+        bounds.position = cursor_pos - *d;
     }
 }
 

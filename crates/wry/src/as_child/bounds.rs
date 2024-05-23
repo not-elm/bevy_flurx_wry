@@ -12,9 +12,9 @@ pub struct Bounds {
 }
 
 impl Bounds {
+    // noinspection DuplicatedCode
     #[inline(always)]
     pub(crate) fn maybe_resizable(&self, cursor_pos: Vec2) -> Option<ResizeMode> {
-        const MARGIN: f32 = 10.;
         const MARGIN_VEC: Vec2 = Vec2::splat(10.);
 
         let o = self.position - MARGIN_VEC;
@@ -55,7 +55,7 @@ impl Bounds {
     pub(crate) fn resize(&mut self, mode: &ResizeMode, mouse_position: Vec2) {
         match mode {
             ResizeMode::Left => {
-                self.size.x += self.position.x - mouse_position.x;
+                self.size.x = (self.position.x + self.size.x) - mouse_position.x;
                 self.position.x = mouse_position.x;
             }
             ResizeMode::Right => {

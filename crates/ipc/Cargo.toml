@@ -16,6 +16,7 @@ serde_json = { workspace = true }
 
 [dev-dependencies]
 trybuild = "1.0.96"
+bevy = "0.13.2"
 
 [lints]
 workspace = true

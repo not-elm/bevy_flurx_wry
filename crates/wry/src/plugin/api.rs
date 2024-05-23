@@ -1,11 +1,10 @@
-use bevy::app::{App, PreUpdate};
-use bevy::input::mouse::MouseMotion;
-use bevy::prelude::{Added, IntoSystemConfigs, not, on_event, Plugin, Query, Res, Update};
+use bevy::app::App;
+use bevy::prelude::{Added, Plugin, Query, Res, Update};
 
 use bevy_flurx_ipc::prelude::{IpcHandler, IpcHandlers};
 
 use crate::api::{ApiAllows, AppApiAllows};
-use crate::plugin::api::mouse::{Pointer, send_mouse_move};
+use crate::plugin::api::mouse::Pointer;
 use crate::plugin::load::WebviewInitialized;
 
 mod app_window;
@@ -19,7 +18,6 @@ impl Plugin for ApiPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_event::<Pointer>()
-            .add_systems(PreUpdate, send_mouse_move.run_if(not(on_event::<MouseMotion>())))
             .add_systems(Update, register_api_handlers);
     }
 }
@@ -72,8 +70,5 @@ fn setup_child_view(
     }));
     handler.register(IpcHandler::new("FLURX|mouse::up", || {
         mouse::up
-    }));
-    handler.register(IpcHandler::new("FLURX|mouse::move", || {
-        mouse::mouse_move
     }));
 }
