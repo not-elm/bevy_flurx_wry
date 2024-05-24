@@ -103,6 +103,10 @@ impl IpcHandler {
             handle: Box::new(move || f.func()),
         }
     }
+
+    pub fn id(&self) -> &str{
+        &self.id
+    }
 }
 
 impl<F> From<F> for IpcHandler

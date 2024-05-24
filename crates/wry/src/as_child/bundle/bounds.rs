@@ -1,11 +1,14 @@
 use bevy::math::{Rect, Vec2};
 use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
+
 use crate::as_child::bundle::resize::ResizeMode;
 
 #[derive(Component, PartialEq, Reflect, Default)]
 #[reflect(Component, Default)]
 pub struct Bounds {
     pub size: Vec2,
+
+    pub min_size: Vec2,
 
     pub position: Vec2,
 }
@@ -98,15 +101,17 @@ impl Bounds {
 #[cfg(test)]
 mod tests {
     use bevy::math::Vec2;
+    use bevy::utils::default;
 
     use crate::as_child::bundle::Bounds;
-    use crate::as_child::bundle::resize_mode::ResizeMode;
+    use crate::prelude::resize::ResizeMode;
 
     #[test]
     fn expand_from_left() {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::Left, Vec2::new(0., 0.));
         assert_eq!(bounds.position, Vec2::new(0., 5.));
@@ -118,6 +123,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::Left, Vec2::new(7., 0.));
         assert_eq!(bounds.position, Vec2::new(7., 5.));
@@ -129,6 +135,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::Right, Vec2::new(20., 0.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
@@ -140,6 +147,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::Right, Vec2::new(8., 0.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
@@ -151,6 +159,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::Top, Vec2::new(3., 0.));
         assert_eq!(bounds.position, Vec2::new(5., 0.));
@@ -162,6 +171,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::Top, Vec2::new(8., 8.));
         assert_eq!(bounds.position, Vec2::new(5., 8.));
@@ -173,6 +183,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::Bottom, Vec2::new(8., 15.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
@@ -184,6 +195,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::Bottom, Vec2::new(8., 8.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
@@ -195,6 +207,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(3., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::TopLeft, Vec2::new(0., 0.));
         assert_eq!(bounds.position, Vec2::new(0., 0.));
@@ -206,6 +219,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(3., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::TopLeft, Vec2::new(6., 7.));
         assert_eq!(bounds.position, Vec2::new(6., 7.));
@@ -217,6 +231,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(3., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::BottomLeft, Vec2::new(0., 15.));
         assert_eq!(bounds.position, Vec2::new(0., 5.));
@@ -228,6 +243,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(3., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::BottomLeft, Vec2::new(6., 6.));
         assert_eq!(bounds.position, Vec2::new(6., 5.));
@@ -239,6 +255,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(3., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::TopRight, Vec2::new(10., 0.));
         assert_eq!(bounds.position, Vec2::new(5., 0.));
@@ -250,6 +267,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(3., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::TopRight, Vec2::new(7., 8.));
         assert_eq!(bounds.position, Vec2::new(5., 8.));
@@ -261,6 +279,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(3., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::BottomRight, Vec2::new(10., 15.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
@@ -272,6 +291,7 @@ mod tests {
         let mut bounds = Bounds {
             position: Vec2::new(5., 5.),
             size: Vec2::new(3., 5.),
+            ..default()
         };
         bounds.resize(&ResizeMode::BottomRight, Vec2::new(6., 8.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));

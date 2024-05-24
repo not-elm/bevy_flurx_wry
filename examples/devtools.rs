@@ -3,8 +3,8 @@ use bevy::DefaultPlugins;
 use bevy::prelude::{Commands, Entity, In, Query, With};
 use bevy::utils::default;
 use bevy::window::PrimaryWindow;
-use bevy_flurx::action::{Action, once};
 
+use bevy_flurx::action::{Action, once};
 use bevy_flurx_wry::prelude::*;
 
 fn main() {

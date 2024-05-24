@@ -7,4 +7,5 @@ fn tests() {
     t.pass("tests/test03_ipc_handlers_macro.rs");
     t.pass("tests/test04_async_command.rs");
     t.pass("tests/test05_async_command_with_inputs.rs");
+    t.pass("tests/test06_custom_id.rs");
 }

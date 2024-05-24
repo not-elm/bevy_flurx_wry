@@ -1,4 +1,3 @@
-use bevy::math::Vec2;
 use bevy::prelude::{Bundle, Component, Entity, Reflect, ReflectComponent};
 
 pub use bounds::Bounds;
