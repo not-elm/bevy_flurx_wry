@@ -1,9 +1,13 @@
 use bevy::prelude::{Bundle, Component, Entity, Reflect, ReflectComponent};
 
 pub use bounds::Bounds;
+pub use toolbar::Toolbar;
+
+
+pub(crate) mod resize;
 
 mod bounds;
-pub(crate) mod resize;
+mod toolbar;
 
 #[derive(Bundle)]
 pub struct AsChild {
@@ -12,6 +16,8 @@ pub struct AsChild {
     pub bounds: Bounds,
 
     pub resizable: Resizable,
+    
+    pub toolbar: Toolbar
 }
 
 #[repr(transparent)]

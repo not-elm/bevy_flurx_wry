@@ -15,7 +15,7 @@ impl Plugin for ResizePlugin {
             .register_type::<ResizeMode>()
             .add_systems(Update, (
                 change_mouse_cursor_icon.run_if(not(input_pressed(MouseButton::Left))),
-                resize.run_if(input_pressed(MouseButton::Left)),
+                transform_bounds.run_if(input_pressed(MouseButton::Left)),
                 render_bounds
             ));
     }
@@ -46,7 +46,7 @@ fn change_mouse_cursor_icon(
     }
 }
 
-fn resize(
+fn transform_bounds(
     mut views: Query<(&mut Bounds, &ResizeMode, &ParentWindow, &Resizable), Without<CurrentMoving>>,
     window: Query<&Window>,
 ) {
@@ -58,7 +58,7 @@ fn resize(
             continue;
         };
         if let Some(cursor_pos) = window.cursor_position() {
-            bounds.resize(resize_mode, cursor_pos);
+            bounds.transform(resize_mode, cursor_pos);
         }
     }
 }

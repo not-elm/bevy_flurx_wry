@@ -54,7 +54,7 @@ impl Bounds {
     }
 
     #[inline]
-    pub(crate) fn resize(&mut self, mode: &ResizeMode, mouse_position: Vec2) {
+    pub(crate) fn transform(&mut self, mode: &ResizeMode, mouse_position: Vec2) {
         let min_size = self.min_size.max(Vec2::ZERO);
         match mode {
             ResizeMode::Left => {
@@ -74,20 +74,20 @@ impl Bounds {
                 self.size.y = min_size.y.max(mouse_position.y - self.position.y);
             }
             ResizeMode::TopLeft => {
-                self.resize(&ResizeMode::Top, mouse_position);
-                self.resize(&ResizeMode::Left, mouse_position);
+                self.transform(&ResizeMode::Top, mouse_position);
+                self.transform(&ResizeMode::Left, mouse_position);
             }
             ResizeMode::BottomLeft => {
-                self.resize(&ResizeMode::Bottom, mouse_position);
-                self.resize(&ResizeMode::Left, mouse_position);
+                self.transform(&ResizeMode::Bottom, mouse_position);
+                self.transform(&ResizeMode::Left, mouse_position);
             }
             ResizeMode::TopRight => {
-                self.resize(&ResizeMode::Top, mouse_position);
-                self.resize(&ResizeMode::Right, mouse_position);
+                self.transform(&ResizeMode::Top, mouse_position);
+                self.transform(&ResizeMode::Right, mouse_position);
             }
             ResizeMode::BottomRight => {
-                self.resize(&ResizeMode::Bottom, mouse_position);
-                self.resize(&ResizeMode::Right, mouse_position);
+                self.transform(&ResizeMode::Bottom, mouse_position);
+                self.transform(&ResizeMode::Right, mouse_position);
             }
         }
     }
@@ -116,7 +116,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::Left, Vec2::new(0., 0.));
+        bounds.transform(&ResizeMode::Left, Vec2::new(0., 0.));
         assert_eq!(bounds.position, Vec2::new(0., 5.));
         assert_eq!(bounds.size, Vec2::new(10., 5.));
     }
@@ -128,7 +128,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::Left, Vec2::new(7., 0.));
+        bounds.transform(&ResizeMode::Left, Vec2::new(7., 0.));
         assert_eq!(bounds.position, Vec2::new(7., 5.));
         assert_eq!(bounds.size, Vec2::new(3., 5.));
     }
@@ -140,7 +140,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::Right, Vec2::new(20., 0.));
+        bounds.transform(&ResizeMode::Right, Vec2::new(20., 0.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
         assert_eq!(bounds.size, Vec2::new(15., 5.));
     }
@@ -152,7 +152,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::Right, Vec2::new(8., 0.));
+        bounds.transform(&ResizeMode::Right, Vec2::new(8., 0.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
         assert_eq!(bounds.size, Vec2::new(3., 5.));
     }
@@ -164,7 +164,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::Top, Vec2::new(3., 0.));
+        bounds.transform(&ResizeMode::Top, Vec2::new(3., 0.));
         assert_eq!(bounds.position, Vec2::new(5., 0.));
         assert_eq!(bounds.size, Vec2::new(5., 10.));
     }
@@ -176,7 +176,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::Top, Vec2::new(8., 8.));
+        bounds.transform(&ResizeMode::Top, Vec2::new(8., 8.));
         assert_eq!(bounds.position, Vec2::new(5., 8.));
         assert_eq!(bounds.size, Vec2::new(5., 2.));
     }
@@ -188,7 +188,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::Bottom, Vec2::new(8., 15.));
+        bounds.transform(&ResizeMode::Bottom, Vec2::new(8., 15.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
         assert_eq!(bounds.size, Vec2::new(5., 10.));
     }
@@ -200,7 +200,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::Bottom, Vec2::new(8., 8.));
+        bounds.transform(&ResizeMode::Bottom, Vec2::new(8., 8.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
         assert_eq!(bounds.size, Vec2::new(5., 3.));
     }
@@ -212,7 +212,7 @@ mod tests {
             size: Vec2::new(3., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::TopLeft, Vec2::new(0., 0.));
+        bounds.transform(&ResizeMode::TopLeft, Vec2::new(0., 0.));
         assert_eq!(bounds.position, Vec2::new(0., 0.));
         assert_eq!(bounds.size, Vec2::new(8., 10.));
     }
@@ -224,7 +224,7 @@ mod tests {
             size: Vec2::new(3., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::TopLeft, Vec2::new(6., 7.));
+        bounds.transform(&ResizeMode::TopLeft, Vec2::new(6., 7.));
         assert_eq!(bounds.position, Vec2::new(6., 7.));
         assert_eq!(bounds.size, Vec2::new(2., 3.));
     }
@@ -236,7 +236,7 @@ mod tests {
             size: Vec2::new(3., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::BottomLeft, Vec2::new(0., 15.));
+        bounds.transform(&ResizeMode::BottomLeft, Vec2::new(0., 15.));
         assert_eq!(bounds.position, Vec2::new(0., 5.));
         assert_eq!(bounds.size, Vec2::new(8., 10.));
     }
@@ -248,7 +248,7 @@ mod tests {
             size: Vec2::new(3., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::BottomLeft, Vec2::new(6., 6.));
+        bounds.transform(&ResizeMode::BottomLeft, Vec2::new(6., 6.));
         assert_eq!(bounds.position, Vec2::new(6., 5.));
         assert_eq!(bounds.size, Vec2::new(2., 1.));
     }
@@ -260,7 +260,7 @@ mod tests {
             size: Vec2::new(3., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::TopRight, Vec2::new(10., 0.));
+        bounds.transform(&ResizeMode::TopRight, Vec2::new(10., 0.));
         assert_eq!(bounds.position, Vec2::new(5., 0.));
         assert_eq!(bounds.size, Vec2::new(5., 10.));
     }
@@ -272,7 +272,7 @@ mod tests {
             size: Vec2::new(3., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::TopRight, Vec2::new(7., 8.));
+        bounds.transform(&ResizeMode::TopRight, Vec2::new(7., 8.));
         assert_eq!(bounds.position, Vec2::new(5., 8.));
         assert_eq!(bounds.size, Vec2::new(2., 2.));
     }
@@ -284,7 +284,7 @@ mod tests {
             size: Vec2::new(3., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::BottomRight, Vec2::new(10., 15.));
+        bounds.transform(&ResizeMode::BottomRight, Vec2::new(10., 15.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
         assert_eq!(bounds.size, Vec2::new(5., 10.));
     }
@@ -296,7 +296,7 @@ mod tests {
             size: Vec2::new(3., 5.),
             ..default()
         };
-        bounds.resize(&ResizeMode::BottomRight, Vec2::new(6., 8.));
+        bounds.transform(&ResizeMode::BottomRight, Vec2::new(6., 8.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
         assert_eq!(bounds.size, Vec2::new(1., 3.));
     }
@@ -308,7 +308,7 @@ mod tests {
             size: Vec2::new(3., 5.),
             min_size: Vec2::new(2., 1.),
         };
-        bounds.resize(&ResizeMode::Left, Vec2::new(7., 0.));
+        bounds.transform(&ResizeMode::Left, Vec2::new(7., 0.));
         assert_eq!(bounds.position, Vec2::new(6., 5.));
         assert_eq!(bounds.size, Vec2::new(2., 5.));
     }
@@ -320,7 +320,7 @@ mod tests {
             size: Vec2::new(3., 5.),
             min_size: Vec2::new(2., 1.),
         };
-        bounds.resize(&ResizeMode::Right, Vec2::new(1., 0.));
+        bounds.transform(&ResizeMode::Right, Vec2::new(1., 0.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
         assert_eq!(bounds.size, Vec2::new(2., 5.));
     }
@@ -332,7 +332,7 @@ mod tests {
             size: Vec2::new(3., 3.),
             min_size: Vec2::new(2., 1.),
         };
-        bounds.resize(&ResizeMode::Top, Vec2::new(1., 8.));
+        bounds.transform(&ResizeMode::Top, Vec2::new(1., 8.));
         assert_eq!(bounds.position, Vec2::new(5., 7.));
         assert_eq!(bounds.size, Vec2::new(3., 1.));
     }
@@ -344,7 +344,7 @@ mod tests {
             size: Vec2::new(3., 3.),
             min_size: Vec2::new(2., 1.),
         };
-        bounds.resize(&ResizeMode::Bottom, Vec2::new(1., 0.));
+        bounds.transform(&ResizeMode::Bottom, Vec2::new(1., 0.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
         assert_eq!(bounds.size, Vec2::new(3., 1.));
     }

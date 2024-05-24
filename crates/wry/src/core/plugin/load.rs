@@ -13,6 +13,7 @@ use crate::core::plugin::load::protocol::set_protocol;
 use crate::core::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
 use crate::core::plugin::WebviewMap;
 use crate::core::WebviewInitialized;
+use crate::prelude::Toolbar;
 
 mod protocol;
 
@@ -42,6 +43,7 @@ type Configs2<'a> = (
     &'a HotkeysZoom,
     &'a UserAgent,
     &'a Uri,
+    Option<&'a Toolbar>
 );
 
 fn setup_new_windows(
@@ -71,11 +73,6 @@ fn setup_new_windows(
             let ipc_commands = ipc_commands.clone();
             let load_queue = load_queue.0.clone();
             builder
-                .with_initialization_script(&format!(
-                    "{}{}",
-                    include_str!("../../../scripts/api.js"),
-                    include_str!("../../../scripts/childWindow.js")
-                ))
                 .with_on_page_load_handler(move |event, uri| {
                     load_queue.lock().unwrap().push(OnPageArgs {
                         event,
@@ -164,11 +161,18 @@ fn feed_configs2<'a>(
         hotkeys_zoom,
         user_agent,
         uri,
+        toolbar
     ): Configs2,
 ) -> WebViewBuilder<'a> {
     let mut builder = builder
         .with_focused(focused.0)
-        .with_hotkeys_zoom(hotkeys_zoom.0);
+        .with_hotkeys_zoom(hotkeys_zoom.0)
+        .with_initialization_script(&format!(
+            "{}{}{}",
+            include_str!("../../../scripts/api.js"),
+            include_str!("../../../scripts/mouse.js"),
+            toolbar.and_then(|toolbar| toolbar.script()).unwrap_or_default()
+        ));
 
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);

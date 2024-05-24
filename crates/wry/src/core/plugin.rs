@@ -5,14 +5,14 @@ use crate::core::{WebviewInitialized, WebviewMap};
 use crate::core::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, HttpsScheme, Incognito, InitializeFocused, IsOpenDevtools, Theme, Uri, UseDevtools, Visible};
 use crate::core::plugin::devtools::DevtoolsPlugin;
 use crate::core::plugin::event::EventEmitterPlugin;
-use crate::core::plugin::ipc::WryIpcPlugin;
+use crate::core::plugin::ipc_resolve::IpcResolvePlugin;
 use crate::core::plugin::load::LoadWebviewPlugin;
 use crate::core::plugin::on_page_load::OnPageLoadPlugin;
 use crate::core::plugin::visible::VisiblePlugin;
-
+use crate::prelude::Toolbar;
 
 mod on_page_load;
-mod ipc;
+mod ipc_resolve;
 mod devtools;
 mod load;
 mod event;
@@ -42,13 +42,14 @@ impl Plugin for FlurxWryCorePlugin {
             .register_type::<HotkeysZoom>()
             .register_type::<Incognito>()
             .register_type::<HttpsScheme>()
+            .register_type::<Toolbar>()
             .add_plugins((
                 LoadWebviewPlugin,
                 DevtoolsPlugin,
                 VisiblePlugin,
                 EventEmitterPlugin,
                 OnPageLoadPlugin,
-                WryIpcPlugin,
+                IpcResolvePlugin,
             ))
             .init_non_send_resource::<WebviewMap>();
     }

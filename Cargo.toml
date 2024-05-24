@@ -17,6 +17,9 @@ edition = "2021"
 bevy = "0.13.2"
 bevy_flurx_wry = { path = "./crates/wry" }
 
+[dev-dependencies]
+bevy-inspector-egui = "0.24.0"
+
 [workspace.dependencies]
 bevy_flurx = { path = "../bevy_flurx", version = "0.5.1" }
 serde = { version = "1.0.202", features = ["derive"] }

@@ -7,9 +7,9 @@ use bevy_flurx_ipc::plugin::{FlurxIpcPlugin, IpcResolveEvent};
 
 use crate::core::plugin::WebviewMap;
 
-pub struct WryIpcPlugin;
+pub struct IpcResolvePlugin;
 
-impl Plugin for WryIpcPlugin {
+impl Plugin for IpcResolvePlugin {
     fn build(&self, app: &mut App) {
         if !app.is_plugin_added::<FlurxIpcPlugin>() {
             app.add_plugins(FlurxIpcPlugin);

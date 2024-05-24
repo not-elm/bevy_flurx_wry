@@ -11,7 +11,8 @@ fn main() {
     App::new()
         .add_plugins((
             DefaultPlugins,
-            FlurxWryPlugin
+            FlurxWryPlugin,
+            bevy_inspector_egui::quick::WorldInspectorPlugin::new()
         ))
         .insert_resource(ClearColor(Color::GRAY))
         .add_systems(Startup, (
@@ -45,6 +46,7 @@ fn spawn_webview(
                 ..default()
             },
             resizable: Resizable(true),
+            toolbar: Toolbar::Px(30.)
         },
     ));
 }
