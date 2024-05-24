@@ -42,6 +42,7 @@ fn spawn_webview(
             bounds: Bounds {
                 position: Vec2::new(100., 100.),
                 size: Vec2::new(500., 500.),
+                ..default()
             },
             resizable: Resizable(true),
         },

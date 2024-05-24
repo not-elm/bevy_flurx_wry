@@ -55,20 +55,23 @@ impl Bounds {
 
     #[inline]
     pub(crate) fn resize(&mut self, mode: &ResizeMode, mouse_position: Vec2) {
+        let min_size = self.min_size.max(Vec2::ZERO);
         match mode {
             ResizeMode::Left => {
-                self.size.x = (self.position.x + self.size.x) - mouse_position.x;
-                self.position.x = mouse_position.x;
+                let e_x = self.position.x + self.size.x;
+                self.size.x = min_size.x.max((self.position.x + self.size.x) - mouse_position.x);
+                self.position.x = e_x - self.size.x;
             }
             ResizeMode::Right => {
-                self.size.x = mouse_position.x - self.position.x;
+                self.size.x = min_size.x.max(mouse_position.x - self.position.x);
             }
             ResizeMode::Top => {
-                self.size.y = (self.position.y + self.size.y) - mouse_position.y;
-                self.position.y = mouse_position.y;
+                let e_y = self.position.y + self.size.y;
+                self.size.y = min_size.y.max((self.position.y + self.size.y) - mouse_position.y);
+                self.position.y = e_y - self.size.y;
             }
             ResizeMode::Bottom => {
-                self.size.y = mouse_position.y - self.position.y;
+                self.size.y = min_size.y.max(mouse_position.y - self.position.y);
             }
             ResizeMode::TopLeft => {
                 self.resize(&ResizeMode::Top, mouse_position);
@@ -296,5 +299,53 @@ mod tests {
         bounds.resize(&ResizeMode::BottomRight, Vec2::new(6., 8.));
         assert_eq!(bounds.position, Vec2::new(5., 5.));
         assert_eq!(bounds.size, Vec2::new(1., 3.));
+    }
+
+    #[test]
+    fn min_size_left() {
+        let mut bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(3., 5.),
+            min_size: Vec2::new(2., 1.),
+        };
+        bounds.resize(&ResizeMode::Left, Vec2::new(7., 0.));
+        assert_eq!(bounds.position, Vec2::new(6., 5.));
+        assert_eq!(bounds.size, Vec2::new(2., 5.));
+    }
+
+    #[test]
+    fn min_size_right() {
+        let mut bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(3., 5.),
+            min_size: Vec2::new(2., 1.),
+        };
+        bounds.resize(&ResizeMode::Right, Vec2::new(1., 0.));
+        assert_eq!(bounds.position, Vec2::new(5., 5.));
+        assert_eq!(bounds.size, Vec2::new(2., 5.));
+    }
+
+    #[test]
+    fn min_size_top() {
+        let mut bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(3., 3.),
+            min_size: Vec2::new(2., 1.),
+        };
+        bounds.resize(&ResizeMode::Top, Vec2::new(1., 8.));
+        assert_eq!(bounds.position, Vec2::new(5., 7.));
+        assert_eq!(bounds.size, Vec2::new(3., 1.));
+    }
+    
+    #[test]
+    fn min_size_bottom() {
+        let mut bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(3., 3.),
+            min_size: Vec2::new(2., 1.),
+        };
+        bounds.resize(&ResizeMode::Bottom, Vec2::new(1., 0.));
+        assert_eq!(bounds.position, Vec2::new(5., 5.));
+        assert_eq!(bounds.size, Vec2::new(3., 1.));
     }
 }
