@@ -5,7 +5,7 @@ use bevy::prelude::{EventReader, NonSendMut};
 
 use bevy_flurx_ipc::plugin::{FlurxIpcPlugin, IpcResolveEvent};
 
-use crate::core::plugin::WebviewMap;
+use crate::core::plugin::WryWebViews;
 
 pub struct IpcResolvePlugin;
 
@@ -21,7 +21,7 @@ impl Plugin for IpcResolvePlugin {
 
 fn resolve_event(
     mut er: EventReader<IpcResolveEvent>,
-    mut views: NonSendMut<WebviewMap>,
+    mut views: NonSendMut<WryWebViews>,
 ) {
     for IpcResolveEvent {
         entity,

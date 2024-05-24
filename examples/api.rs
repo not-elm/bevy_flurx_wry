@@ -46,8 +46,11 @@ fn spawn_webview(
                 ..default()
             },
             resizable: Resizable(true),
-            toolbar: Toolbar::Px(30.)
         },
+        Toolbar{
+            height: 30.,
+            color: Color::BEIGE
+        }
     ));
 }
 

@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "crates/*",
+    "crates/*", "examples/bug_check",
 ]
 exclude = [
     "tooling",

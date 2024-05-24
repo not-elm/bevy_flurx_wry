@@ -1,8 +1,8 @@
 use bevy::app::{App, Plugin};
 use bevy::prelude::{Changed, Entity, NonSend, Query, Update};
 
-use crate::core::bundle::Visible;
-use crate::core::plugin::WebviewMap;
+use crate::core::bundle::WebviewVisible;
+use crate::core::plugin::WryWebViews;
 
 pub struct VisiblePlugin;
 
@@ -13,8 +13,8 @@ impl Plugin for VisiblePlugin {
 }
 
 fn change_visible(
-    view_map: NonSend<WebviewMap>,
-    views: Query<(Entity, &Visible), Changed<Visible>>,
+    view_map: NonSend<WryWebViews>,
+    views: Query<(Entity, &WebviewVisible), Changed<WebviewVisible>>,
 ) {
     for (entity, visible) in views.iter() {
         if let Some(webview) = view_map.0.get(&entity) {

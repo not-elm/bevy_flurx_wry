@@ -2,7 +2,7 @@ use bevy::app::{App, PostUpdate};
 use bevy::prelude::{Entity, NonSend, Plugin, Query};
 
 use crate::core::bundle::EventEmitter;
-use crate::core::plugin::WebviewMap;
+use crate::core::plugin::WryWebViews;
 
 pub(crate) struct EventEmitterPlugin;
 
@@ -14,7 +14,7 @@ impl Plugin for EventEmitterPlugin {
 
 fn emit(
     mut emitters: Query<(Entity, &mut EventEmitter)>,
-    webview_map: NonSend<WebviewMap>,
+    webview_map: NonSend<WryWebViews>,
 ) {
     for (entity, mut emitter) in emitters.iter_mut() {
         let Some(webview) = webview_map.0.get(&entity) else {

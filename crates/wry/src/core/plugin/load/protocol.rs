@@ -5,24 +5,17 @@ use wry::http::header::CONTENT_TYPE;
 use wry::http::Response;
 
 use crate::core::bundle::Uri;
+use crate::WryLocalRoot;
 
-pub fn set_protocol<'a>(builder: WebViewBuilder<'a>, uri: &Uri) -> WebViewBuilder<'a> {
+pub fn feed_uri<'a>(
+    builder: WebViewBuilder<'a>,
+    uri: &Uri,
+    local_root: &WryLocalRoot,
+) -> WebViewBuilder<'a> {
     match uri {
-        Uri::LocalRoot(content_root_dir) => {
-            let content_root_dir = content_root_dir.clone();
-            builder
-                .with_url("flurx://localhost/".to_string())
-                .with_custom_protocol("flurx".to_string(), move |request| {
-                    match get_response(request, &content_root_dir) {
-                        Ok(r) => r.map(Into::into),
-                        Err(e) => http::Response::builder()
-                            .header(CONTENT_TYPE, "text/plain")
-                            .status(500)
-                            .body(e.to_string().as_bytes().to_vec())
-                            .unwrap()
-                            .map(Into::into),
-                    }
-                })
+        Uri::Local(uri) => {
+            let builder = builder.with_url(uri);
+            feed_custom_protocol(builder, local_root.clone())
         }
         Uri::Remote(uri) => {
             builder.with_url(uri)
@@ -30,12 +23,30 @@ pub fn set_protocol<'a>(builder: WebViewBuilder<'a>, uri: &Uri) -> WebViewBuilde
     }
 }
 
+fn feed_custom_protocol(
+    builder: WebViewBuilder,
+    local_root: WryLocalRoot,
+) -> WebViewBuilder {
+    let local_root = local_root.0;
+    builder.with_custom_protocol("flurx".to_string(), move |request| {
+        match get_response(request, &local_root) {
+            Ok(r) => r.map(Into::into),
+            Err(e) => http::Response::builder()
+                .header(CONTENT_TYPE, "text/plain")
+                .status(500)
+                .body(e.to_string().as_bytes().to_vec())
+                .unwrap()
+                .map(Into::into),
+        }
+    })
+}
+
 fn get_response(
     request: wry::http::Request<Vec<u8>>,
-    content_root_dir: &str,
+    local_root: &PathBuf,
 ) -> Result<http::Response<Vec<u8>>, Box<dyn std::error::Error>> {
     let path = request.uri().path();
-    let root = PathBuf::from("assets/ui").join(content_root_dir);
+    let root = PathBuf::from("assets").join(local_root);
     let path = if path == "/" {
         "index.html"
     } else {

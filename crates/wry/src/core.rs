@@ -8,8 +8,8 @@ pub mod bundle;
 #[allow(missing_docs)]
 pub mod prelude {
     pub use crate::core::{
-        plugin::FlurxWryCorePlugin,
-        bundle::*
+        bundle::*,
+        plugin::prelude::*,
     };
 }
 
@@ -19,4 +19,4 @@ pub struct WebviewInitialized(());
 
 
 #[derive(Deref, DerefMut, Default)]
-pub(crate) struct WebviewMap(pub HashMap<Entity, wry::WebView>);
+pub struct WryWebViews(pub(crate) HashMap<Entity, wry::WebView>);

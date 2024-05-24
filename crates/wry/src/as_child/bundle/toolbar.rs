@@ -1,27 +1,34 @@
-use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
+use bevy::prelude::{Color, Component, Reflect, ReflectComponent, ReflectDefault};
 
-#[derive(Component, Default, Reflect, PartialEq, Copy, Clone)]
+#[derive(Debug, Component, Reflect, PartialEq, Copy, Clone)]
 #[reflect(Component, Default)]
-pub enum Toolbar {
-    #[default]
-    None,
+pub struct Toolbar {
+    pub height: f32,
 
-    Px(f32),
+    pub color: Color,
 }
 
 impl Toolbar {
-    pub(crate) fn script(&self) -> Option<String> {
-        let toolbar_height = self.as_height()?;
-        Some(include_str!("../../../scripts/toolbar.js").replace(
-            "<TOOLBAR_HEIGHT>",
-            &toolbar_height,
-        ))
+    pub(crate) fn script(&self) -> String {
+        let [r, g, b, a] = self.color.as_rgba_u8();
+        include_str!("../../../scripts/toolbar.js")
+            .replace(
+                "<TOOLBAR_HEIGHT>",
+                &format!("{}px", self.height),
+            )
+            .replace(
+                "<TOOLBAR_COLOR>",
+                &format!("#{r:X}{g:X}{b:X}{a:X}"),
+            )
     }
+}
 
-    fn as_height(&self) -> Option<String> {
-        match self {
-            Self::None => None,
-            Self::Px(px) => Some(format!("{px}px")),
+
+impl Default for Toolbar {
+    fn default() -> Self {
+        Self {
+            height: 20.,
+            color: Color::NONE,
         }
     }
 }

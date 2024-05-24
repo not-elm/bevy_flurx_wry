@@ -1,7 +1,6 @@
 use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
 use serde::{Deserialize, Serialize};
 
-
 /// Represents the display destination of webview.
 #[derive(Component, Clone, Debug, Eq, PartialEq, Hash, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default)]
@@ -12,7 +11,8 @@ pub enum Uri {
     /// and `index.html`  must be placed directly under the root dir.
     ///
     /// For example, if target path is `assets/ui/example/index.html`, specify `example`.
-    LocalRoot(String),
+    // TODO: description
+    Local(String),
 
     /// The remote web uri
     Remote(String),
@@ -20,6 +20,6 @@ pub enum Uri {
 
 impl Default for Uri {
     fn default() -> Self {
-        Uri::LocalRoot(".".to_string())
+        Uri::Local("flurx://localhost/".to_string())
     }
 }

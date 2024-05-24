@@ -5,8 +5,8 @@ use bevy::math::Vec2;
 use bevy::prelude::{Added, Commands, Entity, Event, EventWriter, In, MouseButton, Plugin, Query, Update, Window, With};
 use bevy_flurx::action::{Action, once};
 use serde::Deserialize;
-use bevy_flurx_ipc::command;
 
+use bevy_flurx_ipc::command;
 use bevy_flurx_ipc::component::{IpcHandlers, WebviewEntity};
 
 use crate::as_child::CurrentMoving;
@@ -31,7 +31,7 @@ fn register_api_handlers(
     }
 }
 
-#[command(id="FLURX|mouse::webview_move_start")]
+#[command(id = "FLURX|mouse::webview_move_start")]
 fn webview_move_start(
     In(p): In<Pointer>,
     entity: WebviewEntity,
@@ -39,14 +39,14 @@ fn webview_move_start(
     once::run(move_start_system).with((entity, p))
 }
 
-#[command(id="FLURX|mouse::down")]
+#[command(id = "FLURX|mouse::down")]
 fn down(
     WebviewEntity(entity): WebviewEntity
 ) -> Action<(Entity, MouseButton, ButtonState)> {
     once::run(mouse_system).with((entity, MouseButton::Left, ButtonState::Pressed))
 }
 
-#[command(id="FLURX|mouse::up")]
+#[command(id = "FLURX|mouse::up")]
 fn up(
     WebviewEntity(entity): WebviewEntity
 ) -> Action<(Entity, MouseButton, ButtonState)> {

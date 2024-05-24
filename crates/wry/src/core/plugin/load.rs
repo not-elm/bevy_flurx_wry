@@ -8,12 +8,13 @@ use wry::{WebView, WebViewBuilder, WebViewBuilderExtWindows};
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
 use crate::as_child::bundle::{Bounds, ParentWindow};
-use crate::core::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, HttpsScheme, Incognito, InitializeFocused, Theme, Uri, UseDevtools, UserAgent, Visible};
-use crate::core::plugin::load::protocol::set_protocol;
-use crate::core::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
-use crate::core::plugin::WebviewMap;
+use crate::core::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, HttpsScheme, Incognito, InitializeFocused, Theme, Uri, UseDevtools, UserAgent, WebviewVisible};
+use crate::core::plugin::handlers::{HandlerQueries, WryEventParams};
+use crate::core::plugin::load::protocol::feed_uri;
+use crate::core::plugin::WryWebViews;
 use crate::core::WebviewInitialized;
 use crate::prelude::Toolbar;
+use crate::WryLocalRoot;
 
 mod protocol;
 
@@ -30,7 +31,7 @@ type Configs1<'a> = (
     &'a UseDevtools,
     &'a AutoPlay,
     &'a EnableClipboard,
-    &'a Visible,
+    &'a WebviewVisible,
     &'a Background,
     &'a Theme,
     &'a Incognito,
@@ -48,47 +49,41 @@ type Configs2<'a> = (
 
 fn setup_new_windows(
     mut commands: Commands,
-    views: Query<(
+    mut views: Query<(
         Entity,
+        HandlerQueries,
         Configs1,
         Configs2,
         Option<&ParentWindow>,
         Option<&Bounds>
     ), (Without<WebviewInitialized>, Or<(With<Window>, With<ParentWindow>)>)>,
     ipc_commands: Res<IpcCommands>,
-    load_queue: Res<PageLoadEventQueue>,
+    event_params: WryEventParams,
+    local_root: Res<WryLocalRoot>,
     windows: NonSend<WinitWindows>,
 ) {
     for (
-        entity,
+        webview_entity,
+        handlers,
         configs1,
         configs2,
         parent_window,
         bounds
-    ) in views.iter() {
-        let builder = {
-            let Some(builder) = new_builder(entity, &parent_window, &bounds, &windows) else {
-                continue;
-            };
-            let ipc_commands = ipc_commands.clone();
-            let load_queue = load_queue.0.clone();
-            builder
-                .with_on_page_load_handler(move |event, uri| {
-                    load_queue.lock().unwrap().push(OnPageArgs {
-                        event,
-                        uri,
-                        entity,
-                    });
-                })
-                .with_ipc_handler(move |request| {
-                    ipc_commands.push(IpcCommand {
-                        entity,
-                        payload: serde_json::from_str(request.body()).unwrap(),
-                    });
-                })
+    ) in views.iter_mut() {
+        let Some(builder) = new_builder(webview_entity, &parent_window, &bounds, &windows) else {
+            continue;
         };
+        let ipc_commands = ipc_commands.clone();
+        let builder = builder.with_ipc_handler(move |request| {
+            ipc_commands.push(IpcCommand {
+                entity: webview_entity,
+                payload: serde_json::from_str(request.body()).unwrap(),
+            });
+        });
+
+        let builder = event_params.feed_handlers(webview_entity, handlers, builder);
         let builder = feed_configs1(builder, configs1);
-        let builder = feed_configs2(builder, configs2);
+        let builder = feed_configs2(builder, configs2, &local_root);
 
         let webview = builder.build().unwrap();
         if let Some(bounds) = bounds {
@@ -96,9 +91,9 @@ fn setup_new_windows(
             webview.set_bounds(bounds.as_wry_rect()).unwrap();
         }
 
-        commands.entity(entity).insert(WebviewInitialized(()));
+        commands.entity(webview_entity).insert(WebviewInitialized(()));
         commands.spawn(Reactor::schedule(move |task| async move {
-            task.will(Update, once::run(insert_webview).with((entity, webview))).await;
+            task.will(Update, once::run(insert_webview).with((webview_entity, webview))).await;
         }));
     }
 }
@@ -163,27 +158,27 @@ fn feed_configs2<'a>(
         uri,
         toolbar
     ): Configs2,
+    local_root: &WryLocalRoot
 ) -> WebViewBuilder<'a> {
     let mut builder = builder
         .with_focused(focused.0)
         .with_hotkeys_zoom(hotkeys_zoom.0)
         .with_initialization_script(&format!(
-            "{}{}{}",
+            "{}{}",
             include_str!("../../../scripts/api.js"),
-            include_str!("../../../scripts/mouse.js"),
-            toolbar.and_then(|toolbar| toolbar.script()).unwrap_or_default()
+            toolbar.map(|t| t.script()).unwrap_or_default()
         ));
 
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);
     }
 
-    set_protocol(builder, uri)
+    feed_uri(builder, uri, local_root)
 }
 
 fn insert_webview(
     In((entity, webview)): In<(Entity, WebView)>,
-    mut view_map: NonSendMut<WebviewMap>,
+    mut view_map: NonSendMut<WryWebViews>,
 ) {
     view_map.0.insert(entity, webview);
 }

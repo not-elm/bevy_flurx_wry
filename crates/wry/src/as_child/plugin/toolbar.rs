@@ -7,12 +7,15 @@ use mouse_rs::Mouse;
 
 use crate::as_child::bundle::{Bounds, ParentWindow};
 use crate::as_child::CurrentMoving;
+use crate::prelude::Toolbar;
 
 pub struct ToolbarPlugin;
 
 impl Plugin for ToolbarPlugin {
     fn build(&self, app: &mut App) {
         app
+
+            .register_type::<Toolbar>()
             .add_systems(Update, (
                 move_webview,
                 all_remove_current_moving.run_if(input_just_released(MouseButton::Left))

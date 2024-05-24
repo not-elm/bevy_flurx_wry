@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <a href="./sample.txt" download="sample.txt">download sample.txt</a>
+    <button id="new-window">
+        new window
+    </button>
+    <button id="navigation">
+        navigation
+    </button>
+
+    <img src="bevy.png" draggable="true" alt="dada" width="100"/>
+
+    <script>
+        document.getElementById("navigation").onclick = () => {
+            window.location = "./second.html";
+        };
+        document.getElementById("new-window").onclick = () => {
+            window.open("./second.html")
+        }
+    </script>
+</div>
+</body>
+</html>

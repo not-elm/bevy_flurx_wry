@@ -2,7 +2,7 @@ use bevy::app::{App, PostUpdate};
 use bevy::prelude::{Commands, Component, DetectChanges, Entity, NonSend, Plugin, Query, Reflect, ReflectComponent};
 
 use crate::core::bundle::{IsOpenDevtools, UseDevtools};
-use crate::core::plugin::WebviewMap;
+use crate::core::plugin::WryWebViews;
 
 pub struct DevtoolsPlugin;
 
@@ -22,17 +22,17 @@ struct DevtoolsReady;
 fn change_open_devtools(
     mut commands: Commands,
     mut views: Query<(Entity, &mut IsOpenDevtools, &UseDevtools, Option<&DevtoolsReady>)>,
-    view_map: NonSend<WebviewMap>,
+    web_views: NonSend<WryWebViews>,
 ) {
-    for (entity, mut is_open, use_devtools, initialized) in views.iter_mut() {
+    for (entity, mut is_open, use_devtools, ready) in views.iter_mut() {
         if !use_devtools.0 {
             is_open.0 = false;
             continue;
         }
-        let Some(webview) = view_map.0.get(&entity) else {
+        let Some(webview) = web_views.0.get(&entity) else {
             continue;
         };
-        if initialized.is_none() || is_open.is_changed() {
+        if ready.is_none() || is_open.is_changed() {
             if is_open.0 {
                 webview.open_devtools();
             } else {

@@ -5,7 +5,7 @@ use bevy::prelude::{Changed, Commands, CursorIcon, Entity, IntoSystemConfigs, Mo
 use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
 use crate::as_child::bundle::resize::ResizeMode;
 use crate::as_child::CurrentMoving;
-use crate::core::WebviewMap;
+use crate::core::WryWebViews;
 
 pub struct ResizePlugin;
 
@@ -64,7 +64,7 @@ fn transform_bounds(
 }
 
 fn render_bounds(
-    webview_map: NonSend<WebviewMap>,
+    webview_map: NonSend<WryWebViews>,
     views: Query<(Entity, &Bounds), Changed<Bounds>>,
 ) {
     for (entity, bounds) in views.iter() {

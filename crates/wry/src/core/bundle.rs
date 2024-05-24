@@ -2,26 +2,28 @@ use bevy::prelude::Bundle;
 
 pub use auto_play::AutoPlay;
 pub use background::Background;
-use bevy_flurx_ipc::prelude::IpcHandlers;
 pub use enable_clipboard::EnableClipboard;
 pub use event_emitter::EventEmitter;
 pub use focused::InitializeFocused;
 pub use hotkeys_zoom::HotkeysZoom;
 pub use incognito::Incognito;
 pub use is_open_devtools::IsOpenDevtools;
-pub use on_page_load::{Location, OnPageLoad};
 pub use theme::Theme;
 pub use uri::Uri;
 pub use use_devtools::UseDevtools;
 pub use user_agent::UserAgent;
-pub use visible::Visible;
+pub use visible::WebviewVisible;
 pub use browser_accelerator_keys::BrowserAcceleratorKeys;
 pub use https_scheme::HttpsScheme;
+pub use on_download::*;
+pub use on_dragdrop::*;
+pub use on_navigation::*;
+pub use on_new_window_request::*;
 
+use bevy_flurx_ipc::prelude::IpcHandlers;
 mod auto_play;
 mod background;
 mod enable_clipboard;
-mod on_page_load;
 mod theme;
 mod use_devtools;
 mod visible;
@@ -34,6 +36,11 @@ mod hotkeys_zoom;
 mod incognito;
 mod browser_accelerator_keys;
 mod https_scheme;
+mod on_download;
+mod on_dragdrop;
+mod on_navigation;
+mod on_new_window_request;
+
 
 
 #[derive(Bundle, Default)]
@@ -57,7 +64,7 @@ pub struct WryWebViewBundle {
     pub is_open_devtools: IsOpenDevtools,
 
     /// [`wry::WebViewBuilder::with_visible`]
-    pub visible: Visible,
+    pub visible: WebviewVisible,
 
     /// [`wry::WebViewBuilder::with_background_color`]
     ///
@@ -82,12 +89,17 @@ pub struct WryWebViewBundle {
     /// [`wry::WebViewBuilder::with_https_scheme`]
     pub https_scheme: HttpsScheme,
 
-    /// [`wry::WebViewBuilder::with_on_page_load_handler`]
-    pub on_page_load: OnPageLoad,
-
     /// The ipc invoke handlers.
     pub ipc_handlers: IpcHandlers,
 
+    pub on_download: OnDownload,
+
+    pub on_dragdrop: OnDragDrop,
+
+    pub on_navigation: OnNavigation,
+    
+    pub on_new_window_request: OnNewWindowRequest,
+    
     pub event_emitter: EventEmitter,
 }
 
