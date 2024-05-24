@@ -3,8 +3,8 @@ use bevy::sprite::SpriteBundle;
 
 use bevy_flurx_ipc::component::IpcHandlers;
 
-pub use crate::bundle::uri::Load;
-pub use crate::bundle::view_size::ViewSize;
+pub use crate::core::bundle::uri::Load;
+pub use crate::core::bundle::view_size::ViewSize;
 
 mod uri;
 mod view_size;

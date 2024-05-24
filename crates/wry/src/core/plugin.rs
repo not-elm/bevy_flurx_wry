@@ -1,42 +1,34 @@
 use bevy::app::{App, Plugin};
-use bevy::prelude::{Deref, DerefMut, Entity};
-use bevy::utils::HashMap;
 use bevy_flurx::FlurxPlugin;
-use crate::api::ApiAllows;
-use crate::as_child::AsChildPlugin;
 
-use crate::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, HttpsScheme, InitializeFocused, IsOpenDevtools, Theme, Uri, UseDevtools, Visible};
-use crate::plugin::api::ApiPlugin;
-use crate::plugin::load::LoadWebviewPlugin;
-use crate::plugin::devtools::DevtoolsPlugin;
-use crate::plugin::event::EventEmitterPlugin;
-use crate::plugin::ipc::WryIpcPlugin;
-use crate::plugin::on_page_load::OnPageLoadPlugin;
-use crate::plugin::visible::VisiblePlugin;
-use crate::prelude::Incognito;
+use crate::core::{WebviewInitialized, WebviewMap};
+use crate::core::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, HttpsScheme, Incognito, InitializeFocused, IsOpenDevtools, Theme, Uri, UseDevtools, Visible};
+use crate::core::plugin::devtools::DevtoolsPlugin;
+use crate::core::plugin::event::EventEmitterPlugin;
+use crate::core::plugin::ipc::WryIpcPlugin;
+use crate::core::plugin::load::LoadWebviewPlugin;
+use crate::core::plugin::on_page_load::OnPageLoadPlugin;
+use crate::core::plugin::visible::VisiblePlugin;
+
 
 mod on_page_load;
 mod ipc;
 mod devtools;
 mod load;
 mod event;
-mod api;
 mod visible;
 
 
-#[derive(Deref, DerefMut, Default)]
-pub(crate) struct WebviewMap(pub HashMap<Entity, wry::WebView>);
+pub struct FlurxWryCorePlugin;
 
-
-pub struct FlurxWryPlugin;
-
-impl Plugin for FlurxWryPlugin {
+impl Plugin for FlurxWryCorePlugin {
     fn build(&self, app: &mut App) {
         if !app.is_plugin_added::<FlurxPlugin>() {
             app.add_plugins(FlurxPlugin);
         }
 
         app
+            .register_type::<WebviewInitialized>()
             .register_type::<AutoPlay>()
             .register_type::<Background>()
             .register_type::<EnableClipboard>()
@@ -50,17 +42,14 @@ impl Plugin for FlurxWryPlugin {
             .register_type::<HotkeysZoom>()
             .register_type::<Incognito>()
             .register_type::<HttpsScheme>()
-            .init_resource::<ApiAllows>()
             .add_plugins((
                 LoadWebviewPlugin,
                 DevtoolsPlugin,
+                VisiblePlugin,
                 EventEmitterPlugin,
                 OnPageLoadPlugin,
                 WryIpcPlugin,
-                ApiPlugin,
-                AsChildPlugin
             ))
-            .add_plugins(VisiblePlugin)
             .init_non_send_resource::<WebviewMap>();
     }
 }

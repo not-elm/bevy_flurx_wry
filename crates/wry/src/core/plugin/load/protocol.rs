@@ -4,7 +4,7 @@ use wry::{http, WebViewBuilder};
 use wry::http::header::CONTENT_TYPE;
 use wry::http::Response;
 
-use crate::bundle::Uri;
+use crate::core::bundle::Uri;
 
 pub fn set_protocol<'a>(builder: WebViewBuilder<'a>, uri: &Uri) -> WebViewBuilder<'a> {
     match uri {

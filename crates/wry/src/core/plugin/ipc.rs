@@ -5,7 +5,7 @@ use bevy::prelude::{EventReader, NonSendMut};
 
 use bevy_flurx_ipc::plugin::{FlurxIpcPlugin, IpcResolveEvent};
 
-use crate::plugin::WebviewMap;
+use crate::core::plugin::WebviewMap;
 
 pub struct WryIpcPlugin;
 

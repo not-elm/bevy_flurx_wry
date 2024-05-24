@@ -5,7 +5,7 @@ use bevy::prelude::{Commands, Entity, Plugin, Query, Res, Resource};
 use bevy_flurx::prelude::Reactor;
 use wry::PageLoadEvent;
 
-use crate::bundle::OnPageLoad;
+use crate::core::bundle::OnPageLoad;
 
 pub(crate) struct OnPageArgs {
     pub event: PageLoadEvent,

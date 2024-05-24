@@ -37,7 +37,6 @@ pub struct Pointer {
     y: f32,
 }
 
-
 fn move_start_system(
     In((WebviewEntity(entity), pointer)): In<(WebviewEntity, Pointer)>,
     mut commands: Commands,

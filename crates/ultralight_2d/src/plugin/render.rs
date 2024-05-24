@@ -4,7 +4,7 @@ use bevy::prelude::{default, Entity, Image, NonSend, Plugin, Query, ResMut, Upda
 use bevy::render::render_resource::Extent3d;
 use ul_next::Renderer;
 
-use crate::plugin::UlViewMap;
+use crate::core::plugin::UlViewMap;
 
 pub struct RenderPlugin;
 

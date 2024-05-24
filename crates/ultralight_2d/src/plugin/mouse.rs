@@ -4,7 +4,7 @@ use bevy::input::mouse::{MouseMotion, MouseScrollUnit, MouseWheel};
 use bevy::prelude::{EventReader, IntoSystemConfigs, MouseButton, on_event, Plugin, Res};
 use ul_next::event::{MouseEvent, MouseEventType, ScrollEventType};
 
-use crate::plugin::UlViewSystemParam;
+use crate::core::plugin::UlViewSystemParam;
 
 pub struct UlMousePlugin;
 

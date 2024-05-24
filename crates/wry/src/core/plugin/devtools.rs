@@ -1,24 +1,27 @@
 use bevy::app::{App, PostUpdate};
-use bevy::prelude::{Commands, Component, DetectChanges, Entity, NonSend, Plugin, Query};
+use bevy::prelude::{Commands, Component, DetectChanges, Entity, NonSend, Plugin, Query, Reflect, ReflectComponent};
 
-use crate::bundle::{IsOpenDevtools, UseDevtools};
-use crate::plugin::WebviewMap;
+use crate::core::bundle::{IsOpenDevtools, UseDevtools};
+use crate::core::plugin::WebviewMap;
 
 pub struct DevtoolsPlugin;
 
 impl Plugin for DevtoolsPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PostUpdate, change_open_devtools);
+        app
+            .register_type::<DevtoolsReady>()
+            .add_systems(PostUpdate, change_open_devtools);
     }
 }
 
 
-#[derive(Component)]
-struct DevtoolsInitialized;
+#[derive(Component, Reflect)]
+#[reflect(Component)]
+struct DevtoolsReady;
 
 fn change_open_devtools(
     mut commands: Commands,
-    mut views: Query<(Entity, &mut IsOpenDevtools, &UseDevtools, Option<&DevtoolsInitialized>)>,
+    mut views: Query<(Entity, &mut IsOpenDevtools, &UseDevtools, Option<&DevtoolsReady>)>,
     view_map: NonSend<WebviewMap>,
 ) {
     for (entity, mut is_open, use_devtools, initialized) in views.iter_mut() {
@@ -35,7 +38,7 @@ fn change_open_devtools(
             } else {
                 webview.close_devtools();
             }
-            commands.entity(entity).insert(DevtoolsInitialized);
+            commands.entity(entity).insert(DevtoolsReady);
         } else {
             is_open.0 = webview.is_devtools_open();
         }

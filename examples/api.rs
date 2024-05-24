@@ -5,7 +5,6 @@ use bevy::pbr::{PbrBundle, PointLightBundle, StandardMaterial};
 use bevy::prelude::{Assets, Camera3dBundle, ClearColor, Color, Commands, Component, Cuboid, default, Entity, Mesh, PointLight, Query, ResMut, Transform, With};
 use bevy::window::PrimaryWindow;
 
-use bevy_flurx_wry::as_child::{AsChild, bounds::Bounds, ParentWindow, Resizable};
 use bevy_flurx_wry::prelude::*;
 
 fn main() {
@@ -65,7 +64,7 @@ fn spawn_shape(
         transform: Transform::from_xyz(8.0, 16.0, 8.0),
         ..default()
     });
-    
+
     commands.spawn(PbrBundle {
         mesh: meshes.add(Cuboid::new(3., 3., 3.)),
         material: materials.add(Color::MIDNIGHT_BLUE),

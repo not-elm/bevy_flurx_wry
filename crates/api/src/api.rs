@@ -4,8 +4,8 @@ use bevy::prelude::{Added, Plugin, Query, Res, Update};
 use bevy_flurx_ipc::prelude::{IpcHandler, IpcHandlers};
 
 use crate::api::{ApiAllows, AppApiAllows};
-use crate::plugin::api::mouse::Pointer;
-use crate::plugin::load::WebviewInitialized;
+use crate::core::plugin::api::mouse::Pointer;
+use crate::core::plugin::load::WebviewInitialized;
 
 mod app_window;
 mod app;

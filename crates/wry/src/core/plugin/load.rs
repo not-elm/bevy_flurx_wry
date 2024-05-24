@@ -1,19 +1,18 @@
 use bevy::app::{App, Plugin, PreUpdate, Update};
-use bevy::prelude::{Commands, Component, Entity, In, NonSend, NonSendMut, Or, Query, Reflect, ReflectComponent, ReflectDefault, Res, Window, With, Without};
+use bevy::prelude::{Commands, Entity, In, NonSend, NonSendMut, Or, Query, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Reactor;
-use serde::{Deserialize, Serialize};
 use wry::{WebView, WebViewBuilder, WebViewBuilderExtWindows};
 
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
-use crate::as_child::{bounds::Bounds, ParentWindow};
-use crate::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, HttpsScheme, Incognito, Theme, Uri, UseDevtools, UserAgent, Visible};
-use crate::plugin::load::protocol::set_protocol;
-use crate::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
-use crate::plugin::WebviewMap;
-use crate::prelude::InitializeFocused;
+use crate::as_child::bundle::{Bounds, ParentWindow};
+use crate::core::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, HttpsScheme, Incognito, InitializeFocused, Theme, Uri, UseDevtools, UserAgent, Visible};
+use crate::core::plugin::load::protocol::set_protocol;
+use crate::core::plugin::on_page_load::{OnPageArgs, PageLoadEventQueue};
+use crate::core::plugin::WebviewMap;
+use crate::core::WebviewInitialized;
 
 mod protocol;
 
@@ -21,15 +20,9 @@ pub struct LoadWebviewPlugin;
 
 impl Plugin for LoadWebviewPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<WebviewInitialized>()
-            .add_systems(PreUpdate, setup_new_windows);
+        app.add_systems(PreUpdate, setup_new_windows);
     }
 }
-
-#[derive(Component, Default, Reflect, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-#[reflect(Component, Default)]
-pub(crate) struct WebviewInitialized;
 
 
 type Configs1<'a> = (
@@ -80,8 +73,8 @@ fn setup_new_windows(
             builder
                 .with_initialization_script(&format!(
                     "{}{}",
-                    include_str!("../../scripts/api.js"),
-                    include_str!("../../scripts/childWindow.js")
+                    include_str!("../../../scripts/api.js"),
+                    include_str!("../../../scripts/childWindow.js")
                 ))
                 .with_on_page_load_handler(move |event, uri| {
                     load_queue.lock().unwrap().push(OnPageArgs {
@@ -106,7 +99,7 @@ fn setup_new_windows(
             webview.set_bounds(bounds.as_wry_rect()).unwrap();
         }
 
-        commands.entity(entity).insert(WebviewInitialized);
+        commands.entity(entity).insert(WebviewInitialized(()));
         commands.spawn(Reactor::schedule(move |task| async move {
             task.will(Update, once::run(insert_webview).with((entity, webview))).await;
         }));

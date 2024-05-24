@@ -4,6 +4,7 @@ members = [
 ]
 exclude = [
     "tooling",
+    "crates/api",
     "crates/ultralight_2d"
 ]
 

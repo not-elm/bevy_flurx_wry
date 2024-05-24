@@ -1,7 +1,6 @@
 use bevy::math::{Rect, Vec2};
 use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
-
-use crate::as_child::resize_mode::ResizeMode;
+use crate::as_child::bundle::resize::ResizeMode;
 
 #[derive(Component, PartialEq, Reflect, Default)]
 #[reflect(Component, Default)]
@@ -100,8 +99,8 @@ impl Bounds {
 mod tests {
     use bevy::math::Vec2;
 
-    use crate::as_child::bounds::Bounds;
-    use crate::as_child::resize_mode::ResizeMode;
+    use crate::as_child::bundle::Bounds;
+    use crate::as_child::bundle::resize_mode::ResizeMode;
 
     #[test]
     fn expand_from_left() {

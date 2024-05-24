@@ -1,8 +1,8 @@
 use bevy::app::{App, Plugin};
 use bevy::prelude::{Changed, Entity, NonSend, Query, Update};
 
-use crate::bundle::Visible;
-use crate::plugin::WebviewMap;
+use crate::core::bundle::Visible;
+use crate::core::plugin::WebviewMap;
 
 pub struct VisiblePlugin;
 

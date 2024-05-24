@@ -1,8 +1,8 @@
 use bevy::app::{App, PostUpdate};
 use bevy::prelude::{Entity, NonSend, Plugin, Query};
 
-use crate::bundle::EventEmitter;
-use crate::plugin::WebviewMap;
+use crate::core::bundle::EventEmitter;
+use crate::core::plugin::WebviewMap;
 
 pub(crate) struct EventEmitterPlugin;
 

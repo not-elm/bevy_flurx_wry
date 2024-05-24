@@ -31,8 +31,8 @@ impl ResizeMode {
 mod tests {
     use bevy::math::Vec2;
 
-    use crate::as_child::bounds::Bounds;
-    use crate::as_child::resize_mode::ResizeMode;
+    use crate::as_child::bundle::Bounds;
+    use crate::as_child::plugin::resize::ResizeMode;
 
     #[test]
     fn resize_top() {
@@ -40,7 +40,7 @@ mod tests {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(6., 3.)), Some(ResizeMode::Top));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(6., 3.)), Some(crate::as_child::plugin::resize::ResizeMode::Top));
     }
 
     #[test]
@@ -49,7 +49,7 @@ mod tests {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 4.5)), Some(ResizeMode::TopLeft));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 4.5)), Some(crate::as_child::plugin::resize::ResizeMode::TopLeft));
     }
 
     #[test]
@@ -58,7 +58,7 @@ mod tests {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 6.)), Some(ResizeMode::Left));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 6.)), Some(crate::as_child::plugin::resize::ResizeMode::Left));
     }
 
     #[test]
@@ -67,7 +67,7 @@ mod tests {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 11.)), Some(ResizeMode::BottomLeft));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 11.)), Some(crate::as_child::plugin::resize::ResizeMode::BottomLeft));
     }
 
     #[test]
@@ -76,7 +76,7 @@ mod tests {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(7.5, 11.)), Some(ResizeMode::Bottom));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(7.5, 11.)), Some(crate::as_child::plugin::resize::ResizeMode::Bottom));
     }
 
     #[test]
@@ -85,7 +85,7 @@ mod tests {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(13.5, 8.)), Some(ResizeMode::Right));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(13.5, 8.)), Some(crate::as_child::plugin::resize::ResizeMode::Right));
     }
 
     #[test]
@@ -94,6 +94,6 @@ mod tests {
             position: Vec2::new(5., 5.),
             size: Vec2::new(5., 5.),
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(11., 3.)), Some(ResizeMode::TopRight));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(11., 3.)), Some(crate::as_child::plugin::resize::ResizeMode::TopRight));
     }
 }

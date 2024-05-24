@@ -11,11 +11,11 @@ use ul_next::{Config, platform, Renderer, View};
 
 use bevy_flurx_ipc::plugin::FlurxIpcPlugin;
 
-use crate::plugin::ipc::IpcPlugin;
-use crate::plugin::keyboard::UlKeyboardPlugin;
-use crate::plugin::mouse::UlMousePlugin;
-use crate::plugin::render::RenderPlugin;
-use crate::plugin::setup_view::SetupViewPlugin;
+use crate::core::plugin::ipc::IpcPlugin;
+use crate::core::plugin::keyboard::UlKeyboardPlugin;
+use crate::core::plugin::mouse::UlMousePlugin;
+use crate::core::plugin::render::RenderPlugin;
+use crate::core::plugin::setup_view::SetupViewPlugin;
 
 mod mouse;
 mod render;

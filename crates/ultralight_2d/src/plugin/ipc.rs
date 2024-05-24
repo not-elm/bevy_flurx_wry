@@ -5,7 +5,7 @@ use tiny_http::{Response, StatusCode};
 use bevy_flurx_ipc::ipc_command_queue::{IpcCommand, IpcCommands};
 use bevy_flurx_ipc::plugin::IpcResolveEvent;
 
-use crate::plugin::UlViewMap;
+use crate::core::plugin::UlViewMap;
 
 pub struct IpcPlugin;
 

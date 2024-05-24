@@ -4,8 +4,8 @@ use bevy::prelude::{Added, Commands, Entity, Image, NonSend, NonSendMut, Query, 
 use ul_next::{Renderer, View};
 use ul_next::view::ViewConfig;
 
-use crate::bundle::{Load, ViewSize};
-use crate::plugin::{DownKey, UlViewMap};
+use crate::core::bundle::{Load, ViewSize};
+use crate::core::plugin::{DownKey, UlViewMap};
 
 pub struct SetupViewPlugin;
 

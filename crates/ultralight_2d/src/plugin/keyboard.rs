@@ -5,7 +5,7 @@ use bevy::prelude::{EventReader, Update};
 use ul_next::event::{KeyEvent, KeyEventCreationInfo, KeyEventModifiers, KeyEventType};
 use ul_next::key_code::VirtualKeyCode;
 
-use crate::plugin::UlViewSystemParam;
+use crate::core::plugin::UlViewSystemParam;
 
 pub struct UlKeyboardPlugin;
 
