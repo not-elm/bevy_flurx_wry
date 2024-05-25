@@ -2,9 +2,9 @@ use bevy::app::{App, Plugin};
 use bevy_flurx::FlurxPlugin;
 
 use crate::core::{WebviewInitialized, WryWebViews};
-use crate::core::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, HttpsScheme, Incognito, InitializeFocused, IsOpenDevtools, Theme, Uri, UseDevtools, WebviewVisible};
+use crate::core::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, UseHttpsScheme, Incognito, InitializeFocused, IsOpenDevtools, Theme, Uri, UseDevtools, WebviewVisible};
 use crate::core::plugin::devtools::DevtoolsPlugin;
-use crate::core::plugin::event::EventEmitterPlugin;
+use crate::core::plugin::event_emitter::EventEmitterPlugin;
 use crate::core::plugin::handlers::WryHandlersPlugin;
 use crate::core::plugin::ipc_resolve::IpcResolvePlugin;
 use crate::core::plugin::load::LoadWebviewPlugin;
@@ -13,7 +13,7 @@ use crate::core::plugin::visible::VisiblePlugin;
 mod ipc_resolve;
 mod devtools;
 mod load;
-mod event;
+mod event_emitter;
 mod visible;
 pub mod handlers;
 
@@ -45,7 +45,7 @@ impl Plugin for FlurxWryCorePlugin {
             .register_type::<InitializeFocused>()
             .register_type::<HotkeysZoom>()
             .register_type::<Incognito>()
-            .register_type::<HttpsScheme>()
+            .register_type::<UseHttpsScheme>()
             .add_plugins((
                 LoadWebviewPlugin,
                 DevtoolsPlugin,

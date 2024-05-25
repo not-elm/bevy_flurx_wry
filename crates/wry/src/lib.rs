@@ -31,6 +31,14 @@ pub struct FlurxWryPlugin {
     pub content_root: PathBuf,
 }
 
+impl Default for FlurxWryPlugin {
+    fn default() -> Self {
+        Self {
+            content_root: PathBuf::from("ui")
+        }
+    }
+}
+
 #[repr(transparent)]
 #[derive(Resource, Debug, Reflect, Clone)]
 pub(crate) struct WryLocalRoot(pub PathBuf);
@@ -49,12 +57,13 @@ impl Plugin for FlurxWryPlugin {
 
 #[cfg(test)]
 pub(crate) mod tests {
-    use bevy::app::{App, PluginGroup};
-    use bevy::DefaultPlugins;
+    use std::path::PathBuf;
+
+    use bevy::app::App;
     use bevy::ecs::system::RunSystemOnce;
     use bevy::prelude::{Entity, NonSend, Query, With};
-    use bevy::utils::default;
-    use bevy::window::{Window, WindowPlugin};
+    use bevy::window::Window;
+    use bevy::winit::WinitWindows;
     use bevy_test_helper::BevyTestHelperPlugin;
 
     use crate::core::WryWebViews;
@@ -63,13 +72,12 @@ pub(crate) mod tests {
     pub fn test_app() -> App {
         let mut app = App::new();
         app.add_plugins((
-            DefaultPlugins.set(WindowPlugin {
-                primary_window: None,
-                ..default()
-            }),
-            FlurxWryPlugin,
+            FlurxWryPlugin {
+                content_root: PathBuf::from("ui").join("bug_check")
+            },
             BevyTestHelperPlugin
         ));
+        app.init_non_send_resource::<WinitWindows>();
         app
     }
 

@@ -8,7 +8,7 @@ use wry::{WebView, WebViewBuilder, WebViewBuilderExtWindows};
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
 use crate::as_child::bundle::{Bounds, ParentWindow};
-use crate::core::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, HttpsScheme, Incognito, InitializeFocused, Theme, Uri, UseDevtools, UserAgent, WebviewVisible};
+use crate::core::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, UseHttpsScheme, Incognito, InitializeFocused, Theme, Uri, UseDevtools, UserAgent, WebviewVisible};
 use crate::core::plugin::handlers::{HandlerQueries, WryEventParams};
 use crate::core::plugin::load::protocol::feed_uri;
 use crate::core::plugin::WryWebViews;
@@ -36,7 +36,7 @@ type Configs1<'a> = (
     &'a Theme,
     &'a Incognito,
     &'a BrowserAcceleratorKeys,
-    &'a HttpsScheme
+    &'a UseHttpsScheme
 );
 
 type Configs2<'a> = (

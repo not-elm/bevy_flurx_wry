@@ -36,7 +36,7 @@ export const resolveIpc = (id: string, output: any) => {
     pendingHandlers[id]?.(output)
 };
 
-export const emit = (eventId: string, f: (event: any) => void) => {
+export const listen = (eventId: string, f: (event: any) => void) => {
     eventHandlers[eventId] = f;
     return () => {
         delete eventHandlers[eventId];

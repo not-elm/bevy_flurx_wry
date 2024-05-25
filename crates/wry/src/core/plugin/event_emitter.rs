@@ -12,6 +12,7 @@ impl Plugin for EventEmitterPlugin {
     }
 }
 
+
 fn emit(
     mut emitters: Query<(Entity, &mut EventEmitter)>,
     webview_map: NonSend<WryWebViews>,
@@ -20,8 +21,9 @@ fn emit(
         let Some(webview) = webview_map.0.get(&entity) else {
             continue;
         };
+        
         for (event_id, event) in emitter.take_events() {
-            webview.evaluate_script(&format!("window.__FLURX__.emitEvent('{event_id}', {event});")).unwrap();
+            webview.evaluate_script(&format!("window.__FLURX__.core.emitEvent('{event_id}', {event});")).unwrap();
         }
     }
 }

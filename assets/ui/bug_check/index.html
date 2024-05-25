@@ -14,9 +14,12 @@
         navigation
     </button>
 
-    <img src="bevy.png" draggable="true" alt="dada" width="100"/>
 
     <script>
+        window.__FLURX__.core.listen("test_event", ({message}) => {
+            console.log(`event emitted ${message}`);
+        });
+
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";
         };

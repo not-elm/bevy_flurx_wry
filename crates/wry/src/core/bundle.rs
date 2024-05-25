@@ -14,7 +14,7 @@ pub use use_devtools::UseDevtools;
 pub use user_agent::UserAgent;
 pub use visible::WebviewVisible;
 pub use browser_accelerator_keys::BrowserAcceleratorKeys;
-pub use https_scheme::HttpsScheme;
+pub use https_scheme::UseHttpsScheme;
 pub use on_download::*;
 pub use on_dragdrop::*;
 pub use on_navigation::*;
@@ -87,7 +87,7 @@ pub struct WryWebViewBundle {
     pub hotkeys_zoom: HotkeysZoom,
 
     /// [`wry::WebViewBuilder::with_https_scheme`]
-    pub https_scheme: HttpsScheme,
+    pub use_https_scheme: UseHttpsScheme,
 
     /// The ipc invoke handlers.
     pub ipc_handlers: IpcHandlers,
