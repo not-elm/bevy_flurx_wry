@@ -8,27 +8,11 @@ pub struct Toolbar {
     pub color: Color,
 }
 
-impl Toolbar {
-    pub(crate) fn script(&self) -> String {
-        let [r, g, b, a] = self.color.as_rgba_u8();
-        include_str!("../../../scripts/toolbar.js")
-            .replace(
-                "<TOOLBAR_HEIGHT>",
-                &format!("{}px", self.height),
-            )
-            .replace(
-                "<TOOLBAR_COLOR>",
-                &format!("#{r:X}{g:X}{b:X}{a:X}"),
-            )
-    }
-}
-
-
 impl Default for Toolbar {
     fn default() -> Self {
         Self {
             height: 20.,
-            color: Color::NONE,
+            color: Color::rgb_u8(0x3E, 0x3E, 0x3E),
         }
     }
 }

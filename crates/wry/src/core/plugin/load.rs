@@ -1,19 +1,16 @@
-use bevy::app::{App, Plugin, PreUpdate, Update};
-use bevy::prelude::{Commands, Entity, In, NonSend, NonSendMut, Or, Query, Res, Window, With, Without};
+use bevy::app::{App, Plugin, PreUpdate};
+use bevy::prelude::{Commands, Entity, NonSend, NonSendMut, Or, Query, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
-use bevy_flurx::action::once;
-use bevy_flurx::prelude::Reactor;
-use wry::{WebView, WebViewBuilder, WebViewBuilderExtWindows};
+use wry::{WebViewBuilder, WebViewBuilderExtWindows};
 
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
 use crate::as_child::bundle::{Bounds, ParentWindow};
-use crate::core::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, UseHttpsScheme, Incognito, InitializeFocused, Theme, Uri, UseDevtools, UserAgent, WebviewVisible};
+use crate::core::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito, InitializeFocused, Theme, Uri, UseDevtools, UseHttpsScheme, UserAgent, WebviewVisible};
 use crate::core::plugin::handlers::{HandlerQueries, WryEventParams};
 use crate::core::plugin::load::protocol::feed_uri;
 use crate::core::plugin::WryWebViews;
 use crate::core::WebviewInitialized;
-use crate::prelude::Toolbar;
 use crate::WryLocalRoot;
 
 mod protocol;
@@ -44,11 +41,11 @@ type Configs2<'a> = (
     &'a HotkeysZoom,
     &'a UserAgent,
     &'a Uri,
-    Option<&'a Toolbar>
 );
 
 fn setup_new_windows(
     mut commands: Commands,
+    mut web_views: NonSendMut<WryWebViews>,
     mut views: Query<(
         Entity,
         HandlerQueries,
@@ -84,17 +81,10 @@ fn setup_new_windows(
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
         let builder = feed_configs1(builder, configs1);
         let builder = feed_configs2(builder, configs2, &local_root);
-
         let webview = builder.build().unwrap();
-        if let Some(bounds) = bounds {
-            // For some reason, `WebViewBuilder::with_bounds` alone doesn't render
-            webview.set_bounds(bounds.as_wry_rect()).unwrap();
-        }
 
         commands.entity(webview_entity).insert(WebviewInitialized(()));
-        commands.spawn(Reactor::schedule(move |task| async move {
-            task.will(Update, once::run(insert_webview).with((webview_entity, webview))).await;
-        }));
+        web_views.0.insert(webview_entity, webview);
     }
 }
 
@@ -156,29 +146,17 @@ fn feed_configs2<'a>(
         hotkeys_zoom,
         user_agent,
         uri,
-        toolbar
     ): Configs2,
-    local_root: &WryLocalRoot
+    local_root: &WryLocalRoot,
 ) -> WebViewBuilder<'a> {
     let mut builder = builder
         .with_focused(focused.0)
         .with_hotkeys_zoom(hotkeys_zoom.0)
-        .with_initialization_script(&format!(
-            "{}{}",
-            include_str!("../../../scripts/api.js"),
-            toolbar.map(|t| t.script()).unwrap_or_default()
-        ));
+        .with_initialization_script(include_str!("../../../scripts/api.js"));
 
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);
     }
 
     feed_uri(builder, uri, local_root)
-}
-
-fn insert_webview(
-    In((entity, webview)): In<(Entity, WebView)>,
-    mut view_map: NonSendMut<WryWebViews>,
-) {
-    view_map.0.insert(entity, webview);
 }

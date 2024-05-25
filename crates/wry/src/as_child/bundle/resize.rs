@@ -42,7 +42,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(6., 3.)), Some(ResizeMode::Top));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(6., 3.), None), Some(ResizeMode::Top));
     }
 
     #[test]
@@ -52,7 +52,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 4.5)), Some(ResizeMode::TopLeft));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 4.5), None), Some(ResizeMode::TopLeft));
     }
 
     #[test]
@@ -62,7 +62,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 6.)), Some(ResizeMode::Left));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 6.), None), Some(ResizeMode::Left));
     }
 
     #[test]
@@ -72,7 +72,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 11.)), Some(ResizeMode::BottomLeft));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 11.), None), Some(ResizeMode::BottomLeft));
     }
 
     #[test]
@@ -82,7 +82,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(7.5, 11.)), Some(ResizeMode::Bottom));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(7.5, 11.), None), Some(ResizeMode::Bottom));
     }
 
     #[test]
@@ -92,7 +92,7 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(13.5, 8.)), Some(ResizeMode::Right));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(13.5, 8.), None), Some(ResizeMode::Right));
     }
 
     #[test]
@@ -102,6 +102,17 @@ mod tests {
             size: Vec2::new(5., 5.),
             ..default()
         };
-        assert_eq!(bounds.maybe_resizable(Vec2::new(11., 3.)), Some(ResizeMode::TopRight));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(11., 3.), None), Some(ResizeMode::TopRight));
+    }
+
+    #[test]
+    fn resize_top_with_toolbar() {
+        let bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(5., 5.),
+            ..default()
+        };
+        assert_eq!(bounds.maybe_resizable(Vec2::new(6., 2.), Some(1.)), Some(ResizeMode::Top));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(6., 5.), Some(5.)), None);
     }
 }

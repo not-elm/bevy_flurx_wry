@@ -1,3 +1,4 @@
+use std::path::PathBuf;
 use bevy::app::{App, Startup};
 use bevy::DefaultPlugins;
 use bevy::math::{Vec2, Vec3};
@@ -11,7 +12,9 @@ fn main() {
     App::new()
         .add_plugins((
             DefaultPlugins,
-            FlurxWryPlugin,
+            FlurxWryPlugin{
+                content_root: PathBuf::from("ui").join("api")
+            },
             bevy_inspector_egui::quick::WorldInspectorPlugin::new()
         ))
         .insert_resource(ClearColor(Color::GRAY))
@@ -32,8 +35,8 @@ fn spawn_webview(
     commands.spawn((
         WebviewWindow,
         WryWebViewBundle {
-            // uri: Uri::LocalRoot("api".to_string()),
             uri: Uri::Remote("https://bevyengine.org/".to_string()),
+            hotkeys_zoom: HotkeysZoom(true),
             use_devtools: UseDevtools(true),
             is_open_devtools: IsOpenDevtools(true),
             ..default()
@@ -47,10 +50,7 @@ fn spawn_webview(
             },
             resizable: Resizable(true),
         },
-        Toolbar{
-            height: 30.,
-            color: Color::BEIGE
-        }
+        Toolbar::default()
     ));
 }
 

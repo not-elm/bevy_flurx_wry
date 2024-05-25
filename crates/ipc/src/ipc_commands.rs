@@ -61,7 +61,7 @@ impl Payload {
         where
             Args: DeserializeOwned
     {
-        let args = serde_json::from_str::<Args> (self.args.as_ref().unwrap()).expect(&format!("failed deserialize ipc args type: {}", std::any::type_name::<Args>()));
+        let args = serde_json::from_str::<Args> (self.args.as_ref().unwrap()).unwrap_or_else(|_| panic!("failed deserialize ipc args type: {}", std::any::type_name::<Args>()));
         bevy::prelude::In(args)
     }
 }

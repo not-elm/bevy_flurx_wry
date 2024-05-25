@@ -7,6 +7,7 @@ edition = "2021"
 bevy = { version = "0.13.2", default-features = false, features = [
     "bevy_winit",
     "bevy_render",
+    "bevy_ui"
 ] }
 wry = { version = "0.39.5" }
 bevy_flurx_ipc = { path = "../ipc" }

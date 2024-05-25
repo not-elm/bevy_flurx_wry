@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 use std::path::PathBuf;
-use bevy::input::common_conditions::input_just_pressed;
 
+use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
 use bevy::window::PrimaryWindow;
@@ -19,7 +19,10 @@ fn main() {
                 content_root: PathBuf::from("ui").join("bug_check")
             }
         ))
-        .add_systems(Startup, spawn_webview)
+        .add_systems(Startup, (
+            spawn_camera,
+            spawn_webview
+        ))
         .add_systems(Update, (
             event_console_output::<DownloadStarted>,
             event_console_output::<DownloadCompleted>,
@@ -32,6 +35,12 @@ fn main() {
             test_event_emit.run_if(input_just_pressed(KeyCode::KeyR))
         ))
         .run();
+}
+
+fn spawn_camera(
+    mut commands: Commands
+) {
+    commands.spawn(Camera2dBundle::default());
 }
 
 fn spawn_webview(
@@ -50,13 +59,14 @@ fn spawn_webview(
             parent: ParentWindow(primary_window.single()),
             bounds: Bounds {
                 size: Vec2::new(500., 500.),
+                // position: Vec2::new(100., 100.),
                 ..default()
             },
             resizable: Resizable(true),
         },
-        Toolbar{
-            height: 200.,
-            color: Color::NONE,
+        Toolbar {
+            height: 20.,
+            color: Color::rgb_u8(0x0E, 0x0E, 0x0E),
         }
     ));
 }

@@ -1,11 +1,12 @@
 use bevy::app::{App, Update};
 use bevy::input::common_conditions::input_pressed;
-use bevy::prelude::{Changed, Commands, CursorIcon, Entity, IntoSystemConfigs, MouseButton, NonSend, not, Plugin, Query, Window, Without};
+use bevy::prelude::{Added, Changed, Commands, CursorIcon, Entity, IntoSystemConfigs, MouseButton, NonSend, not, Or, Plugin, Query, Window, Without};
 
 use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
 use crate::as_child::bundle::resize::ResizeMode;
 use crate::as_child::CurrentMoving;
-use crate::core::WryWebViews;
+use crate::core::{WebviewInitialized, WryWebViews};
+use crate::prelude::Toolbar;
 
 pub struct ResizePlugin;
 
@@ -15,7 +16,7 @@ impl Plugin for ResizePlugin {
             .register_type::<ResizeMode>()
             .add_systems(Update, (
                 change_mouse_cursor_icon.run_if(not(input_pressed(MouseButton::Left))),
-                transform_bounds.run_if(input_pressed(MouseButton::Left)),
+                resize_bounds.run_if(input_pressed(MouseButton::Left)),
                 render_bounds
             ));
     }
@@ -24,9 +25,9 @@ impl Plugin for ResizePlugin {
 fn change_mouse_cursor_icon(
     mut commands: Commands,
     mut windows: Query<&mut Window>,
-    views: Query<(Entity, &ParentWindow, &Bounds, &Resizable), Without<CurrentMoving>>,
+    views: Query<(Entity, &ParentWindow, &Bounds, &Resizable, Option<&Toolbar>), Without<CurrentMoving>>,
 ) {
-    for (entity, parent, bounds, resizable) in views.iter() {
+    for (entity, parent, bounds, resizable, toolbar) in views.iter() {
         if !resizable.0 {
             continue;
         }
@@ -36,7 +37,7 @@ fn change_mouse_cursor_icon(
         let Some(cursor_pos) = window.cursor_position() else {
             continue;
         };
-        if let Some(resize_mode) = bounds.maybe_resizable(cursor_pos) {
+        if let Some(resize_mode) = bounds.maybe_resizable(cursor_pos, toolbar.map(|t| t.height)) {
             commands.entity(entity).insert(resize_mode);
             window.cursor.icon = resize_mode.cursor_icon();
         } else {
@@ -46,11 +47,11 @@ fn change_mouse_cursor_icon(
     }
 }
 
-fn transform_bounds(
-    mut views: Query<(&mut Bounds, &ResizeMode, &ParentWindow, &Resizable), Without<CurrentMoving>>,
+fn resize_bounds(
+    mut views: Query<(&mut Bounds, &ResizeMode, &ParentWindow, &Resizable, Option<&Toolbar>), Without<CurrentMoving>>,
     window: Query<&Window>,
 ) {
-    for (mut bounds, resize_mode, parent, resizable) in views.iter_mut() {
+    for (mut bounds, resize_mode, parent, resizable, toolbar) in views.iter_mut() {
         if !resizable.0 {
             continue;
         }
@@ -58,14 +59,14 @@ fn transform_bounds(
             continue;
         };
         if let Some(cursor_pos) = window.cursor_position() {
-            bounds.transform(resize_mode, cursor_pos);
+            bounds.transform(resize_mode, cursor_pos, toolbar.map(|t| t.height).unwrap_or(0.));
         }
     }
 }
 
 fn render_bounds(
     webview_map: NonSend<WryWebViews>,
-    views: Query<(Entity, &Bounds), Changed<Bounds>>,
+    views: Query<(Entity, &Bounds), Or<(Changed<Bounds>, Added<WebviewInitialized>)>>,
 ) {
     for (entity, bounds) in views.iter() {
         if let Some(webview) = webview_map.0.get(&entity) {

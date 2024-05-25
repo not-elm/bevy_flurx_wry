@@ -2,7 +2,6 @@ use bevy::app::{App, Plugin};
 
 use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
 use crate::as_child::CurrentMoving;
-use crate::as_child::plugin::api::ApiPlugin;
 use crate::as_child::plugin::resize::ResizePlugin;
 use crate::as_child::plugin::toolbar::ToolbarPlugin;
 
@@ -22,7 +21,7 @@ impl Plugin for AsChildPlugin {
             .add_plugins((
                 ResizePlugin,
                 ToolbarPlugin,
-                ApiPlugin
+                // ApiPlugin
             ));
     }
 }
