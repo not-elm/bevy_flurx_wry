@@ -25,7 +25,7 @@ pub struct IpcResolveEvent {
 }
 
 
-/// The core plugin for IPC communication between `Webview` and `bevy`.
+/// The common plugin for IPC communication between `Webview` and `bevy`.
 pub struct FlurxIpcPlugin;
 
 impl Plugin for FlurxIpcPlugin {

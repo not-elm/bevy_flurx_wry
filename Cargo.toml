@@ -1,19 +1,26 @@
+[package]
+name = "bevy_flurx_wry"
+version = "0.1.0"
+edition = "2021"
+
 [workspace]
+resolver = "2"
 members = [
-    "crates/*", "examples/bug_check",
+    "crates/*",
+    "examples/bug_check",
 ]
 exclude = [
     "tooling",
     "crates/api",
-    "crates/ultralight_2d"
 ]
 
+[dependencies]
+bevy_flurx_wry_core = { path = "./crates/core", version = "0.1.0" }
 
 [workspace.dependencies]
 bevy_flurx = { path = "../bevy_flurx", version = "0.5.1" }
 serde = { version = "1.0.202", features = ["derive"] }
 serde_json = "1.0.117"
-
 
 [workspace.lints.clippy]
 type_complexity = "allow"

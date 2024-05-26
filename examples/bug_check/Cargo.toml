@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 bevy = "0.13.2"
-bevy_flurx_wry = { path = "../../crates/wry" }
+bevy_flurx_wry = { path = "../../" }
 serde = { version = "1.0.202", features = ["derive"] }
 
 [lints]
