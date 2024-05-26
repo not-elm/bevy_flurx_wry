@@ -22,11 +22,11 @@ impl Bounds {
         let o = self.position - tool;
         let s = self.size + tool;
         let rect = Rect::new(o.x, o.y, o.x + s.x, o.y + s.y);
- 
-        if Rect::from_center_size(rect.center(), (rect.size() - MARGIN_VEC).max(self.min_size)).contains(cursor_pos) {
+
+        if Rect::from_center_size(rect.center(), (rect.size() - Vec2::splat(0.01)).max(self.min_size)).contains(cursor_pos) {
             return None;
         }
-        if !Rect::from_center_size(rect.center(), rect.size() + MARGIN_VEC).contains(cursor_pos) {
+        if !Rect::from_center_size(rect.center(), rect.size() + 2. * MARGIN_VEC).contains(cursor_pos) {
             return None;
         }
 
@@ -349,5 +349,86 @@ mod tests {
         bounds.transform(&ResizeMode::Bottom, Vec2::new(1., 0.), 0.);
         assert_eq!(bounds.position, Vec2::new(5., 5.));
         assert_eq!(bounds.size, Vec2::new(3., 1.));
+    }
+
+    #[test]
+    fn resize_top() {
+        let bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(5., 5.),
+            ..default()
+        };
+        assert_eq!(bounds.maybe_resizable(Vec2::new(6., 3.), None), Some(ResizeMode::Top));
+    }
+
+    #[test]
+    fn resize_top_left() {
+        let bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(5., 5.),
+            ..default()
+        };
+        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 4.5), None), Some(ResizeMode::TopLeft));
+    }
+
+    #[test]
+    fn resize_left() {
+        let bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(5., 5.),
+            ..default()
+        };
+        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 6.), None), Some(ResizeMode::Left));
+    }
+
+    #[test]
+    fn resize_bottom_left() {
+        let bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(5., 5.),
+            ..default()
+        };
+        assert_eq!(bounds.maybe_resizable(Vec2::new(4.5, 11.), None), Some(ResizeMode::BottomLeft));
+    }
+
+    #[test]
+    fn resize_bottom() {
+        let bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(5., 5.),
+            ..default()
+        };
+        assert_eq!(bounds.maybe_resizable(Vec2::new(7.5, 11.), None), Some(ResizeMode::Bottom));
+    }
+
+    #[test]
+    fn resize_right() {
+        let bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(5., 5.),
+            ..default()
+        };
+        assert_eq!(bounds.maybe_resizable(Vec2::new(13.5, 8.), None), Some(ResizeMode::Right));
+    }
+
+    #[test]
+    fn resize_right_up() {
+        let bounds = Bounds {
+            position: Vec2::new(5., 5.),
+            size: Vec2::new(5., 5.),
+            ..default()
+        };
+        assert_eq!(bounds.maybe_resizable(Vec2::new(11., 3.), None), Some(ResizeMode::TopRight));
+    }
+
+    #[test]
+    fn resize_top_with_toolbar() {
+        let bounds = Bounds {
+            position: Vec2::new(100., 100.),
+            size: Vec2::new(100., 100.),
+            ..default()
+        };
+        assert_eq!(bounds.maybe_resizable(Vec2::new(150., 94.), Some(5.)), Some(ResizeMode::Top));
+        assert_eq!(bounds.maybe_resizable(Vec2::new(150., 96.), Some(5.)), None);
     }
 }

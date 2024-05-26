@@ -46,13 +46,3 @@ impl Plugin for DownloadPlugin {
 }
 
 
-#[cfg(test)]
-mod tests {
-    use crate::tests::test_app;
-
-    #[test]
-    fn should_be_cancel_download() {
-        let mut app = test_app();
-        app.update();
-    }
-}
