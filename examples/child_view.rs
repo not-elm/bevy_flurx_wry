@@ -37,14 +37,17 @@ fn spawn_webview(
             },
             resizable: Resizable(true),
         },
-        Toolbar::default()
+        Toolbar{
+            height: 20.,
+            color: Color::WHITE
+        }
     ));
 }
 
 fn spawn_camera(
     mut commands: Commands
 ) {
-    // The webview is rendered without a camera, 
+    // The webview is rendered without a camera,
     // but the toolbar is rendered using bevy_ui, so a camera is required.
     commands.spawn(Camera2dBundle::default());
 }

@@ -7,6 +7,7 @@ use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
 use bevy::window::PrimaryWindow;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
 use bevy_flurx_wry::prelude::*;
 
@@ -17,6 +18,7 @@ fn main() {
     App::new()
         .add_plugins((
             DefaultPlugins,
+            WorldInspectorPlugin::new(),
             FlurxWryPlugin {
                 local_root: PathBuf::from("ui").join("bug_check")
             }
@@ -68,7 +70,7 @@ fn spawn_webview(
         },
         Toolbar {
             height: 20.,
-            color: Color::rgb_u8(0x0E, 0x0E, 0x0E),
+            color: Color::BLUE,
         }
     ));
 }
