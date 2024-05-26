@@ -1,11 +1,18 @@
 use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
 use serde::Serialize;
 
+
+/// This component is used to emit events to the webview.
+#[repr(transparent)]
 #[derive(Component, Default, Reflect, Debug, Eq, PartialEq, Hash)]
 #[reflect(Component, Default)]
 pub struct EventEmitter(Vec<(String, String)>);
 
 impl EventEmitter {
+    /// Emits an event to a webview.
+    /// 
+    /// On the javascript side, you can receive data by listening to the event as follows: 
+    /// `window.__FLURX__.core.listen("<event_id>", (payload: P) => {})`
     pub fn emit<P>(&mut self, event_id: impl Into<String>, payload: P)
         where
             P: Serialize

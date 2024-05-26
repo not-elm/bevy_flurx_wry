@@ -1,5 +1,6 @@
-#![allow(clippy::type_complexity)]
+//! Provides the minimum functionality required to display webview.
 
+#![allow(clippy::type_complexity)]
 
 use std::path::PathBuf;
 
@@ -9,7 +10,7 @@ use bevy::prelude::{Reflect, Resource};
 pub use bevy_flurx_ipc::{command, ipc_handlers};
 
 use crate::as_child::plugin::AsChildPlugin;
-use crate::common::plugin::FlurxWryCorePlugin;
+use crate::common::plugin::FlurxWryCommonPlugin;
 
 pub mod as_child;
 pub mod common;
@@ -27,29 +28,36 @@ pub mod prelude {
 }
 
 
+#[repr(transparent)]
+#[derive(Resource, Debug, Reflect, Clone)]
+pub(crate) struct WryLocalRoot(pub PathBuf);
+
+
+/// Provides a mechanism for drawing a webview 
+/// in a [`Window`](bevy::prelude::Window) using [`wry`].
 pub struct FlurxWryPlugin {
-    pub content_root: PathBuf,
+    /// Represents the root directory of the local resource.
+    /// This value affects [`Uri::Local`](crate::prelude::Uri::Local).
+    /// 
+    /// This directory must be located under the `assets` directory.
+    pub local_root: PathBuf,
 }
 
 impl Default for FlurxWryPlugin {
     fn default() -> Self {
         Self {
-            content_root: PathBuf::from("ui")
+            local_root: PathBuf::from("ui")
         }
     }
 }
-
-#[repr(transparent)]
-#[derive(Resource, Debug, Reflect, Clone)]
-pub(crate) struct WryLocalRoot(pub PathBuf);
 
 impl Plugin for FlurxWryPlugin {
     fn build(&self, app: &mut App) {
         app
             .register_type::<WryLocalRoot>()
-            .insert_resource(WryLocalRoot(self.content_root.clone()))
+            .insert_resource(WryLocalRoot(self.local_root.clone()))
             .add_plugins((
-                FlurxWryCorePlugin,
+                FlurxWryCommonPlugin,
                 AsChildPlugin
             ));
     }

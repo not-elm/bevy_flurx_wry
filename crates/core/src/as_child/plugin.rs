@@ -7,9 +7,10 @@ use crate::as_child::plugin::toolbar::ToolbarPlugin;
 
 mod resize;
 mod toolbar;
-mod api;
 
-pub struct AsChildPlugin;
+
+/// This is a plugin that uses [`wry::WebViewBuilder::new_as_child`] to spawn a webview as a child of an existing window.
+pub(crate) struct AsChildPlugin;
 
 impl Plugin for AsChildPlugin {
     fn build(&self, app: &mut App) {
@@ -21,7 +22,6 @@ impl Plugin for AsChildPlugin {
             .add_plugins((
                 ResizePlugin,
                 ToolbarPlugin,
-                // ApiPlugin
             ));
     }
 }

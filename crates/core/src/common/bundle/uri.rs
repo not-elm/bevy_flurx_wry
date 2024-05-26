@@ -2,16 +2,36 @@ use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
 use serde::{Deserialize, Serialize};
 
 /// Represents the display destination of webview.
+///
+/// Default is `Uri::Local("flurx://localhost/".to_string())`.
 #[derive(Component, Clone, Debug, Eq, PartialEq, Hash, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default)]
 pub enum Uri {
-    /// The name of local resources root dir.
+    /// Pass a local url in the form of a custom protocol.
     ///
-    /// The root dir must be placed directly under the `assets/ui`,
-    /// and `index.html`  must be placed directly under the root dir.
+    /// ```no_run
+    /// use bevy::prelude::*;
+    /// use bevy_flurx_wry_core::prelude::*;
+    /// use std::path::PathBuf;
+    /// use bevy::window::PrimaryWindow;
     ///
-    /// For example, if target path is `assets/ui/example/index.html`, specify `example`.
-    // TODO: description
+    /// App::new()
+    ///     .add_plugins((
+    ///         DefaultPlugins,
+    ///         FlurxWryPlugin{
+    ///             local_root: PathBuf::from("ui")
+    ///         }
+    ///     ))
+    ///     .run();
+    ///
+    /// fn spawn_webview(mut commands: Commands, window: Query<Entity, With<PrimaryWindow>>){
+    ///     commands.entity(window.single()).insert(WryWebViewBundle{
+    ///         // show assets/ui/example.html
+    ///         uri: Uri::Local("flurx://localhost/example.html".to_string()),
+    ///         ..default()
+    ///     });
+    /// }
+    /// ```
     Local(String),
 
     /// The remote web uri

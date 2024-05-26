@@ -4,7 +4,7 @@ use std::future::Future;
 use std::pin::Pin;
 
 use bevy::app::Update;
-use bevy::prelude::{Component, Entity, EventWriter, In};
+use bevy::prelude::{Component, Entity, EventWriter, In, Reflect};
 use bevy::utils::HashMap;
 use bevy_flurx::action::{Action, once};
 use bevy_flurx::task::ReactiveTask;
@@ -104,6 +104,7 @@ impl IpcHandler {
         }
     }
 
+    /// Returns the ipc-id.
     pub fn id(&self) -> &str{
         &self.id
     }
@@ -117,8 +118,12 @@ impl<F> From<F> for IpcHandler
     }
 }
 
+/// This is one of the optional arguments passed to the ipc command.
+/// 
+/// It represents the entity associated with the `Webview` components 
+/// such as [`IpcHandler`].
 #[repr(transparent)]
-#[derive(Component, Copy, Clone)]
+#[derive(Component, Copy, Clone, Reflect)]
 pub struct WebviewEntity(pub Entity);
 
 
@@ -146,7 +151,7 @@ macro_rules! impl_functor {
                let f = (self)();
                ipc_action_fn(move |cmd| {
                    f(
-                       $(cmd.payload.deserialize_param::<$input>(),)?
+                       $(cmd.payload.deserialize_args::<$input>(),)?
                        WebviewEntity(cmd.entity)
                    )
                })
@@ -166,7 +171,7 @@ macro_rules! impl_functor {
             fn func(&self) -> IpcFn{
                let f = (self)();
                ipc_action_fn(move |cmd| {
-                   f($(cmd.payload.deserialize_param::<$input>())?)
+                   f($(cmd.payload.deserialize_args::<$input>())?)
                })
             }
         }
@@ -188,7 +193,7 @@ macro_rules! impl_async_functor {
                let f = (self)();
                ipc_fn(move |task, cmd| {
                    f(
-                       $(cmd.payload.deserialize_param::<$input>(),)?
+                       $(cmd.payload.deserialize_args::<$input>(),)?
                        WebviewEntity(cmd.entity),
                        task,
                    )
@@ -209,7 +214,7 @@ macro_rules! impl_async_functor {
                let f = (self)();
                ipc_fn(move |task, cmd| {
                    f(
-                       $(cmd.payload.deserialize_param::<$input>(),)?
+                       $(cmd.payload.deserialize_args::<$input>(),)?
                        task,
                    )
                })
@@ -229,7 +234,7 @@ macro_rules! impl_async_functor {
                let f = (self)();
                ipc_fn(move |task, cmd| {
                    f(
-                       $(cmd.payload.deserialize_param::<$input>())?
+                       $(cmd.payload.deserialize_args::<$input>())?
                    )
                })
             }

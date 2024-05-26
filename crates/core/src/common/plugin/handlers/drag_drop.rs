@@ -1,3 +1,5 @@
+//! Controls dragdrop events.
+
 use std::path::PathBuf;
 
 use bevy::app::{App, Plugin, PreUpdate};
@@ -7,8 +9,11 @@ use wry::DragDropEvent;
 
 use crate::common::plugin::handlers::WryEvents;
 
+
+/// Fired when a file or other item is dragged into the Webview.
 #[derive(Event, Clone, Reflect, Debug)]
 pub struct DragEntered {
+    /// The entity associated with the webview from which this event was fired.
     pub webview_entity: Entity,
 
     /// List of paths that are being dragged onto the webview.
@@ -18,16 +23,20 @@ pub struct DragEntered {
     pub position: IVec2,
 }
 
+/// Fired while a file or other item is being dragged over to the web view.
 #[derive(Event, Clone, Reflect, Debug)]
 pub struct DragOver {
+    /// The entity associated with the webview from which this event was fired.
     pub webview_entity: Entity,
 
     /// Position of the drag operation, relative to the webview top-left corner.
     pub position: IVec2,
 }
 
+/// Fired when a file or other item is dropped onto the Webview.
 #[derive(Event, Clone, Reflect, Debug)]
 pub struct Dropped {
+    /// The entity associated with the webview from which this event was fired.
     pub webview_entity: Entity,
 
     /// List of paths that are being dropped onto the window.
@@ -37,8 +46,10 @@ pub struct Dropped {
     pub position: IVec2,
 }
 
+/// Fired when the item under drag left the webview.
 #[derive(Event, Copy, Clone, Reflect, Debug)]
 pub struct DragLeft {
+    /// The entity associated with the webview from which this event was fired.
     pub webview_entity: Entity,
 }
 

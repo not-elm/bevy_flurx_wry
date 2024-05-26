@@ -1,27 +1,34 @@
+//! Controls the process of creating the new window : [`wry::WebViewBuilder::with_new_window_req_handler`]
+
 use bevy::app::{App, PreUpdate};
 use bevy::prelude::{Commands, Entity, Event, EventWriter, Plugin, Reflect, Res};
 use bevy::utils::default;
 use bevy::window::Window;
 
 use crate::common::plugin::handlers::{RegisterWryEvent, WryEvents};
-use crate::prelude::{Uri, WryWebViewBundle};
+use crate::prelude::{HandlerUrl, Uri, WryWebViewBundle};
 
+
+/// The event indicating that a new window has been opened.
+///
+/// [`OnNewWindowRequest`](crate::prelude::OnNewWindowRequest)
 #[derive(Event, Clone, Debug, Reflect)]
 pub struct NewWindowOpened {
+    /// The entity associated with the webview from which this event was fired.
     pub webview_entity: Entity,
 
+    /// The entity associated with the new [`Window`](bevy::prelude::Window).
     pub opened_window_entity: Entity,
 
-    pub url: String,
+    /// The url loaded in new [`Window`](bevy::prelude::Window).
+    pub url: HandlerUrl,
 }
 
 
 #[derive(Event, Clone, Debug, Reflect)]
 pub(crate) struct NewWindowRequested {
     pub webview_entity: Entity,
-
-    pub url: String,
-
+    pub url: HandlerUrl,
     pub window: Window,
 }
 
@@ -49,7 +56,7 @@ fn open_new_window(
             .spawn((
                 request.window,
                 WryWebViewBundle {
-                    uri: Uri::Local(request.url.clone()),
+                    uri: Uri::Local(request.url.0.clone()),
                     ..default()
                 }
             ))

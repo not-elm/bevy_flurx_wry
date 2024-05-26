@@ -1,14 +1,17 @@
+//! Provides a mechanism to control the basic behavior of Webview.
+
 use bevy::app::{App, Plugin};
 use bevy_flurx::FlurxPlugin;
 
 use crate::common::{WebviewInitialized, WryWebViews};
-use crate::common::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, UseHttpsScheme, Incognito, InitializeFocused, IsOpenDevtools, Theme, Uri, UseDevtools, WebviewVisible};
+use crate::common::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, Uri, UseDevtools, UseHttpsScheme, WebviewVisible};
 use crate::common::plugin::devtools::DevtoolsPlugin;
 use crate::common::plugin::event_emitter::EventEmitterPlugin;
 use crate::common::plugin::handlers::WryHandlersPlugin;
 use crate::common::plugin::ipc_resolve::IpcResolvePlugin;
 use crate::common::plugin::load::LoadWebviewPlugin;
 use crate::common::plugin::visible::VisiblePlugin;
+use crate::prelude::HandlerUrl;
 
 mod ipc_resolve;
 mod devtools;
@@ -17,15 +20,14 @@ mod event_emitter;
 mod visible;
 pub mod handlers;
 
-pub mod prelude{
-    pub use crate::common::plugin::{
-        handlers::prelude::*
-    };
+#[allow(missing_docs)]
+pub mod prelude {
+    pub use crate::common::plugin::handlers::prelude::*;
 }
 
-pub(crate) struct FlurxWryCorePlugin;
+pub(crate) struct FlurxWryCommonPlugin;
 
-impl Plugin for FlurxWryCorePlugin {
+impl Plugin for FlurxWryCommonPlugin {
     fn build(&self, app: &mut App) {
         if !app.is_plugin_added::<FlurxPlugin>() {
             app.add_plugins(FlurxPlugin);
@@ -46,6 +48,7 @@ impl Plugin for FlurxWryCorePlugin {
             .register_type::<HotkeysZoom>()
             .register_type::<Incognito>()
             .register_type::<UseHttpsScheme>()
+            .register_type::<HandlerUrl>()
             .add_plugins((
                 LoadWebviewPlugin,
                 DevtoolsPlugin,

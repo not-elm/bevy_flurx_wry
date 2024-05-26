@@ -16,6 +16,14 @@ exclude = [
 
 [dependencies]
 bevy_flurx_wry_core = { path = "./crates/core", version = "0.1.0" }
+bevy_flurx_ipc = { path = "crates/ipc", version = "0.1.0" }
+
+[dev-dependencies]
+bevy = "0.13.2"
+bevy_flurx = { workspace = true }
+
+[lints]
+workspace = true
 
 [workspace.dependencies]
 bevy_flurx = { path = "../bevy_flurx", version = "0.5.1" }
@@ -32,4 +40,4 @@ match_same_arms = "warn"
 semicolon_if_nothing_returned = "warn"
 
 [workspace.lints.rust]
-#missing_docs = "warn"
+missing_docs = "warn"

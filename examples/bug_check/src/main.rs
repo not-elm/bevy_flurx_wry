@@ -1,3 +1,5 @@
+//! This is code for bug checking during development.
+
 use std::fmt::Debug;
 use std::path::PathBuf;
 
@@ -16,7 +18,7 @@ fn main() {
         .add_plugins((
             DefaultPlugins,
             FlurxWryPlugin {
-                content_root: PathBuf::from("ui").join("bug_check")
+                local_root: PathBuf::from("ui").join("bug_check")
             }
         ))
         .add_systems(Startup, (
@@ -31,7 +33,7 @@ fn main() {
             event_console_output::<DragOver>,
             event_console_output::<Dropped>,
             event_console_output::<DragLeft>,
-            event_console_output::<NavigationStarted>,
+            event_console_output::<Navigated>,
             test_event_emit.run_if(input_just_pressed(KeyCode::KeyR))
         ))
         .run();
@@ -55,7 +57,7 @@ fn spawn_webview(
             is_open_devtools: IsOpenDevtools(true),
             ..default()
         },
-        AsChild {
+        AsChildBundle {
             parent: ParentWindow(primary_window.single()),
             bounds: Bounds {
                 size: Vec2::new(500., 500.),

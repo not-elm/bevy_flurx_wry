@@ -6,7 +6,7 @@ use bevy::prelude::{Entity, Resource};
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 
-/// The ipc command queue that exists only one in the [`World`](bevy::prelude::World).
+/// The ipc commands that exists only one in the [`World`](bevy::prelude::World).
 #[derive(Resource, Clone, Default)]
 pub struct IpcCommands(Arc<Mutex<Vec<IpcCommand>>>);
 
@@ -45,7 +45,9 @@ pub struct Payload {
     /// Ipc id
     pub id: String,
 
-    /// The array of args passed from javascript.
+    /// The serialized args passed from javascript.
+    /// 
+    /// None if no arguments are passed from javascript.
     pub args: Option<String>,
 
     /// This value is used when waiting for IPC asynchronously.
@@ -54,10 +56,13 @@ pub struct Payload {
     pub resolve_id: usize,
 }
 
-
 impl Payload {
-
-    pub fn deserialize_param<Args>(&self) -> bevy::prelude::In<Args>
+    /// Deserializes arguments passed from Javascript.
+    /// 
+    /// ## Panics
+    /// 
+    /// Panics if deserialization fails or arguments does not exist.
+    pub fn deserialize_args<Args>(&self) -> bevy::prelude::In<Args>
         where
             Args: DeserializeOwned
     {

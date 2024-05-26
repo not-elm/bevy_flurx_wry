@@ -3,13 +3,24 @@ use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
 
 use crate::as_child::bundle::resize::ResizeMode;
 
+
+/// Represents the display area of a webview within the parent [`Window`](bevy::prelude::Window).
+/// 
+/// All data in the field is represented by logical pixels.
 #[derive(Component, PartialEq, Reflect, Default, Debug, Copy, Clone)]
 #[reflect(Component, Default)]
 pub struct Bounds {
+    /// Webview size
     pub size: Vec2,
 
+    /// Minimum webview size
     pub min_size: Vec2,
 
+    /// Position of the webview with respect to the top left.
+    /// 
+    /// When using the [`Toolbar`](crate::prelude::Toolbar), please note the following two points.
+    /// - Toolbar appears above this position.
+    /// - If there is not enough height to display the Toolbar, this position will be adjusted. 
     pub position: Vec2,
 }
 

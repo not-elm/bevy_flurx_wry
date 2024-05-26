@@ -19,3 +19,6 @@ mouse-rs = "0.4.2"
 [dev-dependencies]
 bevy = "0.13.2"
 bevy_test_helper = { git = "https://github.com/not-elm/bevy_test_helper" }
+
+[lints]
+workspace = true

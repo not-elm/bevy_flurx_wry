@@ -1,19 +1,20 @@
+//! Controls `wry` event handlers.
+
 use std::sync::{Arc, Mutex};
 
 use bevy::app::{App, PreUpdate};
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::{Entity, Event, EventWriter, Mut, Plugin, Reflect, Res, Resource, Window};
+use bevy::prelude::{Entity, Event, EventWriter, Mut, Plugin, Res, Resource, Window};
 use bevy::reflect::GetTypeRegistration;
-use serde::{Deserialize, Serialize};
 use wry::{PageLoadEvent, WebViewBuilder};
 
 use crate::common::plugin::handlers::document_title_changed::{DocumentTitleChanged, DocumentTitlePlugin};
 use crate::common::plugin::handlers::download::{DownloadCompleted, DownloadPlugin, DownloadStarted};
 use crate::common::plugin::handlers::drag_drop::{DragDropPlugin, WryDragDrop};
-use crate::common::plugin::handlers::navigation::{NavigationPlugin, NavigationStarted};
+use crate::common::plugin::handlers::navigation::{NavigationPlugin, Navigated};
 use crate::common::plugin::handlers::new_window_request::{NewWindowRequested, NewWindowRequestedPlugin};
 use crate::common::plugin::handlers::page_load::{PageLoadFinished, PageLoadPlugin, PageLoadStarted};
-use crate::prelude::{OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest, SourceUrl};
+use crate::prelude::{HandlerUrl, OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest};
 
 pub mod document_title_changed;
 pub mod drag_drop;
@@ -22,20 +23,17 @@ pub mod page_load;
 pub mod download;
 pub mod new_window_request;
 
+#[allow(missing_docs)]
 pub mod prelude {
     pub use crate::common::plugin::handlers::{
         document_title_changed::DocumentTitleChanged,
         download::{DownloadCompleted, DownloadStarted},
         drag_drop::*,
-        navigation::NavigationStarted,
+        navigation::Navigated,
         new_window_request::NewWindowOpened,
         page_load::{PageLoadFinished, PageLoadStarted},
     };
 }
-
-#[repr(transparent)]
-#[derive(Eq, PartialEq, Clone, Default, Debug, Hash, Serialize, Deserialize, Reflect)]
-pub struct Location(pub String);
 
 
 pub(super) struct WryHandlersPlugin;
@@ -118,7 +116,7 @@ pub(crate) struct WryEventParams<'w> {
     page_load_finished_events: Res<'w, WryEvents<PageLoadFinished>>,
     document_title_events: Res<'w, WryEvents<DocumentTitleChanged>>,
     drag_drop_events: Res<'w, WryEvents<WryDragDrop>>,
-    navigation_events: Res<'w, WryEvents<NavigationStarted>>,
+    navigation_events: Res<'w, WryEvents<Navigated>>,
     download_started_events: Res<'w, WryEvents<DownloadStarted>>,
     download_completed_events: Res<'w, WryEvents<DownloadCompleted>>,
     new_win_req_events: Res<'w, WryEvents<NewWindowRequested>>,
@@ -152,18 +150,19 @@ impl<'w> WryEventParams<'w> {
     ) -> WebViewBuilder<'a> {
         let started_events = self.page_load_started_events.clone();
         let finished_events = self.page_load_finished_events.clone();
-        builder.with_on_page_load_handler(move |event, uri| {
+        builder.with_on_page_load_handler(move |event, url| {
+            let url = HandlerUrl(url);
             match event {
                 PageLoadEvent::Started => {
                     started_events.push(PageLoadStarted {
                         webview_entity,
-                        uri,
+                        url,
                     });
                 }
                 PageLoadEvent::Finished => {
                     finished_events.push(PageLoadFinished {
                         webview_entity,
-                        uri,
+                        url,
                     });
                 }
             }
@@ -179,7 +178,7 @@ impl<'w> WryEventParams<'w> {
         builder.with_document_title_changed_handler(move |document_title: String| {
             events.push(DocumentTitleChanged {
                 document_title,
-                entity: webview_entity,
+                webview_entity,
             });
         })
     }
@@ -216,9 +215,10 @@ impl<'w> WryEventParams<'w> {
 
         let events = self.navigation_events.clone();
         builder.with_navigation_handler(move |uri| {
+            let uri = HandlerUrl(uri);
             let allow_navigation = on_navigation(uri.clone());
             if allow_navigation {
-                events.push(NavigationStarted {
+                events.push(Navigated {
                     webview_entity,
                     uri,
                 });
@@ -241,7 +241,8 @@ impl<'w> WryEventParams<'w> {
         let finished = self.download_completed_events.clone();
         builder
             .with_download_started_handler(move |source_url, dest| {
-                if on_download(SourceUrl(source_url.clone()), dest) {
+                let source_url = HandlerUrl(source_url);
+                if on_download(source_url.clone(), dest) {
                     started.push(DownloadStarted {
                         webview_entity,
                         source_url,
@@ -255,7 +256,7 @@ impl<'w> WryEventParams<'w> {
             .with_download_completed_handler(move |source_url, dest, succeed| {
                 finished.push(DownloadCompleted {
                     webview_entity,
-                    source_url,
+                    source_url: HandlerUrl(source_url),
                     dest,
                     succeed,
                 });
@@ -275,11 +276,12 @@ impl<'w> WryEventParams<'w> {
 
         builder
             .with_new_window_req_handler(move |url| {
+                let url = HandlerUrl(url);
                 if let Some(window) = on_new_window_request(url.clone()) {
                     events.push(NewWindowRequested {
                         webview_entity,
                         url,
-                        window
+                        window,
                     });
                 }
                 false

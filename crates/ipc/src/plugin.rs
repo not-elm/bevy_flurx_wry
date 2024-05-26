@@ -8,7 +8,7 @@ use bevy_flurx::FlurxPlugin;
 use bevy_flurx::prelude::Reactor;
 use serde::{Deserialize, Serialize};
 
-use crate::component::IpcHandlers;
+use crate::component::{IpcHandlers, WebviewEntity};
 use crate::ipc_commands::IpcCommands;
 
 /// The event signals the end of ipc processing.
@@ -35,6 +35,7 @@ impl Plugin for FlurxIpcPlugin {
         }
 
         app
+            .register_type::<WebviewEntity>()
             .add_event::<IpcResolveEvent>()
             .init_resource::<IpcCommands>()
             .add_systems(Update, receive_ipc_commands);
