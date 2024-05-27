@@ -61,7 +61,7 @@ pub struct WryWebViewBundle {
     /// [`wry::WebViewBuilder::with_devtools`]
     pub use_devtools: UseDevtools,
 
-    /// Represents whether the webview devtools should be used.
+    /// Controls opening and closing the webview devtools.
     pub is_open_devtools: IsOpenDevtools,
 
     /// [`wry::WebViewBuilder::with_visible`]

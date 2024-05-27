@@ -5,7 +5,6 @@ use bevy_flurx::FlurxPlugin;
 
 use crate::common::{WebviewInitialized, WryWebViews};
 use crate::common::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, Uri, UseDevtools, UseHttpsScheme, WebviewVisible};
-use crate::common::plugin::devtools::DevtoolsPlugin;
 use crate::common::plugin::event_emitter::EventEmitterPlugin;
 use crate::common::plugin::handlers::WryHandlersPlugin;
 use crate::common::plugin::ipc_resolve::IpcResolvePlugin;
@@ -14,11 +13,15 @@ use crate::common::plugin::visible::VisiblePlugin;
 use crate::prelude::HandlerUrl;
 
 mod ipc_resolve;
-mod devtools;
+
 mod load;
 mod event_emitter;
 mod visible;
 pub mod handlers;
+
+#[cfg(debug_assertions)]
+mod devtools;
+
 
 #[allow(missing_docs)]
 pub mod prelude {
@@ -51,13 +54,15 @@ impl Plugin for FlurxWryCommonPlugin {
             .register_type::<HandlerUrl>()
             .add_plugins((
                 LoadWebviewPlugin,
-                DevtoolsPlugin,
                 VisiblePlugin,
                 EventEmitterPlugin,
                 IpcResolvePlugin,
                 WryHandlersPlugin
             ))
             .init_non_send_resource::<WryWebViews>();
+
+        #[cfg(debug_assertions)]
+        app.add_plugins(devtools::DevtoolsPlugin);
     }
 }
 
