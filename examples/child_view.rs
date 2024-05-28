@@ -25,7 +25,7 @@ fn spawn_webview(
 ) {
     commands.spawn((
         WryWebViewBundle{
-            uri: Uri::Remote("https://bevyengine.org/".to_string()),
+            uri: WebviewUri::new("https://bevyengine.org/"),
             ..default()
         },
         AsChildBundle {

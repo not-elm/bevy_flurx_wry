@@ -6,7 +6,7 @@ use wry::{WebViewBuilder, WebViewBuilderExtWindows};
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
 use crate::as_child::bundle::{Bounds, ParentWindow};
-use crate::common::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito, InitializeFocused, Theme, Uri, UseDevtools, UseHttpsScheme, UserAgent, WebviewVisible};
+use crate::common::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito, InitializeFocused, Theme, WebviewUri, UseDevtools, UseHttpsScheme, UserAgent, WebviewVisible};
 use crate::common::plugin::handlers::{HandlerQueries, WryEventParams};
 use crate::common::plugin::load::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
@@ -40,7 +40,7 @@ type Configs2<'a> = (
     &'a InitializeFocused,
     &'a HotkeysZoom,
     &'a UserAgent,
-    &'a Uri,
+    &'a WebviewUri,
 );
 
 fn setup_new_windows(

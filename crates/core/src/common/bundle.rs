@@ -14,7 +14,7 @@ pub use https_scheme::UseHttpsScheme;
 pub use incognito::Incognito;
 pub use is_open_devtools::IsOpenDevtools;
 pub use theme::Theme;
-pub use uri::Uri;
+pub use webview_uri::WebviewUri;
 pub use use_devtools::UseDevtools;
 pub use user_agent::UserAgent;
 pub use visible::WebviewVisible;
@@ -27,7 +27,7 @@ mod enable_clipboard;
 mod theme;
 mod use_devtools;
 mod visible;
-mod uri;
+mod webview_uri;
 mod is_open_devtools;
 mod event_emitter;
 mod user_agent;
@@ -56,7 +56,7 @@ pub struct WryWebViewBundle {
     pub enable_clipboard: EnableClipboard,
 
     /// Represents the display destination of webview.
-    pub uri: Uri,
+    pub uri: WebviewUri,
 
     /// [`wry::WebViewBuilder::with_devtools`]
     pub use_devtools: UseDevtools,

@@ -6,7 +6,7 @@ use bevy::utils::default;
 use bevy::window::Window;
 
 use crate::common::plugin::handlers::{RegisterWryEvent, WryEvents};
-use crate::prelude::{HandlerUrl, Uri, WryWebViewBundle};
+use crate::prelude::{HandlerUrl, WebviewUri, WryWebViewBundle};
 
 
 /// The event indicating that a new window has been opened.
@@ -56,7 +56,7 @@ fn open_new_window(
             .spawn((
                 request.window,
                 WryWebViewBundle {
-                    uri: Uri::Local(request.url.0.clone()),
+                    uri: WebviewUri(request.url.0.to_string()),
                     ..default()
                 }
             ))

@@ -7,25 +7,31 @@
 <body>
 <div>
     <a href="./sample.txt" download="sample.txt">download sample.txt</a>
-    <button id="new-window">
-        new window
-    </button>
-    <button id="navigation">
-        navigation
-    </button>
-
+    <div class="flex">
+        <button id="new-window">
+            new window
+        </button>
+        <button id="navigation">
+            navigation
+        </button>
+        <button id="navigation-remote">
+            navigation remote
+        </button>
+    </div>
 
     <script>
-        window.__FLURX__.core.listen("test_event", ({message}) => {
-            console.log(`event emitted ${message}`);
-        });
-
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";
         };
+        document.getElementById("navigation-remote").onclick = () => {
+            window.location = "https://developer.mozilla.org";
+        };
         document.getElementById("new-window").onclick = () => {
             window.open("./second.html")
-        }
+        };
+        window.__FLURX__.core.listen("test_event", ({message}) => {
+            console.log(`event emitted ${message}`);
+        });
     </script>
 </div>
 </body>

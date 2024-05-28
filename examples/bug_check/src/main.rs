@@ -54,6 +54,7 @@ fn spawn_webview(
     commands.spawn((
         WebviewWindow,
         WryWebViewBundle {
+            // uri: WebviewUri::relative_local("second.html"),
             // uri: Uri::Remote("https://bevyengine.org/".to_string()),
             use_devtools: UseDevtools(true),
             is_open_devtools: IsOpenDevtools(true),

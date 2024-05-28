@@ -37,7 +37,7 @@ pub(crate) struct WryLocalRoot(pub PathBuf);
 /// in a [`Window`](bevy::prelude::Window) using [`wry`].
 pub struct FlurxWryPlugin {
     /// Represents the root directory of the local resource.
-    /// This value affects [`Uri::Local`](crate::prelude::Uri::Local).
+    /// This value affects [`WebviewUri`](crate::prelude::WebviewUri).
     /// 
     /// This directory must be located under the `assets` directory.
     pub local_root: PathBuf,

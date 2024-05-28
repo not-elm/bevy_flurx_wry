@@ -4,24 +4,16 @@ use wry::{http, WebViewBuilder};
 use wry::http::header::CONTENT_TYPE;
 use wry::http::Response;
 
-use crate::common::bundle::Uri;
+use crate::common::bundle::WebviewUri;
 use crate::WryLocalRoot;
-
 
 pub fn feed_uri<'a>(
     builder: WebViewBuilder<'a>,
-    uri: &Uri,
+    uri: &WebviewUri,
     local_root: &WryLocalRoot,
 ) -> WebViewBuilder<'a> {
-    match uri {
-        Uri::Local(uri) => {
-            let builder = builder.with_url(uri);
-            feed_custom_protocol(builder, local_root.clone())
-        }
-        Uri::Remote(uri) => {
-            builder.with_url(uri)
-        }
-    }
+    let builder = builder.with_url(uri.0.to_string());
+    feed_custom_protocol(builder, local_root.clone())
 }
 
 fn feed_custom_protocol(

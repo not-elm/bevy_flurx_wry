@@ -4,7 +4,7 @@ use bevy::app::{App, Plugin};
 use bevy_flurx::FlurxPlugin;
 
 use crate::common::{WebviewInitialized, WryWebViews};
-use crate::common::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, Uri, UseDevtools, UseHttpsScheme, WebviewVisible};
+use crate::common::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, WebviewUri, UseDevtools, UseHttpsScheme, WebviewVisible};
 use crate::common::plugin::event_emitter::EventEmitterPlugin;
 use crate::common::plugin::handlers::WryHandlersPlugin;
 use crate::common::plugin::ipc_resolve::IpcResolvePlugin;
@@ -42,7 +42,7 @@ impl Plugin for FlurxWryCommonPlugin {
             .register_type::<Background>()
             .register_type::<EnableClipboard>()
             .register_type::<EventEmitter>()
-            .register_type::<Uri>()
+            .register_type::<WebviewUri>()
             .register_type::<UseDevtools>()
             .register_type::<IsOpenDevtools>()
             .register_type::<WebviewVisible>()

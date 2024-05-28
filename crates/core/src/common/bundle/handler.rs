@@ -12,7 +12,7 @@ mod on_new_window_request;
 
 /// Represents the url that is passed to an event handlers such as [`OnNewWindowRequest`].
 /// 
-/// Note that if a webview is running on [`Uri::Local`](crate::prelude::Uri::Local), 
+/// Note that if a webview is running on [`Uri::Local`](crate::prelude::WebviewUri::Local), 
 /// the local url will be a custom protocol compliant URL.
 ///
 /// - macOS, iOS and Linux: flurx://<path>
