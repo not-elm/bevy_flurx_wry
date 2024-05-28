@@ -154,7 +154,7 @@ fn feed_configs2<'a>(
         .with_initialization_script(&format!(
             "{}{}",
             include_str!("../../../scripts/api.js"),
-            include_str!("./toolbar.js")
+            include_str!("../../../scripts/gripZone.js")
         ));
 
     if let Some(user_agent) = user_agent.0.as_ref() {

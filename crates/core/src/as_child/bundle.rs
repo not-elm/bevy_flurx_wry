@@ -3,10 +3,12 @@
 use bevy::prelude::{Bundle, Component, Entity, Reflect, ReflectComponent};
 
 pub use bounds::Bounds;
+pub use grip_zone::GripZone;
 
 pub(crate) mod resize;
 
 mod bounds;
+mod grip_zone;
 
 
 /// Create the webview as a child of an existing [`Window`](bevy::prelude::Window).
@@ -29,7 +31,8 @@ mod bounds;
 ///         AsChildBundle{
 ///             parent: ParentWindow(window.single()),
 ///             bounds: Bounds::default(),
-///             resizable: Resizable::default()
+///             resizable: Resizable::default(),
+///             grip_zone: GripZone::default(),
 ///         }
 ///     ));
 /// }
@@ -44,6 +47,9 @@ pub struct AsChildBundle {
 
     /// Whether to allow the webview to be resized.
     pub resizable: Resizable,
+    
+    /// the height at which the webview can be gripped by a left-click.
+    pub grip_zone: GripZone
 }
 
 

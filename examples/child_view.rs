@@ -1,6 +1,8 @@
 //! Minimum example showing how to create a webview as child in the window.
 
 
+use std::path::PathBuf;
+
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
@@ -10,12 +12,11 @@ fn main() {
     App::new()
         .add_plugins((
             DefaultPlugins,
-            FlurxWryPlugin::default()
+            FlurxWryPlugin {
+                local_root: PathBuf::from("ui").join("child_view")
+            }
         ))
-        .add_systems(Startup, (
-            spawn_webview,
-            spawn_camera
-        ))
+        .add_systems(Startup, spawn_webview)
         .run();
 }
 
@@ -24,26 +25,36 @@ fn spawn_webview(
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
     commands.spawn((
-        WryWebViewBundle{
+        WryWebViewBundle {
+            ..default()
+        },
+        AsChildBundle {
+            parent: ParentWindow(window.single()),
+            bounds: Bounds {
+                position: Vec2::new(100., 100.),
+                size: Vec2::new(500., 500.),
+                min_size: Vec2::new(100., 100.),
+            },
+            resizable: Resizable(true),
+            grip_zone: GripZone::default(),
+        },
+    ));
+
+    commands.spawn((
+        WryWebViewBundle {
             uri: WebviewUri::new("https://bevyengine.org/"),
             ..default()
         },
         AsChildBundle {
             parent: ParentWindow(window.single()),
             bounds: Bounds {
+                position: Vec2::new(700., 100.),
                 size: Vec2::new(500., 500.),
-                position: Vec2::new(100., 100.),
                 min_size: Vec2::new(100., 100.),
             },
             resizable: Resizable(true),
+            grip_zone: GripZone::default(),
         },
     ));
 }
 
-fn spawn_camera(
-    mut commands: Commands
-) {
-    // The webview is rendered without a camera,
-    // but the toolbar is rendered using bevy_ui, so a camera is required.
-    commands.spawn(Camera2dBundle::default());
-}

@@ -68,6 +68,7 @@ fn spawn_webview(
                 ..default()
             },
             resizable: Resizable(true),
+            grip_zone: GripZone::default()
         }
     ));
 }

@@ -1,7 +1,7 @@
 use bevy::app::{App, Update};
 use bevy::input::common_conditions::input_just_released;
 use bevy::math::{IVec2, Vec2};
-use bevy::prelude::{Added, Commands, Entity, In, IntoSystemConfigs, MouseButton, NonSend, Plugin, Query, Window, With};
+use bevy::prelude::{Added, Changed, Commands, Entity, In, IntoSystemConfigs, MouseButton, NonSend, Plugin, Query, Window, With};
 use bevy::winit::WinitWindows;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::{ActionSeed, Omit};
@@ -14,16 +14,18 @@ use bevy_flurx_ipc::prelude::IpcHandlers;
 use crate::as_child::bundle::{Bounds, ParentWindow};
 use crate::as_child::CurrentMoving;
 use crate::common::WebviewInitialized;
+use crate::prelude::{EventEmitter, GripZone};
 
-pub struct ToolbarPlugin;
+pub struct GripZonePlugin;
 
-impl Plugin for ToolbarPlugin {
+impl Plugin for GripZonePlugin {
     fn build(&self, app: &mut App) {
         app
             .add_systems(Update, (
                 move_webview,
                 all_remove_current_moving.run_if(input_just_released(MouseButton::Left)),
                 register_api,
+                resize_grip_zone
             ));
     }
 }
@@ -32,8 +34,16 @@ fn register_api(
     mut views: Query<&mut IpcHandlers, Added<WebviewInitialized>>
 ) {
     for mut handlers in views.iter_mut() {
-        handlers.register(toolbar_grab());
-        handlers.register(toolbar_release());
+        handlers.register(grip_zone_grab());
+        handlers.register(grip_zone_release());
+    }
+}
+
+fn resize_grip_zone(
+    mut views: Query<(&mut EventEmitter, &GripZone), Changed<GripZone>>
+) {
+    for (mut emitter, grip_zone) in views.iter_mut() {
+        emitter.emit("FLURX|grip::resize", grip_zone.0);
     }
 }
 
@@ -81,13 +91,19 @@ fn move_bounds(bounds: &mut Bounds, top_left: Vec2, window_size: Vec2, toolbar_h
     bounds.position = cursor_pos.min(max_pos);
 }
 
-#[bevy_flurx_ipc::command(id = "FLURX|toolbar::grab")]
-fn toolbar_grab(In(pos): In<CursorPos>, entity: WebviewEntity) -> ActionSeed {
+#[bevy_flurx_ipc::command(id = "FLURX|grip::grab")]
+fn grip_zone_grab(In(pos): In<CursorPos>, entity: WebviewEntity) -> ActionSeed {
+    fn grab(
+        In((pos, entity)): In<(CursorPos, WebviewEntity)>,
+        mut commands: Commands,
+    ) {
+        commands.entity(entity.0).insert(CurrentMoving(Vec2::new(pos.x, pos.y)));
+    }
     once::run(grab).with((pos, entity)).omit()
 }
 
-#[bevy_flurx_ipc::command(id = "FLURX|toolbar::release")]
-fn toolbar_release(entity: WebviewEntity) -> ActionSeed {
+#[bevy_flurx_ipc::command(id = "FLURX|grip::release")]
+fn grip_zone_release(entity: WebviewEntity) -> ActionSeed {
     once::run(move |mut commands: Commands| {
         commands.entity(entity.0).remove::<CurrentMoving>();
     }).omit()
@@ -99,20 +115,13 @@ struct CursorPos {
     y: f32,
 }
 
-fn grab(
-    In((pos, entity)): In<(CursorPos, WebviewEntity)>,
-    mut commands: Commands,
-) {
-    commands.entity(entity.0).insert(CurrentMoving(Vec2::new(pos.x, pos.y)));
-}
-
 
 #[cfg(test)]
 mod tests {
     use bevy::math::Vec2;
     use bevy::utils::default;
 
-    use crate::as_child::plugin::toolbar::move_bounds;
+    use crate::as_child::plugin::grip_zone::move_bounds;
     use crate::prelude::Bounds;
 
     #[test]
