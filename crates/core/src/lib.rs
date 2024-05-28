@@ -1,6 +1,5 @@
 //! Provides the minimum functionality required to display webview.
 
-#![allow(clippy::type_complexity)]
 
 use std::path::PathBuf;
 
@@ -38,7 +37,7 @@ pub(crate) struct WryLocalRoot(pub PathBuf);
 pub struct FlurxWryPlugin {
     /// Represents the root directory of the local resource.
     /// This value affects [`WebviewUri`](crate::prelude::WebviewUri).
-    /// 
+    ///
     /// This directory must be located under the `assets` directory.
     pub local_root: PathBuf,
 }

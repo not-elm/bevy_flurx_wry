@@ -6,7 +6,6 @@ use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
 use crate::as_child::bundle::resize::ResizeMode;
 use crate::as_child::CurrentMoving;
 use crate::common::{WebviewInitialized, WryWebViews};
-use crate::prelude::Toolbar;
 
 pub struct ResizePlugin;
 
@@ -25,9 +24,9 @@ impl Plugin for ResizePlugin {
 fn change_mouse_cursor_icon(
     mut commands: Commands,
     mut windows: Query<&mut Window>,
-    views: Query<(Entity, &ParentWindow, &Bounds, &Resizable, Option<&Toolbar>), Without<CurrentMoving>>,
+    views: Query<(Entity, &ParentWindow, &Bounds, &Resizable), Without<CurrentMoving>>,
 ) {
-    for (entity, parent, bounds, resizable, toolbar) in views.iter() {
+    for (entity, parent, bounds, resizable) in views.iter() {
         if !resizable.0 {
             continue;
         }
@@ -37,7 +36,7 @@ fn change_mouse_cursor_icon(
         let Some(cursor_pos) = window.cursor_position() else {
             continue;
         };
-        if let Some(resize_mode) = bounds.maybe_resizable(cursor_pos, toolbar.map(|t| t.height)) {
+        if let Some(resize_mode) = bounds.maybe_resizable(cursor_pos, None) {
             commands.entity(entity).insert(resize_mode);
             window.cursor.icon = resize_mode.cursor_icon();
         } else {
@@ -48,10 +47,10 @@ fn change_mouse_cursor_icon(
 }
 
 fn resize_bounds(
-    mut views: Query<(&mut Bounds, &ResizeMode, &ParentWindow, &Resizable, Option<&Toolbar>), Without<CurrentMoving>>,
+    mut views: Query<(&mut Bounds, &ResizeMode, &ParentWindow, &Resizable), Without<CurrentMoving>>,
     window: Query<&Window>,
 ) {
-    for (mut bounds, resize_mode, parent, resizable, toolbar) in views.iter_mut() {
+    for (mut bounds, resize_mode, parent, resizable) in views.iter_mut() {
         if !resizable.0 {
             continue;
         }
@@ -59,7 +58,7 @@ fn resize_bounds(
             continue;
         };
         if let Some(cursor_pos) = window.cursor_position() {
-            bounds.transform(resize_mode, cursor_pos, toolbar.map(|t| t.height).unwrap_or(0.));
+            bounds.transform(resize_mode, cursor_pos, 0.);
         }
     }
 }

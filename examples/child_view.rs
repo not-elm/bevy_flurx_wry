@@ -37,10 +37,6 @@ fn spawn_webview(
             },
             resizable: Resizable(true),
         },
-        Toolbar{
-            height: 20.,
-            color: Color::WHITE
-        }
     ));
 }
 

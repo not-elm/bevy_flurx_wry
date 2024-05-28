@@ -3,12 +3,10 @@
 use bevy::prelude::{Bundle, Component, Entity, Reflect, ReflectComponent};
 
 pub use bounds::Bounds;
-pub use toolbar::*;
 
 pub(crate) mod resize;
 
 mod bounds;
-mod toolbar;
 
 
 /// Create the webview as a child of an existing [`Window`](bevy::prelude::Window).

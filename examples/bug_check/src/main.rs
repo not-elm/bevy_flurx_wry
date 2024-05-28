@@ -55,7 +55,7 @@ fn spawn_webview(
         WebviewWindow,
         WryWebViewBundle {
             // uri: WebviewUri::relative_local("second.html"),
-            // uri: Uri::Remote("https://bevyengine.org/".to_string()),
+            uri: WebviewUri::new("https://bevyengine.org/"),
             use_devtools: UseDevtools(true),
             is_open_devtools: IsOpenDevtools(true),
             ..default()
@@ -64,14 +64,10 @@ fn spawn_webview(
             parent: ParentWindow(primary_window.single()),
             bounds: Bounds {
                 size: Vec2::new(500., 500.),
-                // position: Vec2::new(100., 100.),
+                position: Vec2::new(100., 100.),
                 ..default()
             },
             resizable: Resizable(true),
-        },
-        Toolbar {
-            height: 20.,
-            color: Color::BLUE,
         }
     ));
 }

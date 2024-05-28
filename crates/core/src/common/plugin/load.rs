@@ -6,7 +6,7 @@ use wry::{WebViewBuilder, WebViewBuilderExtWindows};
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
 
 use crate::as_child::bundle::{Bounds, ParentWindow};
-use crate::common::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito, InitializeFocused, Theme, WebviewUri, UseDevtools, UseHttpsScheme, UserAgent, WebviewVisible};
+use crate::common::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito, InitializeFocused, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewUri, WebviewVisible};
 use crate::common::plugin::handlers::{HandlerQueries, WryEventParams};
 use crate::common::plugin::load::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
@@ -82,7 +82,6 @@ fn setup_new_windows(
         let builder = feed_configs1(builder, configs1);
         let builder = feed_configs2(builder, configs2, &local_root);
         let webview = builder.build().unwrap();
-
         commands.entity(webview_entity).insert(WebviewInitialized(()));
         web_views.0.insert(webview_entity, webview);
     }
@@ -152,7 +151,11 @@ fn feed_configs2<'a>(
     let mut builder = builder
         .with_focused(focused.0)
         .with_hotkeys_zoom(hotkeys_zoom.0)
-        .with_initialization_script(include_str!("../../../scripts/api.js"));
+        .with_initialization_script(&format!(
+            "{}{}",
+            include_str!("../../../scripts/api.js"),
+            include_str!("./toolbar.js")
+        ));
 
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);

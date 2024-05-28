@@ -12,13 +12,12 @@ impl Plugin for EventEmitterPlugin {
     }
 }
 
-
 fn emit(
     mut emitters: Query<(Entity, &mut EventEmitter)>,
-    webview_map: NonSend<WryWebViews>,
+    web_views: NonSend<WryWebViews>,
 ) {
     for (entity, mut emitter) in emitters.iter_mut() {
-        let Some(webview) = webview_map.0.get(&entity) else {
+        let Some(webview) = web_views.0.get(&entity) else {
             continue;
         };
         
