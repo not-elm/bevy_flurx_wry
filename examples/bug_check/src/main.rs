@@ -67,8 +67,7 @@ fn spawn_webview(
                 position: Vec2::new(100., 100.),
                 ..default()
             },
-            resizable: Resizable(true),
-            grip_zone: GripZone::default()
+            ..default()
         }
     ));
 }

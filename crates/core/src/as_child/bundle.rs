@@ -37,7 +37,7 @@ mod grip_zone;
 ///     ));
 /// }
 /// ```
-#[derive(Bundle)]
+#[derive(Bundle, Default)]
 pub struct AsChildBundle {
     /// The webview parent [`Window`](bevy::prelude::Window).
     pub parent: ParentWindow,
@@ -47,18 +47,28 @@ pub struct AsChildBundle {
 
     /// Whether to allow the webview to be resized.
     pub resizable: Resizable,
-    
+
     /// the height at which the webview can be gripped by a left-click.
     pub grip_zone: GripZone
 }
 
 
 /// The webview parent window.
+/// 
+/// ## Note
+/// 
+/// This component implements [`Default`] for [`AsChildBundle`],
+/// but be sure to specify the correct a parent [`Window`](bevy::prelude::Window) entity for actual use.
 #[repr(transparent)]
 #[derive(Component, Copy, Clone, Eq, PartialEq, Reflect)]
 #[reflect(Component)]
 pub struct ParentWindow(pub Entity);
 
+impl Default for ParentWindow{
+    fn default() -> Self {
+        Self(Entity::PLACEHOLDER)
+    }
+}
 
 /// Whether to allow the webview to be resized.
 ///
