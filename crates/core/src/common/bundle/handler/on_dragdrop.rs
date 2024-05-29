@@ -4,6 +4,7 @@ use wry::DragDropEvent;
 pub(crate) type BoxedDragDropEventHandler = Box<dyn Fn(DragDropEvent) -> bool + Send + Sync>;
 
 /// Represents the [`wry::WebViewBuilder::with_drag_drop_handler`].
+#[repr(transparent)]
 #[derive(Component, Default)]
 pub struct OnDragDrop(Option<BoxedDragDropEventHandler>);
 

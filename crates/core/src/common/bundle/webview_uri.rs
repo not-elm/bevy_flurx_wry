@@ -7,10 +7,10 @@ use serde::{Deserialize, Serialize};
 ///
 /// If you want to load a local resource, use custom protocol: `flurx://localhost/<ROOT>/<uri>`.
 /// 
-/// `<ROOT>` is specified by (`WebviewUri::local_root`)[`WebviewUri`].
+/// `<ROOT>` is specified by [`FlurxWryPlugin::local_root`](crate::prelude::FlurxWryPlugin).
 /// 
 /// 
-/// Default is `WebviewUri("flurx://localhost/")`.
+/// Default is `flurx://localhost/`.
 ///
 /// ```no_run
 /// use bevy::prelude::*;

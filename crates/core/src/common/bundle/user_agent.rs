@@ -1,7 +1,7 @@
 use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
 
 
-/// Please see [`wry::WebViewBuilder::with_user_agent`] for detail.
+/// Please see [`wry::WebViewBuilder::with_user_agent`] for details.
 ///
 /// Default is not specified.
 #[repr(transparent)]

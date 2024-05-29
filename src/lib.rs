@@ -6,7 +6,13 @@ pub mod core {
     pub use bevy_flurx_wry_core::*;
 }
 
+/// Provides the ipc mechanisms.
+pub mod ipc {
+    pub use bevy_flurx_ipc::*;
+}
+
 #[allow(missing_docs)]
 pub mod prelude {
+    pub use bevy_flurx_ipc::prelude::*;
     pub use bevy_flurx_wry_core::prelude::*;
 }

@@ -6,8 +6,6 @@ use std::path::PathBuf;
 use bevy::app::{App, Plugin};
 use bevy::prelude::{Reflect, Resource};
 
-pub use bevy_flurx_ipc::{command, ipc_handlers};
-
 use crate::as_child::plugin::AsChildPlugin;
 use crate::common::plugin::FlurxWryCommonPlugin;
 
@@ -19,10 +17,8 @@ pub mod common;
 pub mod prelude {
     pub use crate::{
         as_child::prelude::*,
-        command,
         common::prelude::*,
         FlurxWryPlugin,
-        ipc_handlers,
     };
 }
 

@@ -17,10 +17,6 @@ pub struct Bounds {
     pub min_size: Vec2,
 
     /// Position of the webview with respect to the top left.
-    /// 
-    /// When using the [`Toolbar`](crate::prelude::Toolbar), please note the following two points.
-    /// - Toolbar appears above this position.
-    /// - If there is not enough height to display the Toolbar, this position will be adjusted. 
     pub position: Vec2,
 }
 

@@ -3,17 +3,17 @@ use bevy::prelude::{Commands, Entity, NonSend, NonSendMut, Or, Query, Res, Windo
 use bevy::winit::WinitWindows;
 use wry::{WebViewBuilder, WebViewBuilderExtWindows};
 
-use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands};
-
 use crate::as_child::bundle::{Bounds, ParentWindow};
 use crate::common::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito, InitializeFocused, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewUri, WebviewVisible};
 use crate::common::plugin::handlers::{HandlerQueries, WryEventParams};
+use crate::common::plugin::load::ipc::IpcHandlerParams;
 use crate::common::plugin::load::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
 use crate::WryLocalRoot;
 
 mod protocol;
+mod ipc;
 
 pub struct LoadWebviewPlugin;
 
@@ -54,7 +54,7 @@ fn setup_new_windows(
         Option<&ParentWindow>,
         Option<&Bounds>
     ), (Without<WebviewInitialized>, Or<(With<Window>, With<ParentWindow>)>)>,
-    ipc_commands: Res<IpcCommands>,
+    ipc_params: IpcHandlerParams,
     event_params: WryEventParams,
     local_root: Res<WryLocalRoot>,
     windows: NonSend<WinitWindows>,
@@ -70,14 +70,8 @@ fn setup_new_windows(
         let Some(builder) = new_builder(webview_entity, &parent_window, &bounds, &windows) else {
             continue;
         };
-        let ipc_commands = ipc_commands.clone();
-        let builder = builder.with_ipc_handler(move |request| {
-            ipc_commands.push(IpcCommand {
-                entity: webview_entity,
-                payload: serde_json::from_str(request.body()).unwrap(),
-            });
-        });
 
+        let builder = ipc_params.feed_ipc(webview_entity, builder);
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
         let builder = feed_configs1(builder, configs1);
         let builder = feed_configs2(builder, configs2, &local_root);

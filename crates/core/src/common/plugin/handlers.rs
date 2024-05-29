@@ -10,14 +10,14 @@ use wry::{PageLoadEvent, WebViewBuilder};
 
 use crate::common::plugin::handlers::document_title_changed::{DocumentTitleChanged, DocumentTitlePlugin};
 use crate::common::plugin::handlers::download::{DownloadCompleted, DownloadPlugin, DownloadStarted};
-use crate::common::plugin::handlers::drag_drop::{DragDropPlugin, WryDragDrop};
-use crate::common::plugin::handlers::navigation::{NavigationPlugin, Navigated};
+use crate::common::plugin::handlers::dragdrop::{DragDropPlugin, WryDragDrop};
+use crate::common::plugin::handlers::navigation::{Navigated, NavigationPlugin};
 use crate::common::plugin::handlers::new_window_request::{NewWindowRequested, NewWindowRequestedPlugin};
 use crate::common::plugin::handlers::page_load::{PageLoadFinished, PageLoadPlugin, PageLoadStarted};
 use crate::prelude::{HandlerUrl, OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest};
 
 pub mod document_title_changed;
-pub mod drag_drop;
+pub mod dragdrop;
 pub mod navigation;
 pub mod page_load;
 pub mod download;
@@ -28,7 +28,7 @@ pub mod prelude {
     pub use crate::common::plugin::handlers::{
         document_title_changed::DocumentTitleChanged,
         download::{DownloadCompleted, DownloadStarted},
-        drag_drop::*,
+        dragdrop::*,
         navigation::Navigated,
         new_window_request::NewWindowOpened,
         page_load::{PageLoadFinished, PageLoadStarted},
@@ -64,7 +64,7 @@ impl<T> WryEvents<T> {
 
     #[inline]
     pub fn take_events(&self) -> Vec<T> {
-        std::mem::take(&mut *self.0.lock().unwrap())
+        self.0.try_lock().map(|mut guard| std::mem::take(&mut *guard)).unwrap_or_default()
     }
 }
 

@@ -19,9 +19,13 @@
         </button>
     </div>
 
-    <iframe src="about:blank"></iframe>
-
     <script>
+        document.body.onclick = (e) => {
+            window.__FLURX__.core.emit("onclick", {
+                x: e.clientX,
+                y: e.clientY
+            });
+        };
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";
         };

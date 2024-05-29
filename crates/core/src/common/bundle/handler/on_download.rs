@@ -8,6 +8,7 @@ pub(crate) type BoxedDownloadHandler = Box<dyn FnMut(HandlerUrl, &mut PathBuf) -
 
 
 /// Represents the [`wry::WebViewBuilder::with_download_started_handler`].
+#[repr(transparent)]
 #[derive(Component, Default)]
 pub struct OnDownload(Option<BoxedDownloadHandler>);
 

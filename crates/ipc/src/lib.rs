@@ -1,21 +1,28 @@
 //! This library facilitates communication between the `webview` and `bevy`.
 
 
+use bevy::app::{App, Plugin};
+
 pub use bevy_flurx_ipc_macro::command;
 
+use crate::ipc_commands::FlurxIpcCommandPlugin;
+use crate::prelude::FlurxIpcEventPlugin;
+
 pub mod component;
-pub mod plugin;
 pub mod ipc_commands;
+pub mod ipc_events;
 
 
 #[allow(missing_docs)]
-pub mod prelude{
+pub mod prelude {
     pub use bevy_flurx_ipc_macro::command;
+
     pub use crate::{
-        ipc_handlers,
         component::*,
-        plugin::{IpcResolveEvent, FlurxIpcPlugin},
-        ipc_commands::IpcCommands
+        FlurxIpcPlugin,
+        ipc_commands::*,
+        ipc_events::*,
+        ipc_handlers,
     };
 }
 
@@ -47,3 +54,15 @@ macro_rules! ipc_handlers {
     });
 }
 
+
+/// The common plugin for IPC communication between `Webview` and `bevy`.
+pub struct FlurxIpcPlugin;
+
+impl Plugin for FlurxIpcPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_plugins((
+            FlurxIpcCommandPlugin,
+            FlurxIpcEventPlugin
+        ));
+    }
+}

@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 
 
 /// Represents the webview background. 
+/// 
+/// Default is [`Background::Unspecified`].
 #[derive(Component, Clone, Debug, PartialEq, Default, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default)]
 pub enum Background {

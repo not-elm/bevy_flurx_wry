@@ -11,14 +11,20 @@ export const invoke = <Out>(
         const convertToArgs = (args: any) => {
             if (args == null) {
                 return {
-                    id,
-                    resolve_id: resolveId,
+                    type: "Command",
+                    message: {
+                        id,
+                        resolve_id: resolveId,
+                    }
                 }
             } else {
                 return {
-                    id,
-                    resolve_id: resolveId,
-                    args: JSON.stringify(args)
+                    type: "Command",
+                    message: {
+                        id,
+                        args: JSON.stringify(args),
+                        resolve_id: resolveId,
+                    }
                 }
             }
         };
@@ -32,10 +38,6 @@ export const invoke = <Out>(
     });
 }
 
-export const resolveIpc = (id: string, output: any) => {
-    pendingHandlers[id]?.(output)
-};
-
 export const listen = (eventId: string, f: (event: any) => void) => {
     eventHandlers[eventId] = f;
     return () => {
@@ -43,6 +45,20 @@ export const listen = (eventId: string, f: (event: any) => void) => {
     };
 };
 
-export const emitEvent = (eventId: string, event: any) => {
+export const emit = (eventId: string, event: any) => {
+    window.ipc.postMessage(JSON.stringify({
+        type: "Event",
+        message: {
+            event_id: eventId,
+            payload: JSON.stringify(event)
+        }
+    }));
+};
+
+export const __resolveIpc = (id: string, output: any) => {
+    pendingHandlers[id]?.(output)
+};
+
+export const __emitEvent = (eventId: string, event: any) => {
     eventHandlers[eventId]?.(event);
 };

@@ -1,41 +1,31 @@
 use bevy::app::{App, Update};
 use bevy::input::common_conditions::input_just_released;
 use bevy::math::{IVec2, Vec2};
-use bevy::prelude::{Added, Changed, Commands, Entity, In, IntoSystemConfigs, MouseButton, NonSend, Plugin, Query, Window, With};
+use bevy::prelude::{Changed, Commands, Condition, Entity, EventReader, IntoSystemConfigs, MouseButton, NonSend, on_event, Plugin, Query, Window, With};
 use bevy::winit::WinitWindows;
-use bevy_flurx::action::once;
-use bevy_flurx::prelude::{ActionSeed, Omit};
 use mouse_rs::Mouse;
 use serde::Deserialize;
 
-use bevy_flurx_ipc::component::WebviewEntity;
-use bevy_flurx_ipc::prelude::IpcHandlers;
+use bevy_flurx_ipc::ipc_events::{IpcEvent, IpcEventExt};
 
 use crate::as_child::bundle::{Bounds, ParentWindow};
 use crate::as_child::CurrentMoving;
-use crate::common::WebviewInitialized;
-use crate::prelude::{EventEmitter, GripZone};
+use crate::prelude::{DragEntered, EventEmitter, GripZone};
 
 pub struct GripZonePlugin;
 
 impl Plugin for GripZonePlugin {
     fn build(&self, app: &mut App) {
         app
+            .add_ipc_event::<OnGripGrab>("FLURX|grip::grab")
+            .add_ipc_event::<OnGripRelease>("FLURX|grip::release")
             .add_systems(Update, (
                 move_webview,
-                all_remove_current_moving.run_if(input_just_released(MouseButton::Left)),
-                register_api,
-                resize_grip_zone
+                all_remove_current_moving.run_if(input_just_released(MouseButton::Left).or_else(on_event::<DragEntered>())),
+                resize_grip_zone,
+                grip_zone_grab,
+                grip_zone_release
             ));
-    }
-}
-
-fn register_api(
-    mut views: Query<&mut IpcHandlers, Added<WebviewInitialized>>
-) {
-    for mut handlers in views.iter_mut() {
-        handlers.register(grip_zone_grab());
-        handlers.register(grip_zone_release());
     }
 }
 
@@ -91,28 +81,35 @@ fn move_bounds(bounds: &mut Bounds, top_left: Vec2, window_size: Vec2, toolbar_h
     bounds.position = cursor_pos.min(max_pos);
 }
 
-#[bevy_flurx_ipc::command(id = "FLURX|grip::grab")]
-fn grip_zone_grab(In(pos): In<CursorPos>, entity: WebviewEntity) -> ActionSeed {
-    fn grab(
-        In((pos, entity)): In<(CursorPos, WebviewEntity)>,
-        mut commands: Commands,
-    ) {
-        commands.entity(entity.0).insert(CurrentMoving(Vec2::new(pos.x, pos.y)));
-    }
-    once::run(grab).with((pos, entity)).omit()
-}
-
-#[bevy_flurx_ipc::command(id = "FLURX|grip::release")]
-fn grip_zone_release(entity: WebviewEntity) -> ActionSeed {
-    once::run(move |mut commands: Commands| {
-        commands.entity(entity.0).remove::<CurrentMoving>();
-    }).omit()
-}
-
 #[derive(Deserialize)]
-struct CursorPos {
+struct OnGripGrab {
     x: f32,
     y: f32,
+}
+
+fn grip_zone_grab(
+    mut er: EventReader<IpcEvent<OnGripGrab>>,
+    mut commands: Commands,
+) {
+    for event in er.read() {
+        let pos = &event.payload;
+        commands.entity(event.webview_entity).insert(CurrentMoving(Vec2::new(pos.x, pos.y)));
+    }
+}
+
+#[allow(non_snake_case)]
+#[derive(Deserialize)]
+struct OnGripRelease {
+    __FLURX__grip_release: u8,
+}
+
+fn grip_zone_release(
+    mut er: EventReader<IpcEvent<OnGripRelease>>,
+    mut commands: Commands,
+) {
+    for IpcEvent { webview_entity, .. } in er.read() {
+        commands.entity(*webview_entity).remove::<CurrentMoving>();
+    }
 }
 
 

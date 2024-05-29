@@ -1,9 +1,7 @@
-
-
 use bevy::app::{App, Plugin, Update};
 use bevy::prelude::{EventReader, NonSendMut};
 
-use bevy_flurx_ipc::plugin::{FlurxIpcPlugin, IpcResolveEvent};
+use bevy_flurx_ipc::prelude::{FlurxIpcPlugin, IpcResolveEvent};
 
 use crate::common::plugin::WryWebViews;
 
@@ -29,7 +27,7 @@ fn resolve_event(
         output
     } in er.read() {
         if let Some(view) = views.get_mut(entity) {
-            view.evaluate_script(&format!("window.__FLURX__.core.resolveIpc({resolve_id}, {output})")).unwrap();
+            view.evaluate_script(&format!("window.__FLURX__.core.__resolveIpc({resolve_id}, {output})")).unwrap();
         }
     }
 }

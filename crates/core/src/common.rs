@@ -22,10 +22,9 @@ pub mod prelude {
 /// This is useful, for example, when setting up a custom API; As shown below.
 /// 
 /// ```no_run
-/// use bevy_flurx_wry_core::prelude::*;
+/// use bevy_flurx_wry::prelude::*;
 /// use bevy_flurx::prelude::*;
 /// use bevy::prelude::*;
-/// use bevy_flurx_ipc::prelude::IpcHandlers;
 ///
 /// #[command]
 /// fn custom_api() -> ActionSeed{
@@ -46,5 +45,6 @@ pub struct WebviewInitialized(());
 /// A hashmap that manages the initialized webview.
 /// 
 /// [`World`](bevy::prelude::World) holds this as [`NonSend`](bevy::prelude::NonSend).
+#[repr(transparent)]
 #[derive(Deref, DerefMut, Default)]
 pub struct WryWebViews(pub(crate) HashMap<Entity, wry::WebView>);

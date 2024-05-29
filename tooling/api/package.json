@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "tsc": "tsc --init",
+    "setup": "pnpm add global pnpm && pnpm install",
     "build": "rollup -c --configPlugin typescript"
   },
   "devDependencies": {

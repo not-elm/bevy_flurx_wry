@@ -8,11 +8,19 @@ use bevy::prelude::*;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
 use bevy::window::PrimaryWindow;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use serde::Deserialize;
 
 use bevy_flurx_wry::prelude::*;
 
 #[derive(Component)]
 struct WebviewWindow;
+
+#[derive(Deserialize, Event, Debug)]
+#[allow(dead_code)]
+struct OnClickOnWebview {
+    pub x: u32,
+    pub y: u32
+}
 
 fn main() {
     App::new()
@@ -23,11 +31,13 @@ fn main() {
                 local_root: PathBuf::from("ui").join("bug_check")
             }
         ))
+        .add_ipc_event::<OnClickOnWebview>("onclick")
         .add_systems(Startup, (
             spawn_camera,
             spawn_webview
         ))
         .add_systems(Update, (
+            event_console_output::<IpcEvent<OnClickOnWebview>>,
             event_console_output::<DownloadStarted>,
             event_console_output::<DownloadCompleted>,
             event_console_output::<NewWindowOpened>,
@@ -55,7 +65,7 @@ fn spawn_webview(
         WebviewWindow,
         WryWebViewBundle {
             // uri: WebviewUri::relative_local("second.html"),
-            uri: WebviewUri::new("https://bevyengine.org/"),
+            // uri: WebviewUri::new("https://bevyengine.org/"),
             use_devtools: UseDevtools(true),
             is_open_devtools: IsOpenDevtools(true),
             ..default()

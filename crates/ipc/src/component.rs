@@ -2,7 +2,6 @@
 
 use std::future::Future;
 use std::pin::Pin;
-
 use bevy::app::Update;
 use bevy::prelude::{Component, Entity, EventWriter, In, Reflect};
 use bevy::utils::HashMap;
@@ -10,13 +9,12 @@ use bevy_flurx::action::{Action, once};
 use bevy_flurx::task::ReactiveTask;
 use serde::de::DeserializeOwned;
 use serde::Serialize;
-
-use crate::ipc_commands::IpcCommand;
-use crate::plugin::IpcResolveEvent;
+use crate::ipc_commands::{IpcCommand, IpcResolveEvent};
 
 /// The ipc invoke handlers.
 ///
-/// Usually created via [`invoke_handlers!`](crate::invoke_handlers).
+/// Usually created via [`ipc_handlers!`](crate::ipc_handlers).
+#[repr(transparent)]
 #[derive(Component, Default)]
 pub struct IpcHandlers(pub(crate) HashMap<String, IpcHandler>);
 
@@ -55,11 +53,7 @@ impl IpcHandlers {
         self.0.insert(handler.id.clone(), handler);
     }
 
-    /// Returns the [`ActionSeed`] if exists related to `id`.
-    ///
-    /// ## Panics
-    ///
-    /// Panics if args types incorrect.
+    /// Returns the function tha creates the future if exists related to `id`.
     pub fn get(&self, id: &str) -> Option<IpcFn> {
         self.0.get(id).map(|handler| (handler.handle)())
     }
@@ -105,7 +99,7 @@ impl IpcHandler {
     }
 
     /// Returns the ipc-id.
-    pub fn id(&self) -> &str{
+    pub fn id(&self) -> &str {
         &self.id
     }
 }
@@ -118,12 +112,13 @@ impl<F> From<F> for IpcHandler
     }
 }
 
+
 /// This is one of the optional arguments passed to the ipc command.
-/// 
+///
 /// It represents the entity associated with the `Webview` components 
 /// such as [`IpcHandler`].
 #[repr(transparent)]
-#[derive(Component, Copy, Clone, Reflect)]
+#[derive(Component, Copy, Clone, Reflect, Debug, Eq, PartialEq)]
 pub struct WebviewEntity(pub Entity);
 
 
@@ -242,8 +237,6 @@ macro_rules! impl_async_functor {
     };
 }
 
-
-
 impl_functor!();
 impl_functor!(Input);
 impl_async_functor!();
@@ -261,7 +254,6 @@ fn ipc_action_fn<I, O, A>(f: impl Fn(IpcCommand) -> A + 'static) -> IpcFn
     })
 }
 
-
 fn ipc_fn<Fut>(f: impl Fn(ReactiveTask, IpcCommand) -> Fut + 'static) -> IpcFn
     where
         Fut: Future,
@@ -275,7 +267,6 @@ fn ipc_fn<Fut>(f: impl Fn(ReactiveTask, IpcCommand) -> Fut + 'static) -> IpcFn
         task.will(Update, once::run(resolve).with((entity, resolve_id, output))).await;
     }))
 }
-
 
 fn resolve(
     In((entity, resolve_id, output)): In<(Entity, usize, String)>,
