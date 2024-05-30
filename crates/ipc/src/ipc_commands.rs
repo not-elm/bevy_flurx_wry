@@ -4,13 +4,11 @@ use std::sync::{Arc, Mutex};
 
 use bevy::app::{App, Plugin, Update};
 use bevy::prelude::{Commands, Entity, Event, Query, Reflect, Res, Resource};
-use bevy_flurx::FlurxPlugin;
 use bevy_flurx::prelude::Reactor;
 use serde::{Deserialize, Serialize};
 use serde::de::DeserializeOwned;
 
 use crate::component::{IpcHandlers, WebviewEntity};
-
 
 /// The ipc commands that exists only one in the [`World`](bevy::prelude::World).
 #[derive(Resource, Clone, Default)]
@@ -101,10 +99,6 @@ pub(crate) struct FlurxIpcCommandPlugin;
 
 impl Plugin for FlurxIpcCommandPlugin {
     fn build(&self, app: &mut App) {
-        if !app.is_plugin_added::<FlurxPlugin>() {
-            app.add_plugins(FlurxPlugin);
-        }
-
         app
             .register_type::<WebviewEntity>()
             .add_event::<IpcResolveEvent>()

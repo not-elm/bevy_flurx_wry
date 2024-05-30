@@ -1,7 +1,7 @@
 use bevy::prelude::Component;
-use crate::common::bundle::handler::HandlerUrl;
+use crate::common::bundle::handler::PassedUrl;
 
-pub(crate) type BoxedNavigateHandler = Box<dyn Fn(HandlerUrl) -> bool + Send + Sync + 'static>;
+pub(crate) type BoxedNavigateHandler = Box<dyn Fn(PassedUrl) -> bool + Send + Sync + 'static>;
 
 
 /// Represents a callback to [`wry::WebViewBuilder::with_navigation_handler`].
@@ -18,7 +18,7 @@ impl OnNavigation {
     /// Creates the new [`OnNavigation`].
     /// 
     /// If the return value of the callback is `false`, navigation is canceled.
-    pub fn new(f: impl Fn(HandlerUrl) -> bool + Send + Sync + 'static) -> Self {
+    pub fn new(f: impl Fn(PassedUrl) -> bool + Send + Sync + 'static) -> Self {
         Self(Some(Box::new(f)))
     }
 

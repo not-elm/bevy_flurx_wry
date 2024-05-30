@@ -1,7 +1,7 @@
 use bevy::app::{App, Plugin, Update};
 use bevy::prelude::{EventReader, NonSendMut};
 
-use bevy_flurx_ipc::prelude::{FlurxIpcPlugin, IpcResolveEvent};
+use bevy_flurx_ipc::prelude::IpcResolveEvent;
 
 use crate::common::plugin::WryWebViews;
 
@@ -9,10 +9,6 @@ pub struct IpcResolvePlugin;
 
 impl Plugin for IpcResolvePlugin {
     fn build(&self, app: &mut App) {
-        if !app.is_plugin_added::<FlurxIpcPlugin>() {
-            app.add_plugins(FlurxIpcPlugin);
-        }
-
         app.add_systems(Update, resolve_event);
     }
 }

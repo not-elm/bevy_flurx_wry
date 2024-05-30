@@ -14,7 +14,7 @@ use crate::common::plugin::handlers::dragdrop::{DragDropPlugin, WryDragDrop};
 use crate::common::plugin::handlers::navigation::{Navigated, NavigationPlugin};
 use crate::common::plugin::handlers::new_window_request::{NewWindowRequested, NewWindowRequestedPlugin};
 use crate::common::plugin::handlers::page_load::{PageLoadFinished, PageLoadPlugin, PageLoadStarted};
-use crate::prelude::{HandlerUrl, OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest};
+use crate::prelude::{PassedUrl, OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest};
 
 pub mod document_title_changed;
 pub mod dragdrop;
@@ -151,7 +151,7 @@ impl<'w> WryEventParams<'w> {
         let started_events = self.page_load_started_events.clone();
         let finished_events = self.page_load_finished_events.clone();
         builder.with_on_page_load_handler(move |event, url| {
-            let url = HandlerUrl(url);
+            let url = PassedUrl(url);
             match event {
                 PageLoadEvent::Started => {
                     started_events.push(PageLoadStarted {
@@ -215,7 +215,7 @@ impl<'w> WryEventParams<'w> {
 
         let events = self.navigation_events.clone();
         builder.with_navigation_handler(move |uri| {
-            let uri = HandlerUrl(uri);
+            let uri = PassedUrl(uri);
             let allow_navigation = on_navigation(uri.clone());
             if allow_navigation {
                 events.push(Navigated {
@@ -241,7 +241,7 @@ impl<'w> WryEventParams<'w> {
         let finished = self.download_completed_events.clone();
         builder
             .with_download_started_handler(move |source_url, dest| {
-                let source_url = HandlerUrl(source_url);
+                let source_url = PassedUrl(source_url);
                 if on_download(source_url.clone(), dest) {
                     started.push(DownloadStarted {
                         webview_entity,
@@ -256,7 +256,7 @@ impl<'w> WryEventParams<'w> {
             .with_download_completed_handler(move |source_url, dest, succeed| {
                 finished.push(DownloadCompleted {
                     webview_entity,
-                    source_url: HandlerUrl(source_url),
+                    source_url: PassedUrl(source_url),
                     dest,
                     succeed,
                 });
@@ -276,7 +276,7 @@ impl<'w> WryEventParams<'w> {
 
         builder
             .with_new_window_req_handler(move |url| {
-                let url = HandlerUrl(url);
+                let url = PassedUrl(url);
                 if let Some(window) = on_new_window_request(url.clone()) {
                     events.push(NewWindowRequested {
                         webview_entity,

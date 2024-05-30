@@ -6,8 +6,8 @@ use wry::WebViewBuilder;
 use crate::as_child::bundle::{Bounds, ParentWindow};
 use crate::common::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito, InitializeFocused, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewUri, WebviewVisible};
 use crate::common::plugin::handlers::{HandlerQueries, WryEventParams};
-use crate::common::plugin::load::ipc::IpcHandlerParams;
-use crate::common::plugin::load::protocol::feed_uri;
+use crate::common::plugin::load_webview::ipc::IpcHandlerParams;
+use crate::common::plugin::load_webview::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
 use crate::WryLocalRoot;
@@ -19,7 +19,7 @@ pub struct LoadWebviewPlugin;
 
 impl Plugin for LoadWebviewPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PreUpdate, setup_new_windows);
+        app.add_systems(PreUpdate, load_webviews);
     }
 }
 
@@ -46,9 +46,9 @@ type ConfigsPlatformSpecific<'a> = (
     &'a UseHttpsScheme
 );
 
-fn setup_new_windows(
+fn load_webviews(
     mut commands: Commands,
-    mut web_views: NonSendMut<WryWebViews>,
+    mut webviews: NonSendMut<WryWebViews>,
     mut views: Query<(
         Entity,
         HandlerQueries,
@@ -83,7 +83,7 @@ fn setup_new_windows(
         let builder = feed_configs_platform_configs(builder, configs_platform);
         let webview = builder.build().unwrap();
         commands.entity(webview_entity).insert(WebviewInitialized(()));
-        web_views.0.insert(webview_entity, webview);
+        webviews.0.insert(webview_entity, webview);
     }
 }
 

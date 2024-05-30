@@ -2,9 +2,9 @@ use std::path::PathBuf;
 
 use bevy::prelude::Component;
 
-use crate::common::bundle::handler::HandlerUrl;
+use crate::common::bundle::handler::PassedUrl;
 
-pub(crate) type BoxedDownloadHandler = Box<dyn FnMut(HandlerUrl, &mut PathBuf) -> bool + Send + Sync>;
+pub(crate) type BoxedDownloadHandler = Box<dyn FnMut(PassedUrl, &mut PathBuf) -> bool + Send + Sync>;
 
 
 /// Represents the [`wry::WebViewBuilder::with_download_started_handler`].
@@ -26,7 +26,7 @@ impl OnDownload {
     /// The download destination is variable and can be changed within the callback.
     ///
     /// The callback returns a `bool` to allow or deny the download.
-    pub fn new(f: impl FnMut(HandlerUrl, &mut PathBuf) -> bool + Send + Sync + 'static) -> Self {
+    pub fn new(f: impl FnMut(PassedUrl, &mut PathBuf) -> bool + Send + Sync + 'static) -> Self {
         Self(Some(Box::new(f)))
     }
 

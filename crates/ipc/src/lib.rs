@@ -2,6 +2,7 @@
 
 
 use bevy::app::{App, Plugin};
+use bevy_flurx::FlurxPlugin;
 
 pub use bevy_flurx_ipc_macro::command;
 
@@ -60,6 +61,10 @@ pub struct FlurxIpcPlugin;
 
 impl Plugin for FlurxIpcPlugin {
     fn build(&self, app: &mut App) {
+        if !app.is_plugin_added::<FlurxPlugin>() {
+            app.add_plugins(FlurxPlugin);
+        }
+        
         app.add_plugins((
             FlurxIpcCommandPlugin,
             FlurxIpcEventPlugin

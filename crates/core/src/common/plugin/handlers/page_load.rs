@@ -4,7 +4,7 @@ use bevy::app::App;
 use bevy::prelude::{Entity, Event, Plugin, Reflect};
 
 use crate::common::plugin::handlers::RegisterWryEvent;
-use crate::prelude::HandlerUrl;
+use crate::prelude::PassedUrl;
 
 /// Indicates that the content of the page has started loading
 #[derive(Event, Clone, Debug, Reflect)]
@@ -13,7 +13,7 @@ pub struct PageLoadStarted {
     pub webview_entity: Entity,
     
     /// The url of the page to be loaded.
-    pub url: HandlerUrl,
+    pub url: PassedUrl,
 }
 
 
@@ -24,7 +24,7 @@ pub struct PageLoadFinished {
     pub webview_entity: Entity,
    
     /// The url of the loaded page.
-    pub url: HandlerUrl,
+    pub url: PassedUrl,
 }
 
 

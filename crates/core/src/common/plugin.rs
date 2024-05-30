@@ -1,20 +1,21 @@
 //! Provides a mechanism to control the basic behavior of Webview.
 
 use bevy::app::{App, Plugin};
-use bevy_flurx::FlurxPlugin;
+
+use bevy_flurx_ipc::FlurxIpcPlugin;
 
 use crate::common::{WebviewInitialized, WryWebViews};
 use crate::common::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, UseDevtools, UseHttpsScheme, WebviewUri, WebviewVisible};
 use crate::common::plugin::event_emitter::EventEmitterPlugin;
 use crate::common::plugin::handlers::WryHandlersPlugin;
 use crate::common::plugin::ipc_resolve::IpcResolvePlugin;
-use crate::common::plugin::load::LoadWebviewPlugin;
+use crate::common::plugin::load_webview::LoadWebviewPlugin;
 use crate::common::plugin::visible::VisiblePlugin;
-use crate::prelude::HandlerUrl;
+use crate::prelude::PassedUrl;
 
 mod ipc_resolve;
 
-mod load;
+mod load_webview;
 mod event_emitter;
 mod visible;
 pub mod handlers;
@@ -31,8 +32,8 @@ pub(crate) struct FlurxWryCommonPlugin;
 
 impl Plugin for FlurxWryCommonPlugin {
     fn build(&self, app: &mut App) {
-        if !app.is_plugin_added::<FlurxPlugin>() {
-            app.add_plugins(FlurxPlugin);
+        if !app.is_plugin_added::<FlurxIpcPlugin>() {
+            app.add_plugins(FlurxIpcPlugin);
         }
 
         app
@@ -50,7 +51,7 @@ impl Plugin for FlurxWryCommonPlugin {
             .register_type::<HotkeysZoom>()
             .register_type::<Incognito>()
             .register_type::<UseHttpsScheme>()
-            .register_type::<HandlerUrl>()
+            .register_type::<PassedUrl>()
             .add_plugins((
                 LoadWebviewPlugin,
                 VisiblePlugin,

@@ -4,7 +4,7 @@ use bevy::app::App;
 use bevy::prelude::{Entity, Event, Plugin, Reflect};
 
 use crate::common::plugin::handlers::RegisterWryEvent;
-use crate::prelude::HandlerUrl;
+use crate::prelude::PassedUrl;
 
 
 /// The event is fired when [`OnNavigation`](crate::prelude::OnNavigation) returns `true`. 
@@ -14,7 +14,7 @@ pub struct Navigated {
     pub webview_entity: Entity,
 
     /// URL of the navigation destination
-    pub uri: HandlerUrl,
+    pub uri: PassedUrl,
 }
 
 

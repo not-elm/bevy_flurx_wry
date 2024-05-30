@@ -6,7 +6,7 @@ use bevy::app::App;
 use bevy::prelude::{Entity, Event, Plugin, Reflect};
 
 use crate::common::plugin::handlers::RegisterWryEvent;
-use crate::prelude::HandlerUrl;
+use crate::prelude::PassedUrl;
 
 
 /// Fired when a download is requested and allowed in the [`OnDownload`](crate::prelude::OnDownload) callback.
@@ -18,7 +18,7 @@ pub struct DownloadStarted {
     pub webview_entity: Entity,
 
     /// The url being downloaded from.
-    pub source_url: HandlerUrl,
+    pub source_url: PassedUrl,
 
     /// Download destination.
     pub dest: PathBuf,
@@ -34,7 +34,7 @@ pub struct DownloadCompleted {
     pub webview_entity: Entity,
 
     /// The url original download request
-    pub source_url: HandlerUrl,
+    pub source_url: PassedUrl,
 
     /// Potentially representing the filesystem path the file was downloaded to.
     pub dest: Option<PathBuf>,

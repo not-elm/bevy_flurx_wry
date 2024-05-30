@@ -6,7 +6,7 @@ use bevy::utils::default;
 use bevy::window::Window;
 
 use crate::common::plugin::handlers::{RegisterWryEvent, WryEvents};
-use crate::prelude::{HandlerUrl, WebviewUri, WryWebViewBundle};
+use crate::prelude::{PassedUrl, WebviewUri, WryWebViewBundle};
 
 
 /// The event indicating that a new window has been opened.
@@ -21,14 +21,14 @@ pub struct NewWindowOpened {
     pub opened_window_entity: Entity,
 
     /// The url loaded in new [`Window`].
-    pub url: HandlerUrl,
+    pub url: PassedUrl,
 }
 
 
 #[derive(Event, Clone, Debug, Reflect)]
 pub(crate) struct NewWindowRequested {
     pub webview_entity: Entity,
-    pub url: HandlerUrl,
+    pub url: PassedUrl,
     pub window: Window,
 }
 

@@ -1,8 +1,8 @@
 use bevy::prelude::Component;
 use bevy::window::Window;
-use crate::common::bundle::handler::HandlerUrl;
+use crate::common::bundle::handler::PassedUrl;
 
-pub(crate) type BoxedNewWindowRequest = Box<dyn Fn(HandlerUrl) -> Option<Window> + Send + Sync + 'static>;
+pub(crate) type BoxedNewWindowRequest = Box<dyn Fn(PassedUrl) -> Option<Window> + Send + Sync + 'static>;
 
 
 /// Specifies the callback to be executed on [`wry::WebViewBuilder::with_new_window_req_handler`].
@@ -19,7 +19,7 @@ impl OnNewWindowRequest {
     pub const NONE: Self = Self(None);
 
     /// Creates the [`OnNewWindowRequest`].
-    pub fn new(f: impl Fn(HandlerUrl) -> Option<Window> + Send + Sync + 'static) -> Self {
+    pub fn new(f: impl Fn(PassedUrl) -> Option<Window> + Send + Sync + 'static) -> Self {
         Self(Some(Box::new(f)))
     }
 
