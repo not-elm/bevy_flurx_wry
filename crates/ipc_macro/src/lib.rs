@@ -9,6 +9,10 @@ use syn::ItemFn;
 
 /// Convert the function to `ipc-command`.
 ///
+/// ## Parameters
+/// 
+/// - `id` to specify ipc-id: if not specified, ipc-id will be the same as the function name.  
+/// 
 /// ## Command Patterns
 /// 
 /// ### Action Command
@@ -19,7 +23,6 @@ use syn::ItemFn;
 /// You can optionally specify arguments from Javascript and [`WebviewEntity`](bevy_flurx_ipc::prelude::WebviewEntity) as arguments.
 ///
 /// ```no_run
-///
 /// use bevy::prelude::*;
 /// use bevy_flurx_ipc::command;
 /// use bevy_flurx::prelude::*;
@@ -56,7 +59,7 @@ use syn::ItemFn;
 /// 
 /// Asynchronous functions that return output to Javascript are called `task action`.
 /// 
-/// It is more advanced than the `action command`.
+/// This allows for more advanced implementations than `action command`, such as conditional branching and repetition.
 ///
 /// ```no_run
 /// use bevy::prelude::*;
@@ -88,9 +91,12 @@ use syn::ItemFn;
 ///
 /// #[command]
 /// async fn case5(In(message): In<String>, WebviewEntity(entity): WebviewEntity, task: ReactiveTask){
-///     task.will(Update, once::run(move ||{
-///         println!("{entity:?} {message}");
-///     })).await;
+///     // `task command` also allows you to use repetition.
+///     for _ in 0..3{
+///         task.will(Update, once::run(move ||{
+///             println!("{entity:?} {message}"); 
+///         })).await;    
+///     }
 /// }
 /// ```
 #[proc_macro_attribute]

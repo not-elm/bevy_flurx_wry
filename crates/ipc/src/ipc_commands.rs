@@ -19,7 +19,7 @@ pub struct IpcCommands(Arc<Mutex<Vec<IpcCommand>>>);
 impl IpcCommands {
     /// Push the [`IpcCommand`] into queue.
     ///
-    /// The pushed command is automatically executed and output as [`IpcResolveEvent`](crate::prelude::IpcResolveEvent).
+    /// The pushed command is automatically executed and output as [`IpcResolveEvent`].
     #[inline(always)]
     pub fn push(&self, command: IpcCommand) {
         self.0.lock().unwrap().push(command);
@@ -41,7 +41,7 @@ impl IpcCommands {
 /// [`IpcHandler`](crate::prelude::IpcHandler) must be spawned in the world to run this command.
 #[derive(Deserialize)]
 pub struct IpcCommand {
-    /// The entity is attached to [`IpcHandlers`](crate::prelude::IpcHandlers) that executes this command.
+    /// The entity is attached to [`IpcHandlers`] that executes this command.
     pub entity: Entity,
 
     /// The command info passed from `javascript`.
@@ -85,7 +85,7 @@ impl Payload {
 /// The event signals the end of ipc processing.
 #[derive(Event, Eq, PartialEq, Clone, Serialize, Deserialize, Reflect)]
 pub struct IpcResolveEvent {
-    /// The entity attached to [`IpcHandlers`](bevy::prelude::IpcHandlers) that execute ipc.
+    /// The entity attached to [`IpcHandlers`] that execute ipc.
     pub entity: Entity,
 
     /// The id used to resolve asynchronous ipc.

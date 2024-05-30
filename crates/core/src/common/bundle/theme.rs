@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 /// Represents a webview theme.
 /// 
 /// Default is [`Theme::Auto`].
+/// 
+/// This setting only works on `Windows`.
 #[derive(Default, Component, Copy, Clone, Eq, PartialEq, Reflect, Serialize, Deserialize)]
 #[reflect(Component, Default)]
 pub enum Theme {

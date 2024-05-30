@@ -1,4 +1,4 @@
-//! Defines a handler that executes the [`Action`](bevy_flurx::prelude::Action) of the command.
+//! Defines a handler that executes the [`Action`] of the command.
 
 use std::future::Future;
 use std::pin::Pin;
@@ -241,7 +241,6 @@ impl_functor!();
 impl_functor!(Input);
 impl_async_functor!();
 impl_async_functor!(Input);
-
 
 fn ipc_action_fn<I, O, A>(f: impl Fn(IpcCommand) -> A + 'static) -> IpcFn
     where

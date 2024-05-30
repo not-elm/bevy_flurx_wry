@@ -1,6 +1,8 @@
 use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
 
 /// Please see [`wry::WebViewBuilder::with_https_scheme`].
+/// 
+/// This setting only works on `Windows` and `Android`. 
 #[repr(transparent)]
 #[derive(Component, Copy, Clone, Reflect, Default, Eq, PartialEq)]
 #[reflect(Component, Default)]

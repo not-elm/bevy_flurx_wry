@@ -46,10 +46,10 @@ mod handler;
 /// 2. Create it as a child in the [`Window`](bevy::prelude::Window).
 #[derive(Bundle, Default)]
 pub struct WryWebViewBundle {
-    /// [`wry::WebViewBuilder::with_autoplay`]
+    /// [`wry::WebViewBuilder::with_autoplay()`]
     pub auto_play: AutoPlay,
 
-    /// [`wry::WebViewBuilder::with_browser_accelerator_keys`]
+    /// [`wry::WebViewBuilder::with_browser_accelerator_keys()`]
     pub browser_accelerator_keys: BrowserAcceleratorKeys,
 
     /// [`wry::WebViewBuilder::with_clipboard`]

@@ -1,7 +1,7 @@
 use bevy::app::{App, Plugin, PreUpdate};
 use bevy::prelude::{Commands, Entity, NonSend, NonSendMut, Or, Query, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
-use wry::{WebViewBuilder, WebViewBuilderExtWindows};
+use wry::WebViewBuilder;
 
 use crate::as_child::bundle::{Bounds, ParentWindow};
 use crate::common::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito, InitializeFocused, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewUri, WebviewVisible};
@@ -30,10 +30,7 @@ type Configs1<'a> = (
     &'a EnableClipboard,
     &'a WebviewVisible,
     &'a Background,
-    &'a Theme,
     &'a Incognito,
-    &'a BrowserAcceleratorKeys,
-    &'a UseHttpsScheme
 );
 
 type Configs2<'a> = (
@@ -41,6 +38,12 @@ type Configs2<'a> = (
     &'a HotkeysZoom,
     &'a UserAgent,
     &'a WebviewUri,
+);
+
+type ConfigsPlatformSpecific<'a> = (
+    &'a Theme,
+    &'a BrowserAcceleratorKeys,
+    &'a UseHttpsScheme
 );
 
 fn setup_new_windows(
@@ -51,6 +54,7 @@ fn setup_new_windows(
         HandlerQueries,
         Configs1,
         Configs2,
+        ConfigsPlatformSpecific,
         Option<&ParentWindow>,
         Option<&Bounds>
     ), (Without<WebviewInitialized>, Or<(With<Window>, With<ParentWindow>)>)>,
@@ -64,6 +68,7 @@ fn setup_new_windows(
         handlers,
         configs1,
         configs2,
+        configs_platform,
         parent_window,
         bounds
     ) in views.iter_mut() {
@@ -75,6 +80,7 @@ fn setup_new_windows(
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
         let builder = feed_configs1(builder, configs1);
         let builder = feed_configs2(builder, configs2, &local_root);
+        let builder = feed_configs_platform_configs(builder, configs_platform);
         let webview = builder.build().unwrap();
         commands.entity(webview_entity).insert(WebviewInitialized(()));
         web_views.0.insert(webview_entity, webview);
@@ -106,10 +112,7 @@ fn feed_configs1<'a>(
         enable_clipboard,
         visible,
         background,
-        theme,
         incognito,
-        browser_accelerator_keys,
-        https_scheme
     ): Configs1,
 ) -> WebViewBuilder<'a> {
     let builder = builder
@@ -117,10 +120,7 @@ fn feed_configs1<'a>(
         .with_autoplay(auto_play.0)
         .with_clipboard(enable_clipboard.0)
         .with_visible(visible.0)
-        .with_theme(theme.as_wry_theme())
-        .with_incognito(incognito.0)
-        .with_browser_accelerator_keys(browser_accelerator_keys.0)
-        .with_https_scheme(https_scheme.0);
+        .with_incognito(incognito.0);
 
     match background {
         Background::Unspecified => builder,
@@ -157,3 +157,30 @@ fn feed_configs2<'a>(
 
     feed_uri(builder, uri, local_root)
 }
+
+#[allow(clippy::needless_return, unreachable_code)]
+fn feed_configs_platform_configs<'a>(
+    builder: WebViewBuilder<'a>,
+    (
+        theme,
+        browser_accelerator_keys,
+        https_scheme
+    ): ConfigsPlatformSpecific,
+) -> WebViewBuilder<'a> {
+    #[cfg(target_os = "windows")]
+    {
+        use wry::WebViewBuilderExtWindows;
+        return builder
+            .with_theme(theme.as_wry_theme())
+            .with_browser_accelerator_keys(browser_accelerator_keys.0)
+            .with_https_scheme(https_scheme.0);
+    }
+    #[cfg(target_os = "android")]
+    {
+        use wry::WebViewBuilderExtAndroid;
+        return builder.with_https_scheme(https_scheme.0);
+    }
+    return builder;
+}
+
+

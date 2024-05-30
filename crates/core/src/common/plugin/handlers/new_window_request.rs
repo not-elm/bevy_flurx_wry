@@ -17,10 +17,10 @@ pub struct NewWindowOpened {
     /// The entity associated with the webview from which this event was fired.
     pub webview_entity: Entity,
 
-    /// The entity associated with the new [`Window`](bevy::prelude::Window).
+    /// The entity associated with the new [`Window`].
     pub opened_window_entity: Entity,
 
-    /// The url loaded in new [`Window`](bevy::prelude::Window).
+    /// The url loaded in new [`Window`].
     pub url: HandlerUrl,
 }
 
