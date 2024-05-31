@@ -53,7 +53,7 @@ impl IpcHandlers {
         self.0.insert(handler.id.clone(), handler);
     }
 
-    /// Returns the function tha creates the future if exists related to `id`.
+    /// Returns the function that creates the future if exists related to `id`.
     pub fn get(&self, id: &str) -> Option<IpcFn> {
         self.0.get(id).map(|handler| (handler.handle)())
     }

@@ -1,6 +1,5 @@
+#![doc=include_str!("../README.md")]
 #![cfg_attr(doc_cfg, feature(doc_cfg))]
-
-//! This crate provides a mechanism to create a webview based on `wry`.
 
 /// Provides the minimum functionality required to display webview.
 pub mod core {

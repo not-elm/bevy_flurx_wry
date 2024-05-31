@@ -2,6 +2,13 @@
 name = "bevy_flurx_wry"
 version = "0.1.0"
 edition = "2021"
+authors = ["elm"]
+description = "Provides a mechanism to create a webview based on `wry`."
+repository = "https://github.com/not-elm/bevy_flurx_wry"
+categories = ["gui", "game-development"]
+keywords = ["game", "gamedev", "bevy", "wry"]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
 
 [workspace]
 resolver = "2"
