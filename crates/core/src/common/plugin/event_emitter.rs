@@ -1,4 +1,5 @@
 use bevy::app::{App, PostUpdate};
+use bevy::log;
 use bevy::prelude::{Entity, NonSend, Plugin, Query};
 
 use crate::common::bundle::EventEmitter;
@@ -14,15 +15,17 @@ impl Plugin for EventEmitterPlugin {
 
 fn emit(
     mut emitters: Query<(Entity, &mut EventEmitter)>,
-    web_views: NonSend<WryWebViews>,
+    webviews: NonSend<WryWebViews>,
 ) {
     for (entity, mut emitter) in emitters.iter_mut() {
-        let Some(webview) = web_views.0.get(&entity) else {
+        let Some(webview) = webviews.0.get(&entity) else {
             continue;
         };
         
         for (event_id, event) in emitter.take_events() {
-            webview.evaluate_script(&format!("window.__FLURX__.__emitEvent('{event_id}', {event});")).unwrap();
+            if let Err(e) = webview.evaluate_script(&format!("window.__FLURX__.__emitEvent('{event_id}', {event});")){
+                log::error!("{e}");
+            }
         }
     }
 }

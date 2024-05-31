@@ -3,13 +3,14 @@
 use std::sync::{Arc, Mutex};
 
 use bevy::app::{App, PreUpdate};
+use bevy::log;
 use bevy::prelude::{Entity, Event, EventWriter, IntoSystemConfigs, Plugin, Res, Resource};
 use bevy::utils::HashMap;
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 
 /// The event sent from webview.
-/// 
+///
 /// For use this, you need to call the [`IpcEventExt::add_ipc_event`] before app running.
 #[derive(Event, Debug, Copy, Clone, Eq, PartialEq)]
 pub struct IpcEvent<P> {
@@ -58,15 +59,6 @@ impl IpcRawEvents {
     pub fn push(&self, event: IpcRawEvent) {
         self.0.lock().unwrap().push(event);
     }
-
-    #[inline(always)]
-    pub(crate) fn take_events(&self) -> Vec<IpcRawEvent> {
-        self
-            .0
-            .try_lock()
-            .map(|mut guard| std::mem::take(&mut *guard))
-            .unwrap_or_default()
-    }
 }
 
 
@@ -84,9 +76,9 @@ struct IpcEvents<P>(Arc<Mutex<Vec<IpcEvent<P>>>>);
 /// Add an [`IpcEvent`] into [`App`].
 pub trait IpcEventExt {
     /// This method registers [`IpcEvent<Payload>`](IpcEvent), which can be read just like a normal bevy event.
-    /// 
+    ///
     /// `event_id` is the id that associated with this event.
-    /// 
+    ///
     /// From javascript side, you can emit the event as follows: 
     /// `window.__FLURX__.emit(<event_id>, payload)`
     fn add_ipc_event<Payload>(&mut self, event_id: impl Into<String>) -> &mut Self
@@ -108,13 +100,17 @@ impl IpcEventExt for App {
         let handlers = self.world.get_resource_or_insert_with::<IpcEventHandlers>(IpcEventHandlers::default);
         let event_id = event_id.into();
         handlers.0.lock().unwrap().insert(event_id.clone(), Box::new(move |raw_event| {
-            let payload = serde_json::from_str::<P>(&raw_event.body.payload).unwrap_or_else(|e| {
-                panic!("Failed ipc event deserialize event_id={event_id}: {e}");
-            });
-            events.0.lock().unwrap().push(IpcEvent {
-                webview_entity: raw_event.webview_entity,
-                payload,
-            });
+            match serde_json::from_str::<P>(&raw_event.body.payload) {
+                Ok(payload) => {
+                    events.0.lock().unwrap().push(IpcEvent {
+                        webview_entity: raw_event.webview_entity,
+                        payload,
+                    });
+                }
+                Err(e) => {
+                    log::error!("Failed ipc event deserialize event_id={event_id}: {e}");
+                }
+            }
         }));
         self
     }
@@ -145,8 +141,21 @@ fn read_raw_events(
     ipc_raw_events: Res<IpcRawEvents>,
     ipc_event_handlers: Res<IpcEventHandlers>,
 ) {
-    for raw_event in ipc_raw_events.take_events() {
-        if let Some(handler) = ipc_event_handlers.0.lock().unwrap().get(&raw_event.body.event_id) {
+    let Ok(mut raw_events) = ipc_raw_events.0.try_lock() else {
+        return;
+    };
+    let events = std::mem::take(&mut *raw_events);
+    if events.is_empty() {
+        return;
+    }
+    let Ok(handlers) = ipc_event_handlers.0.lock() else {
+        raw_events.extend(events);
+        return;
+    };
+    drop(raw_events);
+
+    for raw_event in events {
+        if let Some(handler) = handlers.get(&raw_event.body.event_id) {
             handler(raw_event);
         }
     }

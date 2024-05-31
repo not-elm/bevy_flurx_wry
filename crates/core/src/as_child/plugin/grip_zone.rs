@@ -43,7 +43,9 @@ fn move_webview(
     windows: Query<&Window>,
 ) {
     let mouse = Mouse::new();
-    let pos = mouse.get_position().unwrap();
+    let Ok(pos) = mouse.get_position() else{
+        return;
+    };
     let pos = IVec2::new(pos.x, pos.y).as_vec2();
 
     for (mut bounds, parent, CurrentMoving(d)) in views.iter_mut() {

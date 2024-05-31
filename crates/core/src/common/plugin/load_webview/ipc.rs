@@ -1,4 +1,5 @@
 use bevy::ecs::system::SystemParam;
+use bevy::log;
 use bevy::prelude::{Entity, Res};
 use serde::Deserialize;
 use wry::WebViewBuilder;
@@ -25,18 +26,21 @@ impl<'w> IpcHandlerParams<'w> {
         let ipc_raw_events = self.ipc_raw_events.clone();
 
         builder.with_ipc_handler(move |request| {
-            match serde_json::from_str::<IpcMessage>(request.body()).unwrap() {
-                IpcMessage::Command(payload) => {
+            match serde_json::from_str::<IpcMessage>(request.body()) {
+                Ok(IpcMessage::Command(payload)) => {
                     ipc_commands.push(IpcCommand {
                         entity: webview_entity,
                         payload,
                     });
                 }
-                IpcMessage::Event(payload) => {
+                Ok(IpcMessage::Event(payload)) => {
                     ipc_raw_events.push(IpcRawEvent{
                         webview_entity,
                         body: payload
                     });
+                }
+                Err(e) => {
+                    log::error!("failed deserialize ipc message: {e}");
                 }
             }
         })
