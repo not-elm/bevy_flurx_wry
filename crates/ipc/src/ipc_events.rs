@@ -88,7 +88,7 @@ pub trait IpcEventExt {
     /// `event_id` is the id that associated with this event.
     /// 
     /// From javascript side, you can emit the event as follows: 
-    /// `window.__FLURX__.core.emit(<event_id>, payload)`
+    /// `window.__FLURX__.emit(<event_id>, payload)`
     fn add_ipc_event<Payload>(&mut self, event_id: impl Into<String>) -> &mut Self
         where
             Payload: DeserializeOwned + Send + Sync + 'static;

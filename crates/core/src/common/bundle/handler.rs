@@ -14,8 +14,8 @@ mod on_new_window_request;
 /// 
 /// Note that the local url will be a custom protocol compliant URL.
 ///
-/// - macOS, iOS and Linux: flurx://<path>
-/// - Windows and Android: http(s)://flurx.<path>
+/// - macOS, iOS and Linux: `flurx://<path>`
+/// - Windows and Android: `http(s)://flurx.<path>`
 #[repr(transparent)]
 #[derive(Debug, Clone, Eq, PartialEq, Reflect)]
 pub struct PassedUrl(pub String);

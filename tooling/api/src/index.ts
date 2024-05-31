@@ -1,10 +1,5 @@
-import * as core from "./core";
-import * as appWindow from "./appWindow";
-import * as app from "./app";
+export * as app from "./app";
+export * as log from "./log";
+export * from "./core";
 
-export {
-    core,
-    appWindow,
-    app
-}
 

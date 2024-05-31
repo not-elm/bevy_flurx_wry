@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="index.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div>
@@ -19,9 +20,31 @@
         </button>
     </div>
 
+    <div>
+        <div class="flex">
+            <p>appName:</p>
+            <p id="appName"></p>
+        </div>
+
+        <div class="flex">
+            <p>appVersion:</p>
+            <p id="appVersion"></p>
+        </div>
+
+        <button id="exit-btn">
+            app::exit
+        </button>
+
+        <div class="flex">
+            <input id="println-message" type="text">
+            <button id="println-btn">println</button>
+        </div>
+    </div>
+
     <script>
+        console.log(window.__FLURX__)
         document.body.onclick = (e) => {
-            window.__FLURX__.core.emit("onclick", {
+            window.__FLURX__.emit("onclick", {
                 x: e.clientX,
                 y: e.clientY
             });
@@ -35,7 +58,18 @@
         document.getElementById("new-window").onclick = () => {
             window.open("./second.html")
         };
-        window.__FLURX__.core.listen("test_event", ({message}) => {
+        document.getElementById("exit-btn").onclick = async () => {
+            await window.__FLURX__.app.exit();
+        };
+        const message = document.getElementById("println-message");
+        document.getElementById("println-btn").onclick = async () => {
+            window.__FLURX__.log.println(message.value);
+        };
+        (async () => {
+            document.getElementById("appName").innerText = await window.__FLURX__.app.getName();
+            document.getElementById("appVersion").innerText = await window.__FLURX__.app.getVersion();
+        })();
+        window.__FLURX__.listen("test_event", ({message}) => {
             console.log(`event emitted ${message}`);
         });
     </script>

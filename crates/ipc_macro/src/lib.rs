@@ -112,10 +112,11 @@ fn parse_command(input: TokenStream, custom_id: Option<String>) -> syn::Result<T
     let fn_ident = f.sig.ident.clone();
     let ipc_id = custom_id.unwrap_or(fn_ident.to_string());
     f.sig.ident = Ident::new("internal", Span::call_site());
-
+    let visibility = &f.vis;
+    
     Ok(quote! {
         #[allow(missing_docs)]
-        pub fn #fn_ident() -> bevy_flurx_ipc::prelude::IpcHandler{
+        #visibility fn #fn_ident() -> bevy_flurx_ipc::prelude::IpcHandler{
             #f
             use bevy_flurx_ipc::prelude::Functor;
             bevy_flurx_ipc::prelude::IpcHandler::new(#ipc_id, ||{

@@ -29,7 +29,11 @@ fn main() {
             WorldInspectorPlugin::new(),
             FlurxWryPlugin {
                 local_root: PathBuf::from("ui").join("bug_check")
-            }
+            },
+            AppGetNameApiPlugin,
+            AppGetVersionApiPlugin,
+            AppExitApiPlugin,
+            LogPrintlnApiPlugin,
         ))
         .add_ipc_event::<OnClickOnWebview>("onclick")
         .add_systems(Startup, (

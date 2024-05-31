@@ -39,7 +39,7 @@ pub mod prelude {
 /// ```
 #[derive(Component, Reflect, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
 #[reflect(Component)]
-pub struct WebviewInitialized(());
+pub struct WebviewInitialized(pub ());
 
 
 /// A hashmap that manages the initialized webview.

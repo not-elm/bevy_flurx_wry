@@ -22,7 +22,7 @@ fn emit(
         };
         
         for (event_id, event) in emitter.take_events() {
-            webview.evaluate_script(&format!("window.__FLURX__.core.__emitEvent('{event_id}', {event});")).unwrap();
+            webview.evaluate_script(&format!("window.__FLURX__.__emitEvent('{event_id}', {event});")).unwrap();
         }
     }
 }

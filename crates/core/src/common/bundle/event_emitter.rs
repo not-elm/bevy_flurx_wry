@@ -12,7 +12,7 @@ impl EventEmitter {
     /// Emits an event to a webview.
     /// 
     /// On the javascript side, you can receive data by listening to the event as follows: 
-    /// `window.__FLURX__.core.listen("<event_id>", (payload: P) => {})`
+    /// `window.__FLURX__.listen("<event_id>", (payload: P) => {})`
     pub fn emit<P>(&mut self, event_id: impl Into<String>, payload: P)
         where
             P: Serialize

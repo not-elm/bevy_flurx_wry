@@ -80,7 +80,7 @@ fn load_webviews(
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
         let builder = feed_configs1(builder, configs1);
         let builder = feed_configs2(builder, configs2, &local_root);
-        let builder = feed_configs_platform_configs(builder, configs_platform);
+        let builder = feed_platform_configs(builder, configs_platform);
         let webview = builder.build().unwrap();
         commands.entity(webview_entity).insert(WebviewInitialized(()));
         webviews.0.insert(webview_entity, webview);
@@ -159,7 +159,7 @@ fn feed_configs2<'a>(
 }
 
 #[allow(clippy::needless_return, unreachable_code)]
-fn feed_configs_platform_configs<'a>(
+fn feed_platform_configs<'a>(
     builder: WebViewBuilder<'a>,
     (
         theme,

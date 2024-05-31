@@ -23,7 +23,7 @@ fn resolve_event(
         output
     } in er.read() {
         if let Some(view) = views.get_mut(entity) {
-            view.evaluate_script(&format!("window.__FLURX__.core.__resolveIpc({resolve_id}, {output})")).unwrap();
+            view.evaluate_script(&format!("window.__FLURX__.__resolveIpc({resolve_id}, {output})")).unwrap();
         }
     }
 }

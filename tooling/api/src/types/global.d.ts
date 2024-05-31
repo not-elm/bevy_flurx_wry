@@ -1,4 +1,4 @@
-import {app, appWindow, core} from "../index";
+import {app, log, invoke, listen, emit} from "../index";
 
 export {};
 
@@ -8,9 +8,11 @@ declare global {
             postMessage: (message: string) => void;
         },
         __FLURX__: {
-            core: typeof core,
             app: typeof app,
-            appWindow: typeof appWindow
+            log: typeof log,
+            invoke: typeof invoke,
+            listen: typeof listen,
+            emit: typeof emit
         }
     }
 }
