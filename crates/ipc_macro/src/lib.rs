@@ -93,8 +93,9 @@ use syn::ItemFn;
 /// async fn case5(In(message): In<String>, WebviewEntity(entity): WebviewEntity, task: ReactiveTask){
 ///     // `task command` also allows you to use repetition.
 ///     for _ in 0..3{
+///         let message = message.clone();
 ///         task.will(Update, once::run(move ||{
-///             println!("{entity:?} {message}"); 
+///             println!("{entity:?} {message}");
 ///         })).await;    
 ///     }
 /// }

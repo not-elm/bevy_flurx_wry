@@ -1,6 +1,6 @@
 [package]
 name = "bevy_flurx_wry_api"
-version = "0.1.0"
+version = "0.1.0-alpha1"
 edition = "2021"
 authors = ["elm"]
 repository = "https://github.com/not-elm/bevy_flurx_wry"
@@ -12,9 +12,12 @@ readme = "README.md"
 [dependencies]
 bevy = { version = "0.13.2", default-features = false }
 bevy_flurx = { workspace = true }
-bevy_flurx_ipc = { path = "../ipc", version = "0.1.0" }
-bevy_flurx_wry_core = { path = "../core", version = "0.1.0" }
+bevy_flurx_ipc = { path = "../ipc", version = "0.1.0-alpha1" }
+bevy_flurx_wry_core = { path = "../core", version = "0.1.0-alpha1" }
 serde = { workspace = true }
+
+[dev-dependencies]
+bevy = "0.13.2"
 
 [lints]
 workspace = true

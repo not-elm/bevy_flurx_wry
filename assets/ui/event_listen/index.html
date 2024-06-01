@@ -14,15 +14,17 @@
     <title>Title</title>
 </head>
 <body>
-<h1 id="message">count: 0</h1>
-
+<div style="display: flex">
+    <input id="message-txt" type="text"/>
+    <button id="message-btn">send message</button>
+</div>
 <script>
-    const messageTxt = document.getElementById("message");
-    window.__FLURX__.listen("count_event", (event) => {
-        console.log(event);
-        messageTxt.innerText = `count: ${event.count}`;
-    });
+    const inputTxt = document.getElementById("message-txt");
+    document.getElementById("message-btn").onclick = () => {
+        window.__FLURX__.emit("message", {
+            message: inputTxt.value
+        });
+    };
 </script>
-
 </body>
 </html>

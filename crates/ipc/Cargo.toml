@@ -1,6 +1,6 @@
 [package]
 name = "bevy_flurx_ipc"
-version = "0.1.0"
+version = "0.1.0-alpha1"
 edition = "2021"
 authors = ["elm"]
 repository = "https://github.com/not-elm/bevy_flurx_wry"
@@ -15,7 +15,7 @@ path = "tests/index.rs"
 
 [dependencies]
 bevy = { version = "0.13.2", default-features = false }
-bevy_flurx_ipc_macro = { path = "../ipc_macro", version = "0.1.0" }
+bevy_flurx_ipc_macro = { path = "../ipc_macro", version = "0.1.0-alpha1" }
 bevy_flurx = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }

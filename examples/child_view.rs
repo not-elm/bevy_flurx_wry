@@ -29,6 +29,7 @@ fn spawn_webview(
             ..default()
         },
         AsChildBundle {
+            // Here, create a webview as child inside a given window.
             parent: ParentWindow(window.single()),
             bounds: Bounds {
                 position: Vec2::new(100., 100.),

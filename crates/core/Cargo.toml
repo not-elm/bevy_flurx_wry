@@ -1,6 +1,6 @@
 [package]
 name = "bevy_flurx_wry_core"
-version = "0.1.0"
+version = "0.1.0-alpha1"
 edition = "2021"
 authors = ["elm"]
 repository = "https://github.com/not-elm/bevy_flurx_wry"
@@ -16,7 +16,7 @@ bevy = { version = "0.13.2", default-features = false, features = [
     "bevy_ui"
 ] }
 wry = { version = "0.39.5" }
-bevy_flurx_ipc = { path = "../ipc", version = "0.1.0" }
+bevy_flurx_ipc = { path = "../ipc", version = "0.1.0-alpha1" }
 bevy_flurx = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
