@@ -19,7 +19,7 @@ the framework of existing game engines.
 
 The operation has been confirmed on `Windows` and `MacOS`.
 
-`Ubuntu` is currently not supported.
+`Linux` is currently not supported.
 
 ## Usage
 
