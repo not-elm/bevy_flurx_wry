@@ -37,7 +37,7 @@ impl IpcCommands {
 /// The ipc command to execute.
 ///
 /// [`IpcHandler`](crate::prelude::IpcHandler) must be spawned in the world to run this command.
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct IpcCommand {
     /// The entity is attached to [`IpcHandlers`] that executes this command.
     pub entity: Entity,
@@ -48,7 +48,7 @@ pub struct IpcCommand {
 
 
 /// The command info passed from `javascript`.
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Payload {
     /// Ipc id
     pub id: String,

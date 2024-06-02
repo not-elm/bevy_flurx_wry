@@ -1,13 +1,11 @@
-let resolveIdCount = 0;
-const pendingHandlers: Record<string, any> = {};
-const eventHandlers: Record<string, (event: any) => void> = {};
-
 export const invoke = <Out>(
     id: string,
     args: any = null
 ): Promise<Out> => {
     return new Promise((resolve, reject) => {
-        const resolveId = resolveIdCount++;
+        const resolveId = uid();
+        const prop = `_${resolveId}`;
+
         const convertToArgs = (args: any) => {
             if (args == null) {
                 return {
@@ -30,18 +28,26 @@ export const invoke = <Out>(
         };
 
         window.ipc.postMessage(JSON.stringify(convertToArgs(args)));
-
-        pendingHandlers[resolveId] = (args: Out) => {
-            resolve(args);
-            delete pendingHandlers[resolveId]
-        }
+        Object.defineProperty(window.__FLURX__, prop, {
+            value: (args: Out) => {
+                Reflect.deleteProperty(window.__FLURX__, prop);
+                resolve(args);
+            },
+            writable: false,
+            configurable: true
+        })
     });
 }
 
-export const listen = (eventId: string, f: (event: any) => void) => {
-    eventHandlers[eventId] = f;
+export const listen = <E>(eventId: string, f: (event: E) => void) => {
+    const prop = `_event_${eventId}`;
+    Object.defineProperty(window.__FLURX__, prop, {
+        value: f,
+        writable: false,
+        configurable: true
+    })
     return () => {
-        delete eventHandlers[eventId];
+        Reflect.deleteProperty(window.__FLURX__, prop);
     };
 };
 
@@ -56,9 +62,13 @@ export const emit = (eventId: string, event: any) => {
 };
 
 export const __resolveIpc = (id: string, output: any) => {
-    pendingHandlers[id]?.(output)
+    (window.__FLURX__ as any)[`_${id}`]?.(output)
 };
 
 export const __emitEvent = (eventId: string, event: any) => {
-    eventHandlers[eventId]?.(event);
+    (window.__FLURX__ as any)[`_event_${eventId}`]?.(event)
 };
+
+const uid = () => {
+    return window.crypto.getRandomValues(new Uint32Array(1))[0]
+}

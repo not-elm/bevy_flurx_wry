@@ -22,6 +22,7 @@ pub enum Theme {
 }
 
 impl Theme{
+    #[cfg(target_os = "windows")]
     pub(crate) fn as_wry_theme(&self) -> wry::Theme{
         match self {
             Theme::Auto => wry::Theme::Auto,

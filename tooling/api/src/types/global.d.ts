@@ -12,7 +12,7 @@ declare global {
             log: typeof log,
             invoke: typeof invoke,
             listen: typeof listen,
-            emit: typeof emit
+            emit: typeof emit,
         }
     }
 }

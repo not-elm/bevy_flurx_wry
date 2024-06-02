@@ -159,15 +159,23 @@ In this case, `IpcCommand` can be used.
 Please check  [examples/ipc_command.rs](examples/ipc_command.rs) for details.
 
 
+## Todo
+
+- [ ] Enhance security
+- [ ] Bug fix
+- [ ] Add apis
+- [ ] Support Linux(X11)
+- [ ] Support Linux(Wayland)
+
 ## ChangeLog
 
 Please see [here](https://github.com/not-elm/bevy_flurx_wry/blob/main/CHANGELOG.md).
 
 ## Compatible Bevy versions
 
-| bevy_flurx_wry | bevy   |
-|----------------|--------|
-| 0.1.0-alpha1   | 0.13.2 |
+| bevy_flurx_wry | bevy_flurx | bevy    |
+|----------------|------------|---------|
+| 0.1.0-alpha1   | 0.5.2      |  0.13.2 |
 
 ## License
 
