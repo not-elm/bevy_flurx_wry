@@ -13,7 +13,7 @@ the framework of existing game engines.
 
 ## Platform Support
 
-The operation has been confirmed on `Windows`.
+The operation has been confirmed on `Windows` and `MacOS`.
 
 `Ubuntu` is currently not supported.
 
