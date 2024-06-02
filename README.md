@@ -1,5 +1,9 @@
 # bevy_flurx_wry
 
+[![Crates.io](https://img.shields.io/crates/v/bevy_flurx_wry.svg)](https://crates.io/crates/bevy_flurx_wry)
+[![MIT/Apache 2.0](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)](https://github.com/not-elm/bevy_flurx_wry#license)
+[![Crates.io](https://img.shields.io/crates/d/bevy_flurx_wry.svg)](https://crates.io/crates/bevy_flurx_wry)
+
 > [!CAUTION]
 > This crate is in the early stages of development and is subject to disruptive changes.
 
