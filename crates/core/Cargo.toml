@@ -1,6 +1,7 @@
 [package]
 name = "bevy_flurx_wry_core"
 version = "0.1.0-alpha1"
+description = "The core crate of bevy_flurx_wry"
 edition = "2021"
 authors = ["elm"]
 repository = "https://github.com/not-elm/bevy_flurx_wry"

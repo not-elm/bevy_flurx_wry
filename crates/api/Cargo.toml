@@ -2,6 +2,7 @@
 name = "bevy_flurx_wry_api"
 version = "0.1.0-alpha1"
 edition = "2021"
+description = "Provides the api plugins for bevy_flurx_wry"
 authors = ["elm"]
 repository = "https://github.com/not-elm/bevy_flurx_wry"
 categories = ["game-development"]

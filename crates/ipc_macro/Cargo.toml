@@ -6,6 +6,7 @@ authors = ["elm"]
 repository = "https://github.com/not-elm/bevy_flurx_wry"
 categories = ["game-development"]
 keywords = ["game", "gamedev", "bevy", "ipc"]
+description = "provide ipc-command macro for bevy_flurx_ipc"
 license = "MIT OR Apache-2.0"
 readme = "../../README.md"
 
