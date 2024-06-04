@@ -3,6 +3,7 @@ use bevy::prelude::{Changed, Entity, NonSend, Query, Update};
 
 use crate::common::bundle::WebviewVisible;
 use crate::common::plugin::WryWebViews;
+use crate::util::WryResultLog;
 
 pub struct VisiblePlugin;
 
@@ -18,7 +19,7 @@ fn change_visible(
 ) {
     for (entity, visible) in views.iter() {
         if let Some(webview) = view_map.0.get(&entity) {
-            webview.set_visible(visible.0).unwrap();
+            webview.set_visible(visible.0).output_log_if_failed();
         }
     }
 }

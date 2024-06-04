@@ -5,12 +5,15 @@ use bevy::prelude::{Changed, Commands, Condition, Entity, EventReader, IntoSyste
 use bevy::winit::WinitWindows;
 use mouse_rs::Mouse;
 use serde::Deserialize;
+use wry::raw_window_handle::{HasWindowHandle, RawWindowHandle};
 
 use bevy_flurx_ipc::ipc_events::{IpcEvent, IpcEventExt};
 
 use crate::as_child::bundle::{Bounds, ParentWindow};
 use crate::as_child::CurrentMoving;
+use crate::common::WryWebViews;
 use crate::prelude::{DragEntered, EventEmitter, GripZone};
+use crate::util::WryResultLog;
 
 pub struct GripZonePlugin;
 
@@ -43,7 +46,7 @@ fn move_webview(
     windows: Query<&Window>,
 ) {
     let mouse = Mouse::new();
-    let Ok(pos) = mouse.get_position() else{
+    let Ok(pos) = mouse.get_position() else {
         return;
     };
     let pos = IVec2::new(pos.x, pos.y).as_vec2();
@@ -92,10 +95,42 @@ struct OnGripGrab {
 fn grip_zone_grab(
     mut er: EventReader<IpcEvent<OnGripGrab>>,
     mut commands: Commands,
+    webviews: NonSend<WryWebViews>,
+    winit_windows: NonSend<WinitWindows>,
+    views: Query<&ParentWindow>,
 ) {
     for event in er.read() {
         let pos = &event.payload;
         commands.entity(event.webview_entity).insert(CurrentMoving(Vec2::new(pos.x, pos.y)));
+        let Some(webview) = webviews.0.get(&event.webview_entity) else {
+            continue;
+        };
+        let Some(window_handle) = views
+            .get(event.webview_entity)
+            .ok()
+            .and_then(|p| winit_windows.get_window(p.0))
+            .and_then(|w| w.window_handle().ok())
+            .map(|h| h.as_raw())
+            else {
+                continue;
+            };
+        match window_handle {
+            RawWindowHandle::Win32(handle) => {
+                #[cfg(target_os = "windows")]
+                {
+                    use wry::WebViewExtWindows;
+                    webview.reparent(handle.hwnd.get()).output_log_if_failed();
+                }
+            }
+            RawWindowHandle::AppKit(_) => {
+                #[cfg(target_os = "macos")]
+                {
+                    use wry::WebViewExtMacOS;
+                    webview.reparent(weview.ns_window()).output_log_if_failed();
+                }
+            }
+            _ => {}
+        }
     }
 }
 
