@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 bevy = "0.13.2"
-bevy_flurx_wry = { path = "../../" }
+bevy_flurx_wry = { path = "../..", version = "0.1.0-alpha1"}
 bevy-inspector-egui = "0.24.0"
 serde = { version = "1.0.202", features = ["derive"] }
 

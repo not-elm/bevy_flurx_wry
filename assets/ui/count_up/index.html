@@ -16,7 +16,7 @@
 
 <script>
     document.getElementById("count-button").onclick = async () => {
-        const count = await window.__FLURX__.core.invoke("count_up");
+        const count = await window.__FLURX__.invoke("count_up");
         document.getElementById("count").innerText = count.toString();
     };
 </script>

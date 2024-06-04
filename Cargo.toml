@@ -1,9 +1,9 @@
 [package]
 name = "bevy_flurx_wry"
-version = "0.1.0"
+version = "0.1.0-alpha1"
 edition = "2021"
 authors = ["elm"]
-description = "Provides a mechanism to create a webview based on `wry`."
+description = "Provides a mechanism to create a webview based on wry"
 repository = "https://github.com/not-elm/bevy_flurx_wry"
 categories = ["gui", "game-development"]
 keywords = ["game", "gamedev", "bevy", "wry"]
@@ -21,19 +21,22 @@ exclude = [
 ]
 
 [dependencies]
-bevy_flurx_wry_core = { path = "./crates/core", version = "0.1.0" }
-bevy_flurx_ipc = { path = "crates/ipc", version = "0.1.0" }
-bevy_flurx_wry_api = { path = "crates/api", version = "0.1.0" }
+bevy_flurx_wry_core = { path = "./crates/core", version = "0.1.0-alpha1" }
+bevy_flurx_ipc = { path = "crates/ipc", version = "0.1.0-alpha1" }
+bevy_flurx_wry_api = { path = "crates/api", version = "0.1.0-alpha1" }
+serde = { workspace = true }
 
 [dev-dependencies]
 bevy = "0.13.2"
 bevy_flurx = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 
 [lints]
 workspace = true
 
 [workspace.dependencies]
-bevy_flurx = { path = "../bevy_flurx", version = "0.5.1" }
+bevy_flurx = { version = "0.5.2" }
 serde = { version = "1.0.202", features = ["derive"] }
 serde_json = "1.0.117"
 

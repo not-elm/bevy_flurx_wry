@@ -195,9 +195,29 @@ macro_rules! impl_async_functor {
                })
             }
         }
-
+        
         #[allow(unused)]
         impl<Fut, FI, FO, $($input)?> Functor<(u16, $($input)?)> for FI
+            where
+                FI: Fn() -> FO,
+                FO: Fn($(bevy::prelude::In<$input>,)? WebviewEntity) -> Fut + 'static,
+                Fut: Future,
+                Fut::Output: Serialize,
+                $($input: DeserializeOwned)?
+        {
+            fn func(&self) -> IpcFn{
+               let f = (self)();
+               ipc_fn(move |_, cmd| {
+                   f(
+                       $(cmd.payload.deserialize_args::<$input>(),)?
+                       WebviewEntity(cmd.entity),
+                   )
+               })
+            }
+        }
+
+        #[allow(unused)]
+        impl<Fut, FI, FO, $($input)?> Functor<(u32, $($input)?)> for FI
             where
                 FI: Fn() -> FO,
                 FO: Fn($(bevy::prelude::In<$input>,)? ReactiveTask) -> Fut + 'static,
@@ -217,7 +237,7 @@ macro_rules! impl_async_functor {
         }
 
         #[allow(unused)]
-        impl<Fut, FI, FO, $($input)?> Functor<(u32, $($input)?)> for FI
+        impl<Fut, FI, FO, $($input)?> Functor<(u64, $($input)?)> for FI
             where
                 FI: Fn() -> FO,
                 FO: Fn($(bevy::prelude::In<$input>)?) -> Fut + 'static,

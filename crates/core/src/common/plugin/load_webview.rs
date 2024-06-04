@@ -158,7 +158,7 @@ fn feed_configs2<'a>(
     feed_uri(builder, uri, local_root)
 }
 
-#[allow(clippy::needless_return, unreachable_code)]
+#[allow(clippy::needless_return, unreachable_code, unused_variables)]
 fn feed_platform_configs<'a>(
     builder: WebViewBuilder<'a>,
     (

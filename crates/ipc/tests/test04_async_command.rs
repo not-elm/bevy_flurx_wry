@@ -17,6 +17,11 @@ async fn with_task(task: ReactiveTask) -> String {
 }
 
 #[command]
+async fn with_entity(_: WebviewEntity) -> u32 {
+    0
+}
+
+#[command]
 async fn with_entity_and_task(entity: WebviewEntity, task: ReactiveTask) -> u32 {
     task.will(Update, once::run(move || entity.0.index())).await
 }
@@ -31,6 +36,7 @@ fn main() {
         hello,
         with_task,
         with_entity_and_task,
+        with_entity,
         with_expand_entity_and_task
     ];
 }
