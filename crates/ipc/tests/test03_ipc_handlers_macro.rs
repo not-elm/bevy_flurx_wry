@@ -1,8 +1,9 @@
-use bevy::prelude::In;
+//!  Testing to call the `ipc_handlers!`
+
+use bevy_ecs::prelude::In;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Action;
 use bevy_flurx_ipc::ipc_handlers;
-
 use bevy_flurx_ipc_macro::command;
 
 #[command]

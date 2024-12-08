@@ -1,10 +1,11 @@
 //! Declares the [`WryWebViewBundle`] and associated components.
 
-use bevy::prelude::Bundle;
+use bevy_ecs::prelude::Bundle;
+use bevy_flurx_ipc::prelude::IpcHandlers;
 
+pub use crate::common::bundle::handler::*;
 pub use auto_play::AutoPlay;
 pub use background::Background;
-use bevy_flurx_ipc::prelude::IpcHandlers;
 pub use browser_accelerator_keys::BrowserAcceleratorKeys;
 pub use enable_clipboard::EnableClipboard;
 pub use event_emitter::EventEmitter;
@@ -14,34 +15,31 @@ pub use https_scheme::UseHttpsScheme;
 pub use incognito::Incognito;
 pub use is_open_devtools::IsOpenDevtools;
 pub use theme::Theme;
-pub use webview_uri::WebviewUri;
 pub use use_devtools::UseDevtools;
 pub use user_agent::UserAgent;
 pub use visible::WebviewVisible;
-
-pub use crate::common::bundle::handler::*;
+pub use webview_uri::WebviewUri;
 
 mod auto_play;
 mod background;
+mod browser_accelerator_keys;
 mod enable_clipboard;
+mod event_emitter;
+mod focused;
+mod handler;
+mod hotkeys_zoom;
+mod https_scheme;
+mod incognito;
+mod is_open_devtools;
 mod theme;
 mod use_devtools;
+mod user_agent;
 mod visible;
 mod webview_uri;
-mod is_open_devtools;
-mod event_emitter;
-mod user_agent;
-mod focused;
-mod hotkeys_zoom;
-mod incognito;
-mod browser_accelerator_keys;
-mod https_scheme;
-mod handler;
-
 
 /// The following is a list of required components for generating a webview.
-/// 
-/// Two patterns of webview generation are provided: 
+///
+/// Two patterns of webview generation are provided:
 /// 1. Make the entire [`Window`](bevy::prelude::Window) a webview.
 /// 2. Create it as a child in the [`Window`](bevy::prelude::Window).
 #[derive(Bundle, Default)]
@@ -108,5 +106,3 @@ pub struct WryWebViewBundle {
     /// Used to emit events to the webview.
     pub event_emitter: EventEmitter,
 }
-
-

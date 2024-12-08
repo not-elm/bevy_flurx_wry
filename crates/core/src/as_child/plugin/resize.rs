@@ -1,36 +1,41 @@
-use bevy::app::{App, Update};
-use bevy::input::common_conditions::input_pressed;
-use bevy::prelude::{Added, Changed, Commands, CursorIcon, Entity, IntoSystemConfigs, MouseButton, NonSend, not, Or, Plugin, Query, Window, Without};
-
-use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
 use crate::as_child::bundle::resize::ResizeMode;
+use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
 use crate::as_child::CurrentMoving;
 use crate::common::{WebviewInitialized, WryWebViews};
+use bevy_app::{App, Plugin, Update};
+use bevy_ecs::prelude::{
+    not, Added, Changed, Commands, Entity, IntoSystemConfigs, NonSend, Or, Query, Without,
+};
+use bevy_input::common_conditions::input_pressed;
+use bevy_input::mouse::MouseButton;
+use bevy_window::Window;
+use bevy_winit::cursor::CursorIcon;
 
 pub struct ResizePlugin;
 
 impl Plugin for ResizePlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<ResizeMode>()
-            .add_systems(Update, (
+        app.register_type::<ResizeMode>().add_systems(
+            Update,
+            (
                 change_mouse_cursor_icon.run_if(not(input_pressed(MouseButton::Left))),
                 resize_bounds.run_if(input_pressed(MouseButton::Left)),
-                render_bounds
-            ));
+                render_bounds,
+            ),
+        );
     }
 }
 
 fn change_mouse_cursor_icon(
     mut commands: Commands,
-    mut windows: Query<&mut Window>,
+    mut windows: Query<(Entity, &Window)>,
     views: Query<(Entity, &ParentWindow, &Bounds, &Resizable), Without<CurrentMoving>>,
 ) {
     for (entity, parent, bounds, resizable) in views.iter() {
         if !resizable.0 {
             continue;
         }
-        let Ok(mut window) = windows.get_mut(parent.0) else {
+        let Ok((window_entity, window)) = windows.get_mut(parent.0) else {
             continue;
         };
         let Some(cursor_pos) = window.cursor_position() else {
@@ -38,10 +43,12 @@ fn change_mouse_cursor_icon(
         };
         if let Some(resize_mode) = bounds.maybe_resizable(cursor_pos, None) {
             commands.entity(entity).insert(resize_mode);
-            window.cursor.icon = resize_mode.cursor_icon();
+            commands
+                .entity(window_entity)
+                .insert(CursorIcon::System(resize_mode.cursor_icon()));
         } else {
             commands.entity(entity).remove::<ResizeMode>();
-            window.cursor.icon = CursorIcon::Default;
+            commands.entity(window_entity).insert(CursorIcon::default());
         }
     }
 }
@@ -73,4 +80,3 @@ fn render_bounds(
         }
     }
 }
-

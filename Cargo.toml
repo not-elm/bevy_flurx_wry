@@ -27,7 +27,7 @@ bevy_flurx_wry_api = { path = "crates/api", version = "0.1.0-alpha1" }
 serde = { workspace = true }
 
 [dev-dependencies]
-bevy = "0.13.2"
+bevy = "0.15.0"
 bevy_flurx = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
@@ -36,7 +36,20 @@ serde_json = { workspace = true }
 workspace = true
 
 [workspace.dependencies]
-bevy_flurx = { version = "0.5.2" }
+bevy_winit = "0.15.0"
+bevy_render = "0.15.0"
+bevy_app = { version = "0.15.0" }
+bevy_asset = { version = "0.15.0" }
+bevy_derive = { version = "0.15.0" }
+bevy_utils = { version = "0.15.0" }
+bevy_log = { version = "0.15.0" }
+bevy_reflect = { version = "0.15.0" }
+bevy_math = { version = "0.15.0" }
+bevy_input = { version = "0.15.0" }
+bevy_color = "0.15.1"
+bevy_ecs = "0.15.0"
+bevy_window = "0.15.0"
+bevy_flurx = { version = "0.7.0" }
 serde = { version = "1.0.202", features = ["derive"] }
 serde_json = "1.0.117"
 

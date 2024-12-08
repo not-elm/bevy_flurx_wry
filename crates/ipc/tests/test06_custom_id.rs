@@ -1,3 +1,5 @@
+//! Testing to edit the id of  ipc-command. 
+
 use bevy_flurx_ipc::ipc_handlers;
 use bevy_flurx_ipc_macro::command;
 

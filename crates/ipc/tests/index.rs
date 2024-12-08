@@ -1,3 +1,5 @@
+//! Test process
+
 #[cfg(test)]
 #[test]
 fn tests() {

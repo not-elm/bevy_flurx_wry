@@ -1,8 +1,7 @@
-use bevy::math::{Rect, Vec2};
-use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
-
+use bevy_math::{Rect, Vec2};
+use bevy_ecs::prelude::{Component, ReflectComponent};
+use bevy_reflect::prelude::{ReflectDefault, Reflect};
 use crate::as_child::bundle::resize::ResizeMode;
-
 
 /// Represents the display area of a webview within the parent [`Window`](bevy::prelude::Window).
 /// 
@@ -112,8 +111,8 @@ impl Bounds {
 
 #[cfg(test)]
 mod tests {
-    use bevy::math::Vec2;
-    use bevy::utils::default;
+    use bevy_math::Vec2;
+    use bevy_utils::default;
 
     use crate::as_child::bundle::Bounds;
     use crate::prelude::resize::ResizeMode;

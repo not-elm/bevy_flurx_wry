@@ -1,12 +1,10 @@
 //! This example show how to emit the event to a webview side.
 
-use std::path::PathBuf;
-use std::time::Duration;
-
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
-
 use bevy_flurx_wry::prelude::*;
+use std::path::PathBuf;
+use std::time::Duration;
 
 fn main() {
     App::new()
@@ -41,7 +39,7 @@ fn emit_event(
     if timer.0.tick(time.delta()).finished() {
         *count += 1;
         for mut emitter in views.iter_mut() {
-            emitter.emit("count_event", &serde_json::json!({
+            emitter.emit("count_event", serde_json::json!({
                 "count" : *count
             }));
         }

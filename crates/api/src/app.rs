@@ -1,12 +1,10 @@
 //! Provides mechanism to control the application such as reading metadata, exiting the application, etc.
 
-use bevy::app::AppExit;
-use bevy_flurx::action::{Action, once};
-use bevy_flurx::prelude::ActionSeed;
-
-use bevy_flurx_ipc::command;
-
 use crate::macros::define_api_plugin;
+use bevy_app::AppExit;
+use bevy_flurx::action::{once, Action};
+use bevy_flurx::prelude::ActionSeed;
+use bevy_flurx_ipc::command;
 
 define_api_plugin!(
     /// You will be able to get the application name from typescript(or js).
@@ -64,18 +62,18 @@ fn get_version() -> ActionSeed<(), String> {
 
 #[command(id = "FLURX|app::exit")]
 fn exit() -> Action<AppExit, ()> {
-    once::event::app_exit()
+    once::event::app_exit_success()
 }
 
 
 #[cfg(test)]
 mod tests {
-    use bevy::app::Startup;
-    use bevy::prelude::{Commands, In, Update};
+    use bevy_app::{Startup, Update};
+    use bevy_ecs::prelude::{Commands, In};
     use bevy_flurx::action::once;
     use bevy_flurx::prelude::{Pipe, Reactor};
 
-    use crate::app::{AppExitApiPlugin, AppGetNameApiPlugin, AppGetVersionApiPlugin, get_name_action, };
+    use crate::app::{get_name_action, AppExitApiPlugin, AppGetNameApiPlugin, AppGetVersionApiPlugin};
     use crate::tests::{assert_api_registered, test_app};
 
     #[test]

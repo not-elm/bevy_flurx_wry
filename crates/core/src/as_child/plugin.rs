@@ -1,4 +1,4 @@
-use bevy::app::{App, Plugin};
+use bevy_app::{App, Plugin};
 
 use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
 use crate::as_child::CurrentMoving;

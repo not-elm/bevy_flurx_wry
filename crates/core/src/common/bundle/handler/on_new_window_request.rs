@@ -1,5 +1,5 @@
-use bevy::prelude::Component;
-use bevy::window::Window;
+use bevy_ecs::component::Component;
+use bevy_window::Window;
 use crate::common::bundle::handler::PassedUrl;
 
 pub(crate) type BoxedNewWindowRequest = Box<dyn Fn(PassedUrl) -> Option<Window> + Send + Sync + 'static>;

@@ -1,4 +1,5 @@
-use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
+use bevy_ecs::prelude::{Component, ReflectComponent};
+use bevy_reflect::prelude::{ReflectDefault, Reflect};
 
 /// Please see [`wry::WebViewBuilder::with_browser_accelerator_keys`] for details.
 ///

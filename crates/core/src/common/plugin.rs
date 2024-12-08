@@ -1,24 +1,24 @@
 //! Provides a mechanism to control the basic behavior of Webview.
 
-use bevy::app::{App, Plugin};
-
-use bevy_flurx_ipc::FlurxIpcPlugin;
-
-use crate::common::{WebviewInitialized, WryWebViews};
-use crate::common::bundle::{AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, UseDevtools, UseHttpsScheme, WebviewUri, WebviewVisible};
+use crate::common::bundle::{
+    AutoPlay, Background, EnableClipboard, EventEmitter, HotkeysZoom, Incognito, InitializeFocused,
+    IsOpenDevtools, Theme, UseDevtools, UseHttpsScheme, WebviewUri, WebviewVisible,
+};
 use crate::common::plugin::event_emitter::EventEmitterPlugin;
 use crate::common::plugin::handlers::WryHandlersPlugin;
 use crate::common::plugin::ipc_resolve::IpcResolvePlugin;
 use crate::common::plugin::load_webview::LoadWebviewPlugin;
 use crate::common::plugin::visible::VisiblePlugin;
+use crate::common::{WebviewInitialized, WryWebViews};
 use crate::prelude::PassedUrl;
+use bevy_app::{App, Plugin};
+use bevy_flurx_ipc::FlurxIpcPlugin;
 
-mod ipc_resolve;
-
-mod load_webview;
 mod event_emitter;
-mod visible;
 pub mod handlers;
+mod ipc_resolve;
+mod load_webview;
+mod visible;
 
 #[cfg(debug_assertions)]
 mod devtools;
@@ -36,8 +36,7 @@ impl Plugin for FlurxWryCommonPlugin {
             app.add_plugins(FlurxIpcPlugin);
         }
 
-        app
-            .register_type::<WebviewInitialized>()
+        app.register_type::<WebviewInitialized>()
             .register_type::<AutoPlay>()
             .register_type::<Background>()
             .register_type::<EnableClipboard>()
@@ -65,4 +64,3 @@ impl Plugin for FlurxWryCommonPlugin {
         app.add_plugins(devtools::DevtoolsPlugin);
     }
 }
-

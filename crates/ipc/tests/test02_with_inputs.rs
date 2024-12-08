@@ -1,7 +1,8 @@
-use bevy::prelude::In;
+//!  Testing to define `ipc-command` from a function with input args via macro.
+
+use bevy_ecs::prelude::In;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Action;
-
 use bevy_flurx_ipc::component::IpcHandlers;
 use bevy_flurx_ipc::prelude::WebviewEntity;
 use bevy_flurx_ipc_macro::command;

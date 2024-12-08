@@ -1,7 +1,7 @@
-use bevy::prelude::{Color, Component, Reflect, ReflectComponent, ReflectDefault};
+use bevy_ecs::prelude::{Component, ReflectComponent};
+use bevy_reflect::prelude::{ReflectDefault, Reflect};
 use serde::{Deserialize, Serialize};
-
-
+use bevy_color::Color;
 
 /// Represents the webview background. 
 /// 

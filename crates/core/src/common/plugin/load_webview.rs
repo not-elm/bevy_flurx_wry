@@ -1,28 +1,31 @@
-use bevy::app::{App, Plugin, PreUpdate};
-use bevy::prelude::{Commands, Entity, NonSend, NonSendMut, Or, Query, Res, Window, With, Without};
-use bevy::winit::WinitWindows;
-use wry::WebViewBuilder;
-
 use crate::as_child::bundle::{Bounds, ParentWindow};
-use crate::common::bundle::{AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito, InitializeFocused, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewUri, WebviewVisible};
+use crate::common::bundle::{
+    AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito,
+    InitializeFocused, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewUri, WebviewVisible,
+};
 use crate::common::plugin::handlers::{HandlerQueries, WryEventParams};
 use crate::common::plugin::load_webview::ipc::IpcHandlerParams;
 use crate::common::plugin::load_webview::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
 use crate::WryLocalRoot;
+use bevy_app::{App, Plugin, PreUpdate};
+use bevy_ecs::prelude::{Commands, Entity, NonSend, NonSendMut, Or, Query, Res, With, Without};
+use bevy_winit::WinitWindows;
+use bevy_window::Window;
+use std::ops::Deref;
+use wry::WebViewBuilder;
 
-mod protocol;
 mod ipc;
+mod protocol;
 
 pub struct LoadWebviewPlugin;
 
 impl Plugin for LoadWebviewPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PreUpdate, load_webviews);
+        app.add_systems(PreUpdate, load_web_views);
     }
 }
-
 
 type Configs1<'a> = (
     &'a UseDevtools,
@@ -40,38 +43,34 @@ type Configs2<'a> = (
     &'a WebviewUri,
 );
 
-type ConfigsPlatformSpecific<'a> = (
-    &'a Theme,
-    &'a BrowserAcceleratorKeys,
-    &'a UseHttpsScheme
-);
+type ConfigsPlatformSpecific<'a> = (&'a Theme, &'a BrowserAcceleratorKeys, &'a UseHttpsScheme);
 
-fn load_webviews(
+fn load_web_views(
     mut commands: Commands,
-    mut webviews: NonSendMut<WryWebViews>,
-    mut views: Query<(
-        Entity,
-        HandlerQueries,
-        Configs1,
-        Configs2,
-        ConfigsPlatformSpecific,
-        Option<&ParentWindow>,
-        Option<&Bounds>
-    ), (Without<WebviewInitialized>, Or<(With<Window>, With<ParentWindow>)>)>,
+    mut web_views: NonSendMut<WryWebViews>,
+    mut views: Query<
+        (
+            Entity,
+            HandlerQueries,
+            Configs1,
+            Configs2,
+            ConfigsPlatformSpecific,
+            Option<&ParentWindow>,
+            Option<&Bounds>,
+        ),
+        (
+            Without<WebviewInitialized>,
+            Or<(With<Window>, With<ParentWindow>)>,
+        ),
+    >,
     ipc_params: IpcHandlerParams,
     event_params: WryEventParams,
     local_root: Res<WryLocalRoot>,
     windows: NonSend<WinitWindows>,
 ) {
-    for (
-        webview_entity,
-        handlers,
-        configs1,
-        configs2,
-        configs_platform,
-        parent_window,
-        bounds
-    ) in views.iter_mut() {
+    for (webview_entity, handlers, configs1, configs2, configs_platform, parent_window, bounds) in
+        views.iter_mut()
+    {
         let Some(builder) = new_builder(webview_entity, &parent_window, &bounds, &windows) else {
             continue;
         };
@@ -82,8 +81,10 @@ fn load_webviews(
         let builder = feed_configs2(builder, configs2, &local_root);
         let builder = feed_platform_configs(builder, configs_platform);
         let webview = builder.build().unwrap();
-        commands.entity(webview_entity).insert(WebviewInitialized(()));
-        webviews.0.insert(webview_entity, webview);
+        commands
+            .entity(webview_entity)
+            .insert(WebviewInitialized(()));
+        web_views.0.insert(webview_entity, webview);
     }
 }
 
@@ -94,26 +95,19 @@ fn new_builder<'a>(
     windows: &'a WinitWindows,
 ) -> Option<WebViewBuilder<'a>> {
     if let Some(ParentWindow(parent_entity)) = parent_window {
-        let mut builder = WebViewBuilder::new_as_child(windows.get_window(*parent_entity)?);
+        let mut builder = WebViewBuilder::new_as_child(windows.get_window(*parent_entity)?.deref());
         if let Some(bounds) = bounds {
             builder = builder.with_bounds(bounds.as_wry_rect());
         }
         Some(builder)
     } else {
-        Some(WebViewBuilder::new(windows.get_window(entity)?))
+        Some(WebViewBuilder::new(windows.get_window(entity)?.deref()))
     }
 }
 
 fn feed_configs1<'a>(
     builder: WebViewBuilder<'a>,
-    (
-        dev_tools,
-        auto_play,
-        enable_clipboard,
-        visible,
-        background,
-        incognito,
-    ): Configs1,
+    (dev_tools, auto_play, enable_clipboard, visible, background, incognito): Configs1,
 ) -> WebViewBuilder<'a> {
     let builder = builder
         .with_devtools(dev_tools.0)
@@ -126,7 +120,8 @@ fn feed_configs1<'a>(
         Background::Unspecified => builder,
         Background::Transparent => builder.with_transparent(true),
         Background::Color(color) => {
-            let rgba = color.as_rgba_u8();
+            use bevy_color::ColorToPacked;
+            let rgba = color.to_srgba().to_u8_array();
             builder.with_background_color((rgba[0], rgba[1], rgba[2], rgba[3]))
         }
     }
@@ -134,12 +129,7 @@ fn feed_configs1<'a>(
 
 fn feed_configs2<'a>(
     builder: WebViewBuilder<'a>,
-    (
-        focused,
-        hotkeys_zoom,
-        user_agent,
-        uri,
-    ): Configs2,
+    (focused, hotkeys_zoom, user_agent, uri): Configs2,
     local_root: &WryLocalRoot,
 ) -> WebViewBuilder<'a> {
     let mut builder = builder
@@ -161,11 +151,7 @@ fn feed_configs2<'a>(
 #[allow(clippy::needless_return, unreachable_code, unused_variables)]
 fn feed_platform_configs<'a>(
     builder: WebViewBuilder<'a>,
-    (
-        theme,
-        browser_accelerator_keys,
-        https_scheme
-    ): ConfigsPlatformSpecific,
+    (theme, browser_accelerator_keys, https_scheme): ConfigsPlatformSpecific,
 ) -> WebViewBuilder<'a> {
     #[cfg(target_os = "windows")]
     {
@@ -182,5 +168,3 @@ fn feed_platform_configs<'a>(
     }
     return builder;
 }
-
-

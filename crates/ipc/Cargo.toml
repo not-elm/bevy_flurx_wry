@@ -15,7 +15,13 @@ name = "progress"
 path = "tests/index.rs"
 
 [dependencies]
-bevy = { version = "0.13.2", default-features = false }
+bevy_app = { workspace = true }
+bevy_asset = { workspace = true }
+bevy_reflect = { workspace = true }
+bevy_winit = { workspace = true }
+bevy_ecs = { workspace = true }
+bevy_utils = { workspace = true }
+bevy_log = { workspace = true }
 bevy_flurx_ipc_macro = { path = "../ipc_macro", version = "0.1.0-alpha1" }
 bevy_flurx = { workspace = true }
 serde = { workspace = true }
@@ -23,7 +29,7 @@ serde_json = { workspace = true }
 
 [dev-dependencies]
 trybuild = "1.0.96"
-bevy = "0.13.2"
+bevy = "0.15.0"
 
 [lints]
 workspace = true
