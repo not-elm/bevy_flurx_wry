@@ -1,3 +1,5 @@
+//! Testing to pass async ipc-commands with inputs to the `ipc_handlers!`.
+
 use bevy_app::Update;
 use bevy_ecs::prelude::In;
 use bevy_flurx::action::once;

@@ -1,7 +1,8 @@
+//! Testing to pass async ipc-commands to the `ipc_handlers!`.
+
 use bevy_app::prelude::Update;
 use bevy_flurx::action::once;
 use bevy_flurx::task::ReactiveTask;
-
 use bevy_flurx_ipc::ipc_handlers;
 use bevy_flurx_ipc::prelude::WebviewEntity;
 use bevy_flurx_ipc_macro::command;
