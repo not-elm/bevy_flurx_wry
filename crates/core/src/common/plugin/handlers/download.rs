@@ -2,9 +2,9 @@
 
 use std::path::PathBuf;
 
-use bevy::app::App;
-use bevy::prelude::{Entity, Event, Plugin, Reflect};
-
+use bevy_app::{App, Plugin};
+use bevy_ecs::prelude::{Entity, Event};
+use bevy_reflect::Reflect;
 use crate::common::plugin::handlers::RegisterWryEvent;
 use crate::prelude::PassedUrl;
 

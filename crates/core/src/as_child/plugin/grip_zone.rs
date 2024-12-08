@@ -1,41 +1,44 @@
-use bevy::app::{App, Update};
-use bevy::input::common_conditions::input_just_released;
-use bevy::math::{IVec2, Vec2};
-use bevy::prelude::{Changed, Commands, Condition, Entity, EventReader, IntoSystemConfigs, MouseButton, NonSend, on_event, Plugin, Query, With};
-use bevy::winit::WinitWindows;
-use bevy_window::Window;
-use mouse_rs::Mouse;
-use serde::Deserialize;
-use wry::raw_window_handle::{HasWindowHandle, RawWindowHandle};
-
-use bevy_flurx_ipc::ipc_events::{IpcEvent, IpcEventExt};
-
 use crate::as_child::bundle::{Bounds, ParentWindow};
 use crate::as_child::CurrentMoving;
 use crate::common::WryWebViews;
 use crate::prelude::{DragEntered, EventEmitter, GripZone};
 use crate::util::WryResultLog;
+use bevy_app::{App, Plugin, Update};
+use bevy_ecs::prelude::{
+    on_event, Changed, Commands, Condition, Entity, EventReader, IntoSystemConfigs, NonSend, Query,
+    With,
+};
+use bevy_flurx_ipc::ipc_events::{IpcEvent, IpcEventExt};
+use bevy_input::common_conditions::input_just_released;
+use bevy_input::mouse::MouseButton;
+use bevy_math::{IVec2, Vec2};
+use bevy_window::Window;
+use bevy_winit::WinitWindows;
+use mouse_rs::Mouse;
+use serde::Deserialize;
+use wry::raw_window_handle::{HasWindowHandle, RawWindowHandle};
 
 pub struct GripZonePlugin;
 
 impl Plugin for GripZonePlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_ipc_event::<OnGripGrab>("FLURX|grip::grab")
+        app.add_ipc_event::<OnGripGrab>("FLURX|grip::grab")
             .add_ipc_event::<OnGripRelease>("FLURX|grip::release")
-            .add_systems(Update, (
-                move_webview,
-                all_remove_current_moving.run_if(input_just_released(MouseButton::Left).or(on_event::<DragEntered>)),
-                resize_grip_zone,
-                grip_zone_grab,
-                grip_zone_release
-            ));
+            .add_systems(
+                Update,
+                (
+                    move_webview,
+                    all_remove_current_moving
+                        .run_if(input_just_released(MouseButton::Left).or(on_event::<DragEntered>)),
+                    resize_grip_zone,
+                    grip_zone_grab,
+                    grip_zone_release,
+                ),
+            );
     }
 }
 
-fn resize_grip_zone(
-    mut views: Query<(&mut EventEmitter, &GripZone), Changed<GripZone>>
-) {
+fn resize_grip_zone(mut views: Query<(&mut EventEmitter, &GripZone), Changed<GripZone>>) {
     for (mut emitter, grip_zone) in views.iter_mut() {
         emitter.emit("FLURX|grip::resize", grip_zone.0);
     }
@@ -55,7 +58,8 @@ fn move_webview(
     for (mut bounds, parent, CurrentMoving(d)) in views.iter_mut() {
         let Ok(window_size) = windows
             .get(parent.0)
-            .map(|w| Vec2::new(w.resolution.width(), w.resolution.height())) else {
+            .map(|w| Vec2::new(w.resolution.width(), w.resolution.height()))
+        else {
             continue;
         };
         let Some(winit_window) = winit_windows.get_window(parent.0) else {
@@ -71,17 +75,21 @@ fn move_webview(
     }
 }
 
-fn all_remove_current_moving(
-    mut commands: Commands,
-    views: Query<Entity, With<CurrentMoving>>,
-) {
+fn all_remove_current_moving(mut commands: Commands, views: Query<Entity, With<CurrentMoving>>) {
     for entity in views.iter() {
         commands.entity(entity).remove::<CurrentMoving>();
     }
 }
 
-fn move_bounds(bounds: &mut Bounds, top_left: Vec2, window_size: Vec2, toolbar_height: Option<f32>) {
-    let max = toolbar_height.map(|height| Vec2::new(0., height)).unwrap_or_default();
+fn move_bounds(
+    bounds: &mut Bounds,
+    top_left: Vec2,
+    window_size: Vec2,
+    toolbar_height: Option<f32>,
+) {
+    let max = toolbar_height
+        .map(|height| Vec2::new(0., height))
+        .unwrap_or_default();
     let cursor_pos = top_left.max(max);
     let max_pos = (window_size - bounds.size).max(Vec2::ZERO);
     bounds.position = cursor_pos.min(max_pos);
@@ -102,7 +110,9 @@ fn grip_zone_grab(
 ) {
     for event in er.read() {
         let pos = &event.payload;
-        commands.entity(event.webview_entity).insert(CurrentMoving(Vec2::new(pos.x, pos.y)));
+        commands
+            .entity(event.webview_entity)
+            .insert(CurrentMoving(Vec2::new(pos.x, pos.y)));
         let Some(webview) = webviews.0.get(&event.webview_entity) else {
             continue;
         };
@@ -112,9 +122,9 @@ fn grip_zone_grab(
             .and_then(|p| winit_windows.get_window(p.0))
             .and_then(|w| w.window_handle().ok())
             .map(|h| h.as_raw())
-            else {
-                continue;
-            };
+        else {
+            continue;
+        };
         match window_handle {
             RawWindowHandle::Win32(handle) => {
                 #[cfg(target_os = "windows")]
@@ -141,20 +151,16 @@ struct OnGripRelease {
     __FLURX__grip_release: u8,
 }
 
-fn grip_zone_release(
-    mut er: EventReader<IpcEvent<OnGripRelease>>,
-    mut commands: Commands,
-) {
+fn grip_zone_release(mut er: EventReader<IpcEvent<OnGripRelease>>, mut commands: Commands) {
     for IpcEvent { webview_entity, .. } in er.read() {
         commands.entity(*webview_entity).remove::<CurrentMoving>();
     }
 }
 
-
 #[cfg(test)]
 mod tests {
-    use bevy::math::Vec2;
-    use bevy::utils::default;
+    use bevy_math::Vec2;
+    use bevy_utils::default;
 
     use crate::as_child::plugin::grip_zone::move_bounds;
     use crate::prelude::Bounds;
@@ -162,21 +168,36 @@ mod tests {
     #[test]
     fn stop_top_left_edge() {
         let mut bounds = new_bounds();
-        move_bounds(&mut bounds, Vec2::new(-3., -3.), Vec2::new(100., 100.), None);
+        move_bounds(
+            &mut bounds,
+            Vec2::new(-3., -3.),
+            Vec2::new(100., 100.),
+            None,
+        );
         assert_eq!(bounds.position, Vec2::new(0., 0.));
     }
 
     #[test]
     fn stop_top_left_edge_with_toolbar() {
         let mut bounds = new_bounds();
-        move_bounds(&mut bounds, Vec2::new(-3., -3.), Vec2::new(100., 100.), Some(10.));
+        move_bounds(
+            &mut bounds,
+            Vec2::new(-3., -3.),
+            Vec2::new(100., 100.),
+            Some(10.),
+        );
         assert_eq!(bounds.position, Vec2::new(0., 10.));
     }
 
     #[test]
     fn stop_bottom_right() {
         let mut bounds = new_bounds();
-        move_bounds(&mut bounds, Vec2::new(110., 110.), Vec2::new(100., 100.), None);
+        move_bounds(
+            &mut bounds,
+            Vec2::new(110., 110.),
+            Vec2::new(100., 100.),
+            None,
+        );
         assert_eq!(bounds.position, Vec2::new(95., 90.));
     }
 

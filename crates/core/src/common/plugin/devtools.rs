@@ -1,19 +1,19 @@
-use bevy::app::{App, PostUpdate};
-use bevy::prelude::{Commands, Component, DetectChanges, Entity, NonSend, Plugin, Query, Reflect, ReflectComponent};
-
 use crate::common::bundle::{IsOpenDevtools, UseDevtools};
 use crate::common::plugin::WryWebViews;
+use bevy_reflect::Reflect;
+use bevy_app::{App, Plugin, PostUpdate};
+use bevy_ecs::prelude::{
+    Commands, Component, DetectChanges, Entity, NonSend, Query, ReflectComponent,
+};
 
 pub struct DevtoolsPlugin;
 
 impl Plugin for DevtoolsPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<DevtoolsReady>()
+        app.register_type::<DevtoolsReady>()
             .add_systems(PostUpdate, change_open_devtools);
     }
 }
-
 
 #[derive(Component, Reflect)]
 #[reflect(Component)]
@@ -21,7 +21,12 @@ struct DevtoolsReady;
 
 fn change_open_devtools(
     mut commands: Commands,
-    mut views: Query<(Entity, &mut IsOpenDevtools, &UseDevtools, Option<&DevtoolsReady>)>,
+    mut views: Query<(
+        Entity,
+        &mut IsOpenDevtools,
+        &UseDevtools,
+        Option<&DevtoolsReady>,
+    )>,
     web_views: NonSend<WryWebViews>,
 ) {
     for (entity, mut is_open, use_devtools, ready) in views.iter_mut() {

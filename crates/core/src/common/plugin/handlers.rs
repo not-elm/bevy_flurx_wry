@@ -2,10 +2,10 @@
 
 use std::sync::{Arc, Mutex};
 
-use bevy::app::{App, PreUpdate};
-use bevy::ecs::system::SystemParam;
-use bevy::prelude::{Entity, Event, EventWriter, Mut, Plugin, Res, Resource};
-use bevy::reflect::GetTypeRegistration;
+use bevy_app::{App, Plugin, PreUpdate};
+use bevy_ecs::prelude::{Entity, Event, EventWriter, Mut, Res, Resource};
+use bevy_ecs::system::SystemParam;
+use bevy_reflect::GetTypeRegistration;
 use bevy_window::Window;
 use wry::{PageLoadEvent, WebViewBuilder};
 

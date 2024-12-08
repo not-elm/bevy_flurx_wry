@@ -1,7 +1,8 @@
 //! Provides the mechanism to spawn a webview as a child of an existing window using [`wry::WebViewBuilder::new_as_child`].
 
-use bevy::math::Vec2;
-use bevy::prelude::{Component, Reflect, ReflectComponent};
+use bevy_ecs::prelude::{Component, ReflectComponent};
+use bevy_math::Vec2;
+use bevy_reflect::prelude::Reflect;
 
 pub mod bundle;
 pub(super) mod plugin;
@@ -14,4 +15,3 @@ pub mod prelude {
 #[derive(Component, Reflect)]
 #[reflect(Component)]
 struct CurrentMoving(pub Vec2);
-

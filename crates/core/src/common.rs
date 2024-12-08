@@ -1,7 +1,9 @@
 //! Provides a mechanism to control the basic behavior of Webview.
 
-use bevy::prelude::{Component, Deref, DerefMut, Entity, Reflect, ReflectComponent};
-use bevy::utils::HashMap;
+use bevy_ecs::prelude::{Component, Entity, ReflectComponent};
+use bevy_derive::{Deref, DerefMut};
+use bevy_utils::HashMap;
+use bevy_reflect::Reflect;
 use serde::{Deserialize, Serialize};
 
 pub mod plugin;
@@ -24,7 +26,7 @@ pub mod prelude {
 /// ```no_run
 /// use bevy_flurx_wry::prelude::*;
 /// use bevy_flurx::prelude::*;
-/// use bevy::prelude::*;
+/// use bevy_ecs::prelude::*;
 ///
 /// #[command]
 /// fn custom_api() -> ActionSeed{

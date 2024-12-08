@@ -9,10 +9,9 @@ use crate::common::plugin::load_webview::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
 use crate::WryLocalRoot;
-use bevy::app::{App, Plugin, PreUpdate};
-use bevy::color::ColorToPacked;
-use bevy::prelude::{Commands, Entity, NonSend, NonSendMut, Or, Query, Res, With, Without};
-use bevy::winit::WinitWindows;
+use bevy_app::{App, Plugin, PreUpdate};
+use bevy_ecs::prelude::{Commands, Entity, NonSend, NonSendMut, Or, Query, Res, With, Without};
+use bevy_winit::WinitWindows;
 use bevy_window::Window;
 use std::ops::Deref;
 use wry::WebViewBuilder;
@@ -24,7 +23,7 @@ pub struct LoadWebviewPlugin;
 
 impl Plugin for LoadWebviewPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(PreUpdate, load_webviews);
+        app.add_systems(PreUpdate, load_web_views);
     }
 }
 
@@ -46,9 +45,9 @@ type Configs2<'a> = (
 
 type ConfigsPlatformSpecific<'a> = (&'a Theme, &'a BrowserAcceleratorKeys, &'a UseHttpsScheme);
 
-fn load_webviews(
+fn load_web_views(
     mut commands: Commands,
-    mut webviews: NonSendMut<WryWebViews>,
+    mut web_views: NonSendMut<WryWebViews>,
     mut views: Query<
         (
             Entity,
@@ -85,7 +84,7 @@ fn load_webviews(
         commands
             .entity(webview_entity)
             .insert(WebviewInitialized(()));
-        webviews.0.insert(webview_entity, webview);
+        web_views.0.insert(webview_entity, webview);
     }
 }
 
@@ -121,6 +120,7 @@ fn feed_configs1<'a>(
         Background::Unspecified => builder,
         Background::Transparent => builder.with_transparent(true),
         Background::Color(color) => {
+            use bevy_color::ColorToPacked;
             let rgba = color.to_srgba().to_u8_array();
             builder.with_background_color((rgba[0], rgba[1], rgba[2], rgba[3]))
         }

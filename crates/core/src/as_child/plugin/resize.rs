@@ -2,14 +2,14 @@ use crate::as_child::bundle::resize::ResizeMode;
 use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
 use crate::as_child::CurrentMoving;
 use crate::common::{WebviewInitialized, WryWebViews};
-use bevy::app::{App, Update};
-use bevy::input::common_conditions::input_pressed;
-use bevy_window::Window;
-use bevy::prelude::{
-    not, Added, Changed, Commands, Entity, IntoSystemConfigs, MouseButton, NonSend, Or, Plugin,
-    Query, Without,
+use bevy_app::{App, Plugin, Update};
+use bevy_ecs::prelude::{
+    not, Added, Changed, Commands, Entity, IntoSystemConfigs, NonSend, Or, Query, Without,
 };
-use bevy::winit::cursor::CursorIcon;
+use bevy_input::common_conditions::input_pressed;
+use bevy_input::mouse::MouseButton;
+use bevy_window::Window;
+use bevy_winit::cursor::CursorIcon;
 
 pub struct ResizePlugin;
 

@@ -1,5 +1,7 @@
-use bevy::prelude::{Component, Reflect};
+use bevy_reflect::Reflect;
+use bevy_ecs::prelude::Component;
 use bevy_window::SystemCursorIcon;
+
 
 #[derive(Component, Reflect, Eq, PartialEq, Debug, Copy, Clone)]
 pub(crate) enum ResizeMode {
@@ -13,7 +15,6 @@ pub(crate) enum ResizeMode {
     BottomLeft,
 }
 
-
 impl ResizeMode {
     pub(crate) fn cursor_icon(&self) -> SystemCursorIcon {
         match self {
@@ -22,9 +23,7 @@ impl ResizeMode {
             Self::TopLeft => SystemCursorIcon::NwResize,
             Self::BottomLeft => SystemCursorIcon::SwResize,
             Self::BottomRight => SystemCursorIcon::SeResize,
-            Self::TopRight => SystemCursorIcon::NeResize
+            Self::TopRight => SystemCursorIcon::NeResize,
         }
     }
 }
-
-

@@ -1,4 +1,4 @@
-use bevy::prelude::Component;
+use bevy_ecs::component::Component;
 use bevy_window::Window;
 use crate::common::bundle::handler::PassedUrl;
 

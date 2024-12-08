@@ -1,7 +1,7 @@
 //! Declares the [`AsChildBundle`] and associated components.
 
-use bevy::prelude::{Bundle, Component, Entity, Reflect, ReflectComponent};
-
+use bevy_ecs::prelude::{Bundle, Component, Entity,ReflectComponent};
+use bevy_reflect::Reflect;
 pub use bounds::Bounds;
 pub use grip_zone::GripZone;
 
@@ -18,7 +18,7 @@ mod grip_zone;
 /// ## Examples
 ///
 /// ```no_run
-/// use bevy::prelude::*;
+/// use bevy_ecs::prelude::*;
 /// use bevy::window::PrimaryWindow;
 /// use bevy_flurx_wry_core::prelude::*;
 ///
