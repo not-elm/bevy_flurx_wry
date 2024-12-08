@@ -20,7 +20,7 @@ enum IpcMessage {
     Event(IpcRawEventBody),
 }
 
-impl<'w> IpcHandlerParams<'w> {
+impl IpcHandlerParams<'_> {
     pub(crate) fn feed_ipc<'a>(&self, webview_entity: Entity, builder: WebViewBuilder<'a>) -> WebViewBuilder<'a> {
         let ipc_commands = self.ipc_commands.clone();
         let ipc_raw_events = self.ipc_raw_events.clone();

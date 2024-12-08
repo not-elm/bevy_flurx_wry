@@ -4,24 +4,33 @@ use std::sync::{Arc, Mutex};
 
 use bevy::app::{App, PreUpdate};
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::{Entity, Event, EventWriter, Mut, Plugin, Res, Resource, Window};
+use bevy::prelude::{Entity, Event, EventWriter, Mut, Plugin, Res, Resource};
 use bevy::reflect::GetTypeRegistration;
+use bevy_window::Window;
 use wry::{PageLoadEvent, WebViewBuilder};
 
-use crate::common::plugin::handlers::document_title_changed::{DocumentTitleChanged, DocumentTitlePlugin};
-use crate::common::plugin::handlers::download::{DownloadCompleted, DownloadPlugin, DownloadStarted};
+use crate::common::plugin::handlers::document_title_changed::{
+    DocumentTitleChanged, DocumentTitlePlugin,
+};
+use crate::common::plugin::handlers::download::{
+    DownloadCompleted, DownloadPlugin, DownloadStarted,
+};
 use crate::common::plugin::handlers::dragdrop::{DragDropPlugin, WryDragDrop};
 use crate::common::plugin::handlers::navigation::{Navigated, NavigationPlugin};
-use crate::common::plugin::handlers::new_window_request::{NewWindowRequested, NewWindowRequestedPlugin};
-use crate::common::plugin::handlers::page_load::{PageLoadFinished, PageLoadPlugin, PageLoadStarted};
-use crate::prelude::{PassedUrl, OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest};
+use crate::common::plugin::handlers::new_window_request::{
+    NewWindowRequested, NewWindowRequestedPlugin,
+};
+use crate::common::plugin::handlers::page_load::{
+    PageLoadFinished, PageLoadPlugin, PageLoadStarted,
+};
+use crate::prelude::{OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest, PassedUrl};
 
 pub mod document_title_changed;
+pub mod download;
 pub mod dragdrop;
 pub mod navigation;
-pub mod page_load;
-pub mod download;
 pub mod new_window_request;
+pub mod page_load;
 
 #[allow(missing_docs)]
 pub mod prelude {
@@ -35,23 +44,20 @@ pub mod prelude {
     };
 }
 
-
 pub(super) struct WryHandlersPlugin;
 
 impl Plugin for WryHandlersPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .add_plugins((
-                DocumentTitlePlugin,
-                DragDropPlugin,
-                PageLoadPlugin,
-                NavigationPlugin,
-                DownloadPlugin,
-                NewWindowRequestedPlugin
-            ));
+        app.add_plugins((
+            DocumentTitlePlugin,
+            DragDropPlugin,
+            PageLoadPlugin,
+            NavigationPlugin,
+            DownloadPlugin,
+            NewWindowRequestedPlugin,
+        ));
     }
 }
-
 
 #[derive(Resource)]
 pub(crate) struct WryEvents<T>(pub Arc<Mutex<Vec<T>>>);
@@ -64,7 +70,10 @@ impl<T> WryEvents<T> {
 
     #[inline]
     pub fn take_events(&self) -> Vec<T> {
-        self.0.try_lock().map(|mut guard| std::mem::take(&mut *guard)).unwrap_or_default()
+        self.0
+            .try_lock()
+            .map(|mut guard| std::mem::take(&mut *guard))
+            .unwrap_or_default()
     }
 }
 
@@ -81,15 +90,13 @@ impl<T> Clone for WryEvents<T> {
     }
 }
 
-
 trait RegisterWryEvent {
     fn register_wry_event<E: Event + GetTypeRegistration>(&mut self) -> &mut Self;
 }
 
 impl RegisterWryEvent for App {
     fn register_wry_event<E: Event + GetTypeRegistration>(&mut self) -> &mut Self {
-        self
-            .register_type::<E>()
+        self.register_type::<E>()
             .add_event::<E>()
             .init_resource::<WryEvents<E>>()
             .add_systems(PreUpdate, send_wry_events::<E>)
@@ -100,14 +107,14 @@ pub(crate) type HandlerQueries<'a> = (
     &'a mut OnDownload,
     &'a mut OnDragDrop,
     &'a mut OnNavigation,
-    &'a mut OnNewWindowRequest
+    &'a mut OnNewWindowRequest,
 );
 
 type HandlerQueryArgs<'a> = (
     Mut<'a, OnDownload>,
     Mut<'a, OnDragDrop>,
     Mut<'a, OnNavigation>,
-    Mut<'a, OnNewWindowRequest>
+    Mut<'a, OnNewWindowRequest>,
 );
 
 #[derive(SystemParam)]
@@ -122,8 +129,7 @@ pub(crate) struct WryEventParams<'w> {
     new_win_req_events: Res<'w, WryEvents<NewWindowRequested>>,
 }
 
-
-impl<'w> WryEventParams<'w> {
+impl WryEventParams<'_> {
     pub(crate) fn feed_handlers<'a>(
         &self,
         webview_entity: Entity,
@@ -190,9 +196,7 @@ impl<'w> WryEventParams<'w> {
         on_dragdrop: &mut OnDragDrop,
     ) -> WebViewBuilder<'a> {
         let events = self.drag_drop_events.clone();
-        let on_dragdrop = on_dragdrop
-            .take()
-            .unwrap_or(Box::new(|_| false));
+        let on_dragdrop = on_dragdrop.take().unwrap_or(Box::new(|_| false));
 
         builder.with_drag_drop_handler(move |event| {
             events.push(WryDragDrop {
@@ -209,9 +213,7 @@ impl<'w> WryEventParams<'w> {
         builder: WebViewBuilder<'a>,
         on_navigation: &mut OnNavigation,
     ) -> WebViewBuilder<'a> {
-        let on_navigation = on_navigation
-            .take()
-            .unwrap_or(Box::new(|_| true));
+        let on_navigation = on_navigation.take().unwrap_or(Box::new(|_| true));
 
         let events = self.navigation_events.clone();
         builder.with_navigation_handler(move |uri| {
@@ -233,9 +235,7 @@ impl<'w> WryEventParams<'w> {
         builder: WebViewBuilder<'a>,
         on_download: &mut OnDownload,
     ) -> WebViewBuilder<'a> {
-        let mut on_download = on_download
-            .take()
-            .unwrap_or(Box::new(|_, _| true));
+        let mut on_download = on_download.take().unwrap_or(Box::new(|_, _| true));
 
         let started = self.download_started_events.clone();
         let finished = self.download_completed_events.clone();
@@ -274,24 +274,20 @@ impl<'w> WryEventParams<'w> {
             .take()
             .unwrap_or(Box::new(|_| Some(Window::default())));
 
-        builder
-            .with_new_window_req_handler(move |url| {
-                let url = PassedUrl(url);
-                if let Some(window) = on_new_window_request(url.clone()) {
-                    events.push(NewWindowRequested {
-                        webview_entity,
-                        url,
-                        window,
-                    });
-                }
-                false
-            })
+        builder.with_new_window_req_handler(move |url| {
+            let url = PassedUrl(url);
+            if let Some(window) = on_new_window_request(url.clone()) {
+                events.push(NewWindowRequested {
+                    webview_entity,
+                    url,
+                    window,
+                });
+            }
+            false
+        })
     }
 }
 
-fn send_wry_events<E: Event>(
-    mut ew: EventWriter<E>,
-    events: Res<WryEvents<E>>,
-) {
+fn send_wry_events<E: Event>(mut ew: EventWriter<E>, events: Res<WryEvents<E>>) {
     ew.send_batch(events.take_events());
 }

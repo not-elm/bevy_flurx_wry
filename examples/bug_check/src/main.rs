@@ -1,16 +1,14 @@
 //! This is code for bug checking during development.
 
-use std::fmt::Debug;
-use std::path::PathBuf;
-
 use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
 use bevy::window::PrimaryWindow;
+use bevy_flurx_wry::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use serde::Deserialize;
-
-use bevy_flurx_wry::prelude::*;
+use std::fmt::Debug;
+use std::path::PathBuf;
 
 #[derive(Component)]
 struct WebviewWindow;
@@ -19,7 +17,7 @@ struct WebviewWindow;
 #[allow(dead_code)]
 struct OnClickOnWebview {
     pub x: u32,
-    pub y: u32
+    pub y: u32,
 }
 
 fn main() {
@@ -28,7 +26,7 @@ fn main() {
             DefaultPlugins,
             WorldInspectorPlugin::new(),
             FlurxWryPlugin {
-                local_root: PathBuf::from("ui").join("bug_check")
+                local_root: PathBuf::from("ui").join("bug_check"),
             },
             AppGetNameApiPlugin,
             AppGetVersionApiPlugin,
@@ -36,35 +34,30 @@ fn main() {
             LogPrintlnApiPlugin,
         ))
         .add_ipc_event::<OnClickOnWebview>("onclick")
-        .add_systems(Startup, (
-            spawn_camera,
-            spawn_webview
-        ))
-        .add_systems(Update, (
-            event_console_output::<IpcEvent<OnClickOnWebview>>,
-            event_console_output::<DownloadStarted>,
-            event_console_output::<DownloadCompleted>,
-            event_console_output::<NewWindowOpened>,
-            event_console_output::<DragEntered>,
-            event_console_output::<DragOver>,
-            event_console_output::<Dropped>,
-            event_console_output::<DragLeft>,
-            event_console_output::<Navigated>,
-            test_event_emit.run_if(input_just_pressed(KeyCode::KeyR))
-        ))
+        .add_systems(Startup, (spawn_camera, spawn_webview))
+        .add_systems(
+            Update,
+            (
+                event_console_output::<IpcEvent<OnClickOnWebview>>,
+                event_console_output::<DownloadStarted>,
+                event_console_output::<DownloadCompleted>,
+                event_console_output::<NewWindowOpened>,
+                event_console_output::<DragEntered>,
+                event_console_output::<bevy_flurx_wry::prelude::DragOver>,
+                event_console_output::<Dropped>,
+                event_console_output::<DragLeft>,
+                event_console_output::<Navigated>,
+                test_event_emit.run_if(input_just_pressed(KeyCode::KeyR)),
+            ),
+        )
         .run();
 }
 
-fn spawn_camera(
-    mut commands: Commands
-) {
-    commands.spawn(Camera2dBundle::default());
+fn spawn_camera(mut commands: Commands) {
+    commands.spawn(Camera2d);
 }
 
-fn spawn_webview(
-    mut commands: Commands,
-    primary_window: Query<Entity, With<PrimaryWindow>>,
-) {
+fn spawn_webview(mut commands: Commands, primary_window: Query<Entity, With<PrimaryWindow>>) {
     commands.spawn((
         WebviewWindow,
         WryWebViewBundle {
@@ -82,27 +75,25 @@ fn spawn_webview(
                 ..default()
             },
             ..default()
-        }
+        },
     ));
 }
 
-fn test_event_emit(
-    mut views: Query<&mut EventEmitter, With<WebviewWindow>>
-) {
+fn test_event_emit(mut views: Query<&mut EventEmitter, With<WebviewWindow>>) {
     #[derive(Serialize)]
     struct Payload {
         message: String,
     }
 
-    views.single_mut().emit("test_event", Payload {
-        message: "test message!".to_string()
-    });
+    views.single_mut().emit(
+        "test_event",
+        Payload {
+            message: "test message!".to_string(),
+        },
+    );
 }
 
-
-fn event_console_output<E: Event + Debug>(
-    mut er: EventReader<E>
-) {
+fn event_console_output<E: Event + Debug>(mut er: EventReader<E>) {
     for e in er.read() {
         println!("{e:?}");
     }

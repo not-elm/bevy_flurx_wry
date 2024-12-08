@@ -1,8 +1,6 @@
 use bevy::math::{Rect, Vec2};
 use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
-
 use crate::as_child::bundle::resize::ResizeMode;
-
 
 /// Represents the display area of a webview within the parent [`Window`](bevy::prelude::Window).
 /// 

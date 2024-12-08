@@ -97,7 +97,7 @@ impl IpcEventExt for App {
             .insert_resource(IpcEvents(Arc::clone(&events.0)))
             .add_systems(PreUpdate, send_ipc_events::<P>.after(read_raw_events));
 
-        let handlers = self.world.get_resource_or_insert_with::<IpcEventHandlers>(IpcEventHandlers::default);
+        let handlers = self.world_mut().get_resource_or_insert_with::<IpcEventHandlers>(IpcEventHandlers::default);
         let event_id = event_id.into();
         handlers.0.lock().unwrap().insert(event_id.clone(), Box::new(move |raw_event| {
             match serde_json::from_str::<P>(&raw_event.body.payload) {

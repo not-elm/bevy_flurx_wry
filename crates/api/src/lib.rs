@@ -1,3 +1,4 @@
+#![allow(clippy::doc_markdown)]
 #![doc = include_str!("../README.md")]
 
 pub mod app;
@@ -65,8 +66,8 @@ mod tests {
             ));
         });
         app.update();
-        app.world.run_system_once(move |handlers: Query<&IpcHandlers>| {
+        app.world_mut().run_system_once(move |handlers: Query<&IpcHandlers>| {
             assert!(handlers.single().get(ipc_id).is_some());
-        });
+        }).expect("Failed to run system");
     }
 }

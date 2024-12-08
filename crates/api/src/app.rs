@@ -64,7 +64,7 @@ fn get_version() -> ActionSeed<(), String> {
 
 #[command(id = "FLURX|app::exit")]
 fn exit() -> Action<AppExit, ()> {
-    once::event::app_exit()
+    once::event::app_exit_success()
 }
 
 

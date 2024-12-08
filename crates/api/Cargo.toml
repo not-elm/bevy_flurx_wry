@@ -11,14 +11,14 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 
 [dependencies]
-bevy = { version = "0.13.2", default-features = false }
+bevy = { version = "0.15.0", default-features = false }
 bevy_flurx = { workspace = true }
 bevy_flurx_ipc = { path = "../ipc", version = "0.1.0-alpha1" }
 bevy_flurx_wry_core = { path = "../core", version = "0.1.0-alpha1" }
 serde = { workspace = true }
 
 [dev-dependencies]
-bevy = "0.13.2"
+bevy = "0.15.0"
 
 [lints]
 workspace = true

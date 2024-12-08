@@ -3,8 +3,7 @@
 use bevy::app::{App, PreUpdate};
 use bevy::prelude::{Commands, Entity, Event, EventWriter, Plugin, Reflect, Res};
 use bevy::utils::default;
-use bevy::window::Window;
-
+use bevy_window::Window;
 use crate::common::plugin::handlers::{RegisterWryEvent, WryEvents};
 use crate::prelude::{PassedUrl, WebviewUri, WryWebViewBundle};
 

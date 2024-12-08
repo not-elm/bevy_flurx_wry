@@ -1,8 +1,9 @@
 use bevy::app::{App, Update};
 use bevy::input::common_conditions::input_just_released;
 use bevy::math::{IVec2, Vec2};
-use bevy::prelude::{Changed, Commands, Condition, Entity, EventReader, IntoSystemConfigs, MouseButton, NonSend, on_event, Plugin, Query, Window, With};
+use bevy::prelude::{Changed, Commands, Condition, Entity, EventReader, IntoSystemConfigs, MouseButton, NonSend, on_event, Plugin, Query, With};
 use bevy::winit::WinitWindows;
+use bevy_window::Window;
 use mouse_rs::Mouse;
 use serde::Deserialize;
 use wry::raw_window_handle::{HasWindowHandle, RawWindowHandle};
@@ -24,7 +25,7 @@ impl Plugin for GripZonePlugin {
             .add_ipc_event::<OnGripRelease>("FLURX|grip::release")
             .add_systems(Update, (
                 move_webview,
-                all_remove_current_moving.run_if(input_just_released(MouseButton::Left).or_else(on_event::<DragEntered>())),
+                all_remove_current_moving.run_if(input_just_released(MouseButton::Left).or(on_event::<DragEntered>)),
                 resize_grip_zone,
                 grip_zone_grab,
                 grip_zone_release

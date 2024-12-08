@@ -11,11 +11,12 @@ license = "MIT OR Apache-2.0"
 readme = "../../README.md"
 
 [dependencies]
-bevy = { version = "0.13.2", default-features = false, features = [
+bevy = { version = "0.15.0", default-features = false, features = [
     "bevy_winit",
     "bevy_render",
     "bevy_ui"
 ] }
+bevy_window = { workspace = true }
 wry = { version = "0.39.5" }
 bevy_flurx_ipc = { path = "../ipc", version = "0.1.0-alpha1" }
 bevy_flurx = { workspace = true }
@@ -24,8 +25,7 @@ serde_json = { workspace = true }
 mouse-rs = "0.4.2"
 
 [dev-dependencies]
-bevy = "0.13.2"
-bevy_test_helper = { git = "https://github.com/not-elm/bevy_test_helper" }
+bevy = "0.15.0"
 bevy_flurx_wry = { path = "../.." }
 
 [lints]
