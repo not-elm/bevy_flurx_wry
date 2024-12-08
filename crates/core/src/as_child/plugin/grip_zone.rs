@@ -2,6 +2,7 @@ use crate::as_child::bundle::{Bounds, ParentWindow};
 use crate::as_child::CurrentMoving;
 use crate::common::WryWebViews;
 use crate::prelude::{DragEntered, EventEmitter, GripZone};
+#[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::util::WryResultLog;
 use bevy_app::{App, Plugin, Update};
 use bevy_ecs::prelude::{
@@ -113,7 +114,7 @@ fn grip_zone_grab(
         commands
             .entity(event.webview_entity)
             .insert(CurrentMoving(Vec2::new(pos.x, pos.y)));
-        let Some(webview) = webviews.0.get(&event.webview_entity) else {
+        let Some(_webview) = webviews.0.get(&event.webview_entity) else {
             continue;
         };
         let Some(window_handle) = views
@@ -126,18 +127,18 @@ fn grip_zone_grab(
             continue;
         };
         match window_handle {
+            #[cfg(target_os = "windows")]
             RawWindowHandle::Win32(handle) => {
-                #[cfg(target_os = "windows")]
                 {
                     use wry::WebViewExtWindows;
-                    webview.reparent(handle.hwnd.get()).output_log_if_failed();
+                    _webview.reparent(handle.hwnd.get()).output_log_if_failed();
                 }
             }
+            #[cfg(target_os = "macos")]
             RawWindowHandle::AppKit(_) => {
-                #[cfg(target_os = "macos")]
                 {
                     use wry::WebViewExtMacOS;
-                    webview.reparent(weview.ns_window()).output_log_if_failed();
+                    _webview.reparent(weview.ns_window()).output_log_if_failed();
                 }
             }
             _ => {}
