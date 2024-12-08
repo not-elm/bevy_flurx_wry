@@ -39,6 +39,7 @@ workspace = true
 bevy_winit = "0.15.0"
 bevy_render = "0.15.0"
 bevy_app = { version = "0.15.0" }
+bevy_asset = { version = "0.15.0" }
 bevy_derive = { version = "0.15.0" }
 bevy_utils = { version = "0.15.0" }
 bevy_log = { version = "0.15.0" }

@@ -1,7 +1,7 @@
 //! This library facilitates communication between the `webview` and `bevy`.
 
 
-use bevy::app::{App, Plugin};
+use bevy_app::{App, Plugin};
 use bevy_flurx::FlurxPlugin;
 
 pub use bevy_flurx_ipc_macro::command;

@@ -1,14 +1,13 @@
 //! Defines the ipc commands and the queue to execute them.
 
-use std::sync::{Arc, Mutex};
-
-use bevy::app::{App, Plugin, Update};
-use bevy::prelude::{Commands, Entity, Event, Query, Reflect, Res, Resource};
-use bevy_flurx::prelude::Reactor;
-use serde::{Deserialize, Serialize};
-use serde::de::DeserializeOwned;
-
 use crate::component::{IpcHandlers, WebviewEntity};
+use bevy_app::{App, Plugin, Update};
+use bevy_ecs::prelude::{Commands, Entity, Event, Query, Res, Resource};
+use bevy_flurx::prelude::Reactor;
+use bevy_reflect::Reflect;
+use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
+use std::sync::{Arc, Mutex};
 
 /// The ipc commands that exists only one in the [`World`](bevy::prelude::World).
 #[derive(Resource, Clone, Default)]
@@ -25,14 +24,12 @@ impl IpcCommands {
 
     #[inline(always)]
     pub(crate) fn take_commands(&self) -> Vec<IpcCommand> {
-        self
-            .0
+        self.0
             .try_lock()
             .map(|mut guard| std::mem::take(&mut *guard))
             .unwrap_or_default()
     }
 }
-
 
 /// The ipc command to execute.
 ///
@@ -45,7 +42,6 @@ pub struct IpcCommand {
     /// The command info passed from `javascript`.
     pub payload: Payload,
 }
-
 
 /// The command info passed from `javascript`.
 #[derive(Deserialize, Debug)]
@@ -70,15 +66,19 @@ impl Payload {
     /// ## Panics
     ///
     /// Panics if deserialization fails or arguments does not exist.
-    pub fn deserialize_args<Args>(&self) -> bevy::prelude::In<Args>
-        where
-            Args: DeserializeOwned
+    pub fn deserialize_args<Args>(&self) -> bevy_ecs::prelude::In<Args>
+    where
+        Args: DeserializeOwned,
     {
-        let args = serde_json::from_str::<Args>(self.args.as_ref().unwrap()).unwrap_or_else(|_| panic!("failed deserialize ipc args type: {}", std::any::type_name::<Args>()));
-        bevy::prelude::In(args)
+        let args = serde_json::from_str::<Args>(self.args.as_ref().unwrap()).unwrap_or_else(|_| {
+            panic!(
+                "failed deserialize ipc args type: {}",
+                std::any::type_name::<Args>()
+            )
+        });
+        bevy_ecs::prelude::In(args)
     }
 }
-
 
 /// The event signals the end of ipc processing.
 #[derive(Event, Eq, PartialEq, Clone, Serialize, Deserialize, Reflect)]
@@ -93,14 +93,12 @@ pub struct IpcResolveEvent {
     pub output: String,
 }
 
-
 /// The common plugin for IPC communication between `Webview` and `bevy`.
 pub(crate) struct FlurxIpcCommandPlugin;
 
 impl Plugin for FlurxIpcCommandPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<WebviewEntity>()
+        app.register_type::<WebviewEntity>()
             .add_event::<IpcResolveEvent>()
             .init_resource::<IpcCommands>()
             .add_systems(Update, receive_ipc_commands);

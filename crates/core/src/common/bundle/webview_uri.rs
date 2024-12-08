@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize};
 /// Default is `flurx://localhost/`.
 ///
 /// ```no_run
-/// use bevy_ecs::prelude::*;
+/// use bevy::prelude::*;
 /// use bevy_flurx_wry_core::prelude::*;
 /// use std::path::PathBuf;
 /// use bevy::window::PrimaryWindow;

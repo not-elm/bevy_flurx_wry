@@ -1,4 +1,4 @@
-use bevy::prelude::Update;
+use bevy_app::prelude::Update;
 use bevy_flurx::action::once;
 use bevy_flurx::task::ReactiveTask;
 
