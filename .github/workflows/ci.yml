@@ -13,7 +13,7 @@ jobs:
       - name: Toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: Install alsa and udev
-        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev libgtk-3-dev libsoup3.0-dev
+        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev libgtk-3-dev libwebkit2gtk-4.1-dev
         if: runner.os == 'linux'
       - name: Test all features
         run: cargo test --all-features --all
@@ -27,7 +27,7 @@ jobs:
         with:
           components: clippy
       - name: Install alsa and udev
-        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev libgtk-3-dev libsoup3.0-dev
+        run: sudo apt-get update; sudo apt-get install --no-install-recommends libasound2-dev libudev-dev libgtk-3-dev libwebkit2gtk-4.1-dev
         if: runner.os == 'linux'
       - name: Clippy all features
         run: cargo clippy --all-targets --all-features -- -D warnings
