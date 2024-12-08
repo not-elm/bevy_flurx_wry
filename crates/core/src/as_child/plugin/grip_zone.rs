@@ -17,7 +17,9 @@ use bevy_window::Window;
 use bevy_winit::WinitWindows;
 use mouse_rs::Mouse;
 use serde::Deserialize;
-use wry::raw_window_handle::{HasWindowHandle, RawWindowHandle};
+#[cfg(any(target_os = "windows", target_os = "macos"))]
+use wry::raw_window_handle::RawWindowHandle;
+use wry::raw_window_handle::HasWindowHandle;
 
 pub struct GripZonePlugin;
 
