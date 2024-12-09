@@ -11,10 +11,10 @@ use crate::common::WebviewInitialized;
 use crate::WryLocalRoot;
 use bevy_app::{App, Plugin, PreUpdate};
 use bevy_ecs::prelude::{Commands, Entity, NonSend, NonSendMut, Or, Query, Res, With, Without};
-use bevy_winit::WinitWindows;
 use bevy_window::Window;
+use bevy_winit::WinitWindows;
 use std::ops::Deref;
-use wry::WebViewBuilder;
+use wry::{WebView, WebViewBuilder};
 
 mod ipc;
 mod protocol;
@@ -71,7 +71,7 @@ fn load_web_views(
     for (webview_entity, handlers, configs1, configs2, configs_platform, parent_window, bounds) in
         views.iter_mut()
     {
-        let Some(builder) = new_builder(webview_entity, &parent_window, &bounds, &windows) else {
+        let Some(builder) = new_builder(parent_window.is_some(), &bounds) else {
             continue;
         };
 
@@ -80,7 +80,7 @@ fn load_web_views(
         let builder = feed_configs1(builder, configs1);
         let builder = feed_configs2(builder, configs2, &local_root);
         let builder = feed_platform_configs(builder, configs_platform);
-        let webview = builder.build().unwrap();
+        let webview = build_webview(builder, webview_entity, parent_window, &windows).unwrap();
         commands
             .entity(webview_entity)
             .insert(WebviewInitialized(()));
@@ -89,19 +89,17 @@ fn load_web_views(
 }
 
 fn new_builder<'a>(
-    entity: Entity,
-    parent_window: &Option<&ParentWindow>,
+    has_parent: bool,
     bounds: &Option<&Bounds>,
-    windows: &'a WinitWindows,
 ) -> Option<WebViewBuilder<'a>> {
-    if let Some(ParentWindow(parent_entity)) = parent_window {
-        let mut builder = WebViewBuilder::new_as_child(windows.get_window(*parent_entity)?.deref());
+    if has_parent {
+        let mut builder = WebViewBuilder::new();
         if let Some(bounds) = bounds {
             builder = builder.with_bounds(bounds.as_wry_rect());
         }
         Some(builder)
     } else {
-        Some(WebViewBuilder::new(windows.get_window(entity)?.deref()))
+        Some(WebViewBuilder::new())
     }
 }
 
@@ -167,4 +165,22 @@ fn feed_platform_configs<'a>(
         return builder.with_https_scheme(https_scheme.0);
     }
     return builder;
+}
+
+fn build_webview(
+    builder: WebViewBuilder,
+    window_entity: Entity,
+    parent_window: Option<&ParentWindow>,
+    windows: &WinitWindows,
+) -> wry::Result<WebView> {
+    if let Some(parent_window) = parent_window
+        .map(|parent| parent.0)
+        .and_then(|parent| windows.get_window(parent))
+    {
+        builder.build_as_child(parent_window.deref())
+    } else if let Some(window) = windows.get_window(window_entity) {
+        builder.build(window.deref())
+    } else {
+        todo!()
+    }
 }

@@ -22,7 +22,7 @@ bevy_winit = { workspace = true }
 bevy_input = { workspace = true }
 bevy_log = { workspace = true }
 bevy_math = { workspace = true }
-wry = { version = "0.39.5" }
+wry = { version = "0.47.2" }
 bevy_flurx_ipc = { path = "../ipc", version = "0.1.0-alpha1" }
 bevy_flurx = { workspace = true }
 serde = { workspace = true }

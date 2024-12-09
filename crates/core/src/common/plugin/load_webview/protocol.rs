@@ -21,7 +21,7 @@ fn feed_custom_protocol(
     local_root: WryLocalRoot,
 ) -> WebViewBuilder {
     let local_root = local_root.0;
-    builder.with_custom_protocol("flurx".to_string(), move |request| {
+    builder.with_custom_protocol("flurx".to_string(), move |_, request| {
         match get_response(request, &local_root) {
             Ok(r) => r.map(Into::into),
             Err(e) => http::Response::builder()

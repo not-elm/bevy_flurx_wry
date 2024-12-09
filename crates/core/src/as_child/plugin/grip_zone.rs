@@ -131,10 +131,8 @@ fn grip_zone_grab(
         match window_handle {
             #[cfg(target_os = "windows")]
             RawWindowHandle::Win32(handle) => {
-                {
-                    use wry::WebViewExtWindows;
-                    _webview.reparent(handle.hwnd.get()).output_log_if_failed();
-                }
+                use wry::WebViewExtWindows;
+                _webview.reparent(handle.hwnd.get()).output_log_if_failed();
             }
             #[cfg(target_os = "macos")]
             RawWindowHandle::AppKit(_) => {
