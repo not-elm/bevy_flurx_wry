@@ -185,6 +185,18 @@ This crate is licensed under the MIT License or the Apache License 2.0.
 ## Todo
 - bugfix
   - [ ] the webview could be moved without dragging.
+- api
+  - [ ] fs
+  - [ ] clipboard
+  - [ ] dialog
+  - [ ] http
+  - [ ] mocks
+  - [ ] notification
+  - [ ] os
+  - [ ] path
+  - [ ] process
+  - [ ] shell
+  - [ ] window
 - security
-  - [ x ] csp 
+  - [x] csp 
   - [ ] scope
