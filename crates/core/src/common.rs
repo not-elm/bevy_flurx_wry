@@ -13,6 +13,7 @@ pub mod bundle;
 pub mod prelude {
     pub use crate::common::{
         bundle::*,
+        bundle::csp::Csp,
         plugin::prelude::*,
         WebviewInitialized,
         WryWebViews,

@@ -1,28 +1,31 @@
 use std::path::PathBuf;
 
-use wry::{http, WebViewBuilder};
-use wry::http::header::CONTENT_TYPE;
+use wry::http::header::{CONTENT_SECURITY_POLICY, CONTENT_TYPE};
 use wry::http::Response;
+use wry::{http, WebViewBuilder};
 
 use crate::common::bundle::WebviewUri;
+use crate::prelude::csp::Csp;
 use crate::WryLocalRoot;
 
 pub fn feed_uri<'a>(
     builder: WebViewBuilder<'a>,
     uri: &WebviewUri,
     local_root: &WryLocalRoot,
+    csp: Option<Csp>,
 ) -> WebViewBuilder<'a> {
     let builder = builder.with_url(uri.0.to_string());
-    feed_custom_protocol(builder, local_root.clone())
+    feed_custom_protocol(builder, local_root.clone(), csp)
 }
 
 fn feed_custom_protocol(
     builder: WebViewBuilder,
     local_root: WryLocalRoot,
+    csp: Option<Csp>,
 ) -> WebViewBuilder {
     let local_root = local_root.0;
     builder.with_custom_protocol("flurx".to_string(), move |_, request| {
-        match get_response(request, &local_root) {
+        match get_response(request, &local_root, &csp) {
             Ok(r) => r.map(Into::into),
             Err(e) => http::Response::builder()
                 .header(CONTENT_TYPE, "text/plain")
@@ -37,6 +40,7 @@ fn feed_custom_protocol(
 fn get_response(
     request: wry::http::Request<Vec<u8>>,
     local_root: &PathBuf,
+    csp: &Option<Csp>,
 ) -> Result<http::Response<Vec<u8>>, Box<dyn std::error::Error>> {
     let path = request.uri().path();
     let root = PathBuf::from("assets").join(local_root);
@@ -89,7 +93,11 @@ fn get_response(
         panic!("not implemented content type {path}");
     };
 
-    Response::builder()
+    let mut response_builder = Response::builder();
+    if let Some(csp) = csp {
+        response_builder = response_builder.header(CONTENT_SECURITY_POLICY, csp.0.as_str());
+    }
+    response_builder
         .header(CONTENT_TYPE, mimetype)
         .body(content)
         .map_err(Into::into)

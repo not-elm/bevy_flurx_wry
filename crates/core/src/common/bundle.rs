@@ -36,6 +36,7 @@ mod use_devtools;
 mod user_agent;
 mod visible;
 mod webview_uri;
+pub mod csp;
 
 /// The following is a list of required components for generating a webview.
 ///
