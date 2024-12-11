@@ -7,17 +7,17 @@ use bevy_flurx_ipc::component::IpcHandlers;
 use bevy_flurx_ipc::prelude::WebviewEntity;
 use bevy_flurx_ipc_macro::command;
 
-#[command]
+#[command(internal)]
 fn hello1(name: In<String>) -> Action<String> {
     once::run(|In(_): In<String>| {}).with(name.0)
 }
 
-#[command]
+#[command(internal)]
 fn hello2(In(name): In<String>) -> Action<String> {
     once::run(|In(_): In<String>| {}).with(name)
 }
 
-#[command]
+#[command(internal)]
 fn hello3(name: In<String>, WebviewEntity(_): WebviewEntity) -> Action<String> {
     once::run(|In(_): In<String>| {}).with(name.0)
 }

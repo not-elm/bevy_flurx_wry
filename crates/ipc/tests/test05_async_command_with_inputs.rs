@@ -9,7 +9,7 @@ use bevy_flurx_ipc::prelude::WebviewEntity;
 use bevy_flurx_ipc_macro::command;
 use serde::Deserialize;
 
-#[command]
+#[command(internal)]
 async fn hello(In(num): In<u32>) -> String {
     num.to_string()
 }
@@ -17,17 +17,17 @@ async fn hello(In(num): In<u32>) -> String {
 #[derive(Deserialize)]
 struct Test;
 
-#[command]
+#[command(internal)]
 async fn with_task1(In(message): In<String>, task: ReactiveTask) -> String {
     task.will(Update, once::run(move || message.to_string())).await
 }
 
-#[command]
+#[command(internal)]
 async fn with_task2(In((_, message)): In<(Test, String)>, task: ReactiveTask) -> String {
     task.will(Update, once::run(move || message.to_string())).await
 }
 
-#[command]
+#[command(internal)]
 async fn with_entity_and_task(
     In(message): In<String>,
     _: WebviewEntity,
@@ -36,7 +36,7 @@ async fn with_entity_and_task(
     task.will(Update, once::run(move || message.len())).await
 }
 
-#[command]
+#[command(internal)]
 async fn with_expand_entity_and_task(
     In(_): In<String>,
     WebviewEntity(entity): WebviewEntity,

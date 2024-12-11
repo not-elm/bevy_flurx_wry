@@ -42,7 +42,7 @@ define_api_plugin!(
     command: exit
 );
 
-#[command(id = "FLURX|app::get_name")]
+#[command(id = "FLURX|app::get_name", internal)]
 fn get_name() -> ActionSeed<(), String> {
     get_name_action()
 }
@@ -53,14 +53,14 @@ fn get_name_action() -> ActionSeed<(), String> {
     })
 }
 
-#[command(id = "FLURX|app::get_version")]
+#[command(id = "FLURX|app::get_version", internal)]
 fn get_version() -> ActionSeed<(), String> {
     once::run(|| {
         env!("CARGO_PKG_VERSION").to_string()
     })
 }
 
-#[command(id = "FLURX|app::exit")]
+#[command(id = "FLURX|app::exit", internal)]
 fn exit() -> Action<AppExit, ()> {
     once::event::app_exit_success()
 }

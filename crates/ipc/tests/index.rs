@@ -10,4 +10,5 @@ fn tests() {
     t.pass("tests/test04_async_command.rs");
     t.pass("tests/test05_async_command_with_inputs.rs");
     t.pass("tests/test06_custom_id.rs");
+    t.pass("tests/test07_return_result.rs");
 }

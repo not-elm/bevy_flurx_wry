@@ -1,3 +1,27 @@
+interface Ok<Output> {
+    "Ok": Output
+}
+
+interface Err {
+    "Err": any
+}
+
+const isOk = <Out>(args: unknown): args is Ok<Out> => {
+    if (args && typeof (args) !== "object") {
+        return false;
+    }
+    const ok = args as Ok<Out>;
+    return ok.Ok !== undefined;
+}
+
+const isErr = (args: unknown): args is Err => {
+    if (args && typeof (args) !== "object") {
+        return false;
+    }
+    const err = args as Err;
+    return err.Err !== undefined;
+}
+
 export const invoke = <Out>(
     id: string,
     args: any = null
@@ -29,9 +53,15 @@ export const invoke = <Out>(
 
         window.ipc.postMessage(JSON.stringify(convertToArgs(args)));
         Object.defineProperty(window.__FLURX__, prop, {
-            value: (args: Out) => {
+            value: (args: Out | Ok<Out> | Err) => {
                 Reflect.deleteProperty(window.__FLURX__, prop);
-                resolve(args);
+                if (isOk(args)) {
+                    resolve(args.Ok);
+                } else if(isErr(args)) {
+                    reject(args.Err);
+                } else{
+                    resolve(args);
+                }
             },
             writable: false,
             configurable: true

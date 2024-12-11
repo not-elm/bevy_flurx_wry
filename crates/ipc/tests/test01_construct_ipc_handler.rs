@@ -5,7 +5,7 @@ use bevy_flurx::prelude::ActionSeed;
 use bevy_flurx_ipc::component::IpcHandlers;
 use bevy_flurx_ipc_macro::command;
 
-#[command]
+#[command(internal)]
 fn hello() -> ActionSeed{
     once::run(||{})
 }

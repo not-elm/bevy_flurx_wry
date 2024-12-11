@@ -9,6 +9,7 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use serde::Deserialize;
 use std::fmt::Debug;
 use std::path::PathBuf;
+use bevy_flurx::action::{once, Action};
 
 #[derive(Component)]
 struct WebviewWindow;
@@ -65,6 +66,9 @@ fn spawn_webview(mut commands: Commands, primary_window: Query<Entity, With<Prim
             // uri: WebviewUri::new("https://bevyengine.org/"),
             use_devtools: UseDevtools(true),
             is_open_devtools: IsOpenDevtools(true),
+            ipc_handlers: ipc_handlers![
+                result_action,
+            ],
             ..default()
         },
         AsChildBundle {
@@ -77,6 +81,11 @@ fn spawn_webview(mut commands: Commands, primary_window: Query<Entity, With<Prim
             ..default()
         },
     ));
+}
+
+#[command]
+fn result_action() -> Action<(), Result<String, String>>{
+    once::run(|| Err("error message".to_string())).with(())
 }
 
 fn test_event_emit(mut views: Query<&mut EventEmitter, With<WebviewWindow>>) {

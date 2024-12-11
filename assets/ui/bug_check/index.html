@@ -7,6 +7,7 @@
 </head>
 <body>
 <div>
+    <button id="button" >button</button>
     <a href="./sample.txt" download="sample.txt">download sample.txt</a>
     <div class="flex">
         <button id="new-window">
@@ -49,6 +50,9 @@
                 y: e.clientY
             });
         };
+        document.getElementById("button").onclick = async () => {
+            console.log(await window.__FLURX__.invoke("result_action"))
+        }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";
         };
