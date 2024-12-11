@@ -15,6 +15,7 @@ use bevy_window::Window;
 use bevy_winit::WinitWindows;
 use std::ops::Deref;
 use wry::{WebView, WebViewBuilder};
+use crate::prelude::csp::Csp;
 
 mod ipc;
 mod protocol;
@@ -41,6 +42,7 @@ type Configs2<'a> = (
     &'a HotkeysZoom,
     &'a UserAgent,
     &'a WebviewUri,
+    Option<&'a Csp>,
 );
 
 type ConfigsPlatformSpecific<'a> = (&'a Theme, &'a BrowserAcceleratorKeys, &'a UseHttpsScheme);
@@ -127,7 +129,7 @@ fn feed_configs1<'a>(
 
 fn feed_configs2<'a>(
     builder: WebViewBuilder<'a>,
-    (focused, hotkeys_zoom, user_agent, uri): Configs2,
+    (focused, hotkeys_zoom, user_agent, uri, csp): Configs2,
     local_root: &WryLocalRoot,
 ) -> WebViewBuilder<'a> {
     let mut builder = builder
@@ -143,7 +145,7 @@ fn feed_configs2<'a>(
         builder = builder.with_user_agent(user_agent);
     }
 
-    feed_uri(builder, uri, local_root)
+    feed_uri(builder, uri, local_root, csp.cloned())
 }
 
 #[allow(clippy::needless_return, unreachable_code, unused_variables)]

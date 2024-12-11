@@ -182,3 +182,9 @@ Please see [here](https://github.com/not-elm/bevy_flurx_wry/blob/main/CHANGELOG.
 
 This crate is licensed under the MIT License or the Apache License 2.0.
 
+## Todo
+- bugfix
+  - [ ] the webview could be moved without dragging.
+- security
+  - [ x ] csp 
+  - [ ] scope

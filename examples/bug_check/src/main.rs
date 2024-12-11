@@ -9,6 +9,7 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use serde::Deserialize;
 use std::fmt::Debug;
 use std::path::PathBuf;
+use bevy_flurx_wry::prelude::csp::Csp;
 
 #[derive(Component)]
 struct WebviewWindow;
@@ -67,6 +68,7 @@ fn spawn_webview(mut commands: Commands, primary_window: Query<Entity, With<Prim
             is_open_devtools: IsOpenDevtools(true),
             ..default()
         },
+        Csp::from("img-src 'none'"),
         AsChildBundle {
             parent: ParentWindow(primary_window.single()),
             bounds: Bounds {
