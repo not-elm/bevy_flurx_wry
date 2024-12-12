@@ -1,5 +1,10 @@
 import {invoke} from "./core";
 
+export interface FsWriteFileOptions{
+    append?: boolean,
+    recursive?: boolean,
+}
+
 /**
  * Copies a file to a destination.
  */
@@ -57,23 +62,18 @@ export const renameFile = async (oldPath: string, newPath: string): Promise<void
 }
 
 /**
- * Writes a byte array content to a file.
- */
-export const writeBinaryFile = async (
-    path: string,
-    binary: Uint8Array,
-): Promise<void> => {
-    await invoke("FLURX|fs::write_binary_file", [path, binary]);
-}
-
-/**
  * Writes a UTF-8 text file.
  */
-export const writeTextFile = async (
+export const writeFile = async (
     path: string,
     contents: string,
+    options?: FsWriteFileOptions
 ): Promise<void> => {
-    await invoke("FLURX|fs::write_text_file", [path, contents]);
+    await invoke("FLURX|fs::write_file", {
+        path,
+        contents,
+        ...options
+    });
 }
 
 /**
