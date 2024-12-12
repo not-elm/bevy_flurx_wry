@@ -28,6 +28,7 @@ serde_json = { workspace = true }
 [dev-dependencies]
 trybuild = "1.0.96"
 bevy = "0.15.0"
+bevy_flurx_wry = { path = "../../." }
 
 [lints]
 workspace = true

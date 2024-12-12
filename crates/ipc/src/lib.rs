@@ -33,7 +33,7 @@ pub mod prelude {
 ///
 /// use bevy_flurx::action::once;
 /// use bevy_flurx::prelude::ActionSeed;
-/// use bevy_flurx_ipc::prelude::*;
+/// use bevy_flurx_wry::prelude::*;
 ///
 /// #[command]
 /// fn ipc_command() -> ActionSeed{

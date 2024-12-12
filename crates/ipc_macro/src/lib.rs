@@ -27,9 +27,9 @@ use syn::__private::TokenStream2;
 ///
 /// ```no_run
 /// use bevy::prelude::*;
-/// use bevy_flurx_ipc::command;
 /// use bevy_flurx::prelude::*;
-/// use bevy_flurx_ipc::prelude::WebviewEntity;
+/// use bevy_flurx_wry::ipc::command;
+/// use bevy_flurx_wry::ipc::component::WebviewEntity;
 ///
 /// #[command]
 /// fn case1() -> ActionSeed<(), String>{
@@ -66,9 +66,9 @@ use syn::__private::TokenStream2;
 ///
 /// ```no_run
 /// use bevy::prelude::*;
-/// use bevy_flurx_ipc::command;
 /// use bevy_flurx::prelude::*;
-/// use bevy_flurx_ipc::component::WebviewEntity;
+/// use bevy_flurx_wry::ipc::command;
+/// use bevy_flurx_wry::ipc::component::WebviewEntity;
 ///
 /// #[command]
 /// async fn case1() -> String{
