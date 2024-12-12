@@ -4,6 +4,7 @@ mod create_dir;
 mod copy_file;
 mod exists;
 mod read_text_file;
+mod remove_file;
 
 use bevy_ecs::prelude::ReflectResource;
 use bevy_ecs::system::{Res, Resource};
@@ -15,6 +16,7 @@ pub use copy_file::FsCopyFilePlugin;
 pub use create_dir::FsCreateDirPlugin;
 pub use exists::FsExistsPlugin;
 pub use read_text_file::FsReadTextFilePlugin;
+pub use remove_file::FsRemoveFilePlugin;
 
 #[derive(Debug, Resource, Reflect, Default)]
 #[reflect(Resource, Default)]
