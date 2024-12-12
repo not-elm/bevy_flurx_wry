@@ -9,6 +9,7 @@ pub mod fs;
 pub mod prelude {
     pub use crate::{
         app::*,
+        fs::*,
         log::*,
     };
 }

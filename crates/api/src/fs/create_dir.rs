@@ -33,6 +33,9 @@ fn create_dir_system(
     scope: Option<Res<FsScope>>,
 ) -> Result<(), String> {
     error_if_not_accessible(&args.dir_path, &scope)?;
+    if std::fs::exists(&args.dir_path).is_ok_and(|exists| exists) {
+        return Ok(());
+    }
     if args.recursive.is_some_and(|recursive| recursive) {
         std::fs::create_dir_all(args.dir_path).map_err(|e| e.to_string())
     } else {
@@ -59,7 +62,7 @@ mod tests {
             commands.spawn(Reactor::schedule(|task| async move {
                 let tmp_dir = std::env::temp_dir();
                 let result: Result<_, _> = task.will(Update, once::run(create_dir_system).with(CreateDirArgs {
-                    dir_path: tmp_dir.join("test1").to_str().unwrap().to_string(),
+                    dir_path: tmp_dir.join("dir1").to_str().unwrap().to_string(),
                     recursive: None,
                 })).await;
                 assert!(result.is_ok());
