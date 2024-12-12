@@ -20,7 +20,7 @@ pub use exists::FsExistsPlugin;
 pub use read_text_file::FsReadTextFilePlugin;
 pub use remove_file::FsRemoveFilePlugin;
 pub use rename_file::FsRenameFilePlugin;
-pub use write_file::FsWriteFilePlugin;
+pub use write_file::{FsWriteBinaryFilePlugin, FsWriteTextFilePlugin};
 
 #[derive(Debug, Resource, Reflect, Default)]
 #[reflect(Resource, Default)]

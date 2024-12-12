@@ -64,12 +64,27 @@ export const renameFile = async (oldPath: string, newPath: string): Promise<void
 /**
  * Writes a UTF-8 text file.
  */
-export const writeFile = async (
+export const writeTextFile = async (
     path: string,
     contents: string,
     options?: FsWriteFileOptions
 ): Promise<void> => {
-    await invoke("FLURX|fs::write_file", {
+    await invoke("FLURX|fs::write_text_file", {
+        path,
+        contents,
+        ...options
+    });
+}
+
+/**
+ * Writes a file.
+ */
+export const writeBinaryFile = async (
+    path: string,
+    contents: Uint8Array,
+    options?: FsWriteFileOptions
+): Promise<void> => {
+    await invoke("FLURX|fs::write_binary_file", {
         path,
         contents,
         ...options
