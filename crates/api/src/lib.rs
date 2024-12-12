@@ -3,6 +3,7 @@
 
 pub mod app;
 pub mod log;
+pub mod fs;
 
 #[allow(missing_docs)]
 pub mod prelude {
