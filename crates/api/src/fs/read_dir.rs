@@ -46,14 +46,14 @@ fn read_dir_system(
 ) -> Result<Vec<FileEntry>, String> {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
-    read_dirs(&path, &scope).map_err(|e| e.to_string())
+    read_dirs(&path).map_err(|e| e.to_string())
 }
 
-fn read_dirs(path: &PathBuf, scope: &Option<Res<FsScope>>) -> std::io::Result<Vec<FileEntry>> {
+fn read_dirs(path: &PathBuf) -> std::io::Result<Vec<FileEntry>> {
     let mut file_entries = Vec::new();
     for entry in std::fs::read_dir(path)?.filter_map(|entry| entry.ok()) {
         let children = if entry.metadata()?.is_dir() {
-            Some(read_dirs(&entry.path(), scope)?)
+            Some(read_dirs(&entry.path())?)
         } else {
             None
         };

@@ -26,11 +26,24 @@ pub use remove_file::FsRemoveFilePlugin;
 pub use rename_file::FsRenameFilePlugin;
 pub use write_file::{FsWriteBinaryFilePlugin, FsWriteTextFilePlugin};
 
+/// Represents the list of the paths accessible from [crate::fs] api.
+///
+/// If this resource is not inserted in the application, api has access to all files.
 #[derive(Debug, Resource, Reflect, Default, Clone)]
 #[reflect(Resource, Default)]
 pub struct FsScope(Vec<PathBuf>);
 
 impl FsScope {
+    /// Create a [`FsScope`].
+    ///
+    /// ## Examples
+    ///
+    /// ```
+    /// use bevy_flurx_wry::api::fs::FsScope;
+    /// FsScope::new(vec![
+    ///     "./dir",
+    /// ]);
+    /// ```
     pub fn new<P: Into<PathBuf>>(allows: impl IntoIterator<Item=P>) -> Self {
         Self(allows.into_iter().map(|p| p.into()).collect())
     }

@@ -159,15 +159,6 @@ In this case, `IpcCommand` can be used.
 
 Please check  [examples/ipc_command.rs](examples/ipc_command.rs) for details.
 
-
-## Todo
-
-- [ ] Enhance security
-- [ ] Bug fix
-- [ ] Add apis
-- [ ] Support Linux(X11)
-- [ ] Support Linux(Wayland)
-
 ## ChangeLog
 
 Please see [here](https://github.com/not-elm/bevy_flurx_wry/blob/main/CHANGELOG.md).
@@ -183,10 +174,10 @@ Please see [here](https://github.com/not-elm/bevy_flurx_wry/blob/main/CHANGELOG.
 This crate is licensed under the MIT License or the Apache License 2.0.
 
 ## Todo
-- bugfix
+- [ ] Bugfix
   - [ ] the webview could be moved without dragging.
-- api
-  - [ ] fs
+- [ ] Api
+  - [x] fs
   - [ ] clipboard
   - [ ] dialog
   - [ ] http
@@ -197,6 +188,8 @@ This crate is licensed under the MIT License or the Apache License 2.0.
   - [ ] process
   - [ ] shell
   - [ ] window
-- security
+- [ ] Security
   - [x] csp 
   - [ ] scope
+- [ ] Support Linux(X11)
+- [ ] Support Linux(Wayland)
