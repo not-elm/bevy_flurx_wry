@@ -9,6 +9,10 @@ export interface FsBaseDirectoryOption {
     dir?: BaseDirectory,
 }
 
+export interface FsDirOptions {
+    dir?: BaseDirectory,
+    recursive?: boolean,
+}
 
 export type BaseDirectory =
     "ConfigLocal" |
@@ -56,12 +60,10 @@ export const copyFile = async (
  *  If you need to create the parent directory recursively, set `recursive` to `true`.
  */
 export const createDir = async (
-    dir: string,
-    options?: FsBaseDirectoryOption & {
-        recursive?: boolean,
-    }
+    path: string,
+    options?: FsDirOptions
 ): Promise<void> => {
-    await invoke("FLURX|fs::create_dir", {dir, ...options});
+    await invoke("FLURX|fs::create_dir", { path, ...options});
 }
 
 /**

@@ -45,12 +45,10 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            await window.__FLURX__.fs.copyFile(
-                "hello.txt",
-                "hello_moved.txt",
+            await window.__FLURX__.fs.createDir(
+                "sub/child",
                 {
-                    fromBaseDir: "Desktop",
-                    toBaseDir:  "Desktop",
+                    dir: "Desktop",
                 }
             )
         }
