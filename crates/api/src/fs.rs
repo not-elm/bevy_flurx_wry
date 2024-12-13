@@ -58,6 +58,7 @@ pub enum BaseDirectory {
     Picture,
     Public,
     Runtime,
+    Temp,
     Template,
     Video,
 }
@@ -80,6 +81,7 @@ impl BaseDirectory {
             BaseDirectory::Picture => dirs::picture_dir(),
             BaseDirectory::Public => dirs::public_dir(),
             BaseDirectory::Runtime => dirs::runtime_dir(),
+            BaseDirectory::Temp => Some(std::env::temp_dir()),
             BaseDirectory::Template => dirs::template_dir(),
             BaseDirectory::Video => dirs::video_dir(),
         }

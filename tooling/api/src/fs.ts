@@ -31,6 +31,7 @@ export type BaseDirectory =
     "Picture" |
     "Public" |
     "Runtime" |
+    "Temp" |
     "Template" |
     "Video"
 
