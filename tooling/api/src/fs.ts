@@ -63,7 +63,7 @@ export const createDir = async (
     path: string,
     options?: FsDirOptions
 ): Promise<void> => {
-    await invoke("FLURX|fs::create_dir", { path, ...options});
+    await invoke("FLURX|fs::create_dir", {path, ...options});
 }
 
 /**
@@ -89,8 +89,14 @@ export const readBinaryFile = async (filePath: string): Promise<Uint8Array> => {
 /**
  * Reads a file as a UTF-8 encoded string.
  */
-export const readTextFile = async (filePath: string): Promise<string> => {
-    return await invoke("FLURX|fs::read_text_file", filePath);
+export const readTextFile = async (
+    path: string,
+    options?: FsBaseDirectoryOption,
+): Promise<string> => {
+    return await invoke("FLURX|fs::read_text_file", {
+        path,
+        ...options
+    });
 }
 
 /**

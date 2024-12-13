@@ -33,9 +33,7 @@ fn main() {
             AppGetVersionApiPlugin,
             AppExitApiPlugin,
             LogPrintlnApiPlugin,
-            FsCopyFilePlugin,
-            FsCreateDirPlugin,
-            FsExistsPlugin,
+            FsReadTextFilePlugin,
         ))
         .add_ipc_event::<OnClickOnWebview>("onclick")
         .add_systems(Startup, (spawn_camera, spawn_webview))

@@ -45,8 +45,8 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.fs.exists(
-                "ローディング (1).png",
+            console.log(await window.__FLURX__.fs.readTextFile(
+                "local.properties",
                 {
                     dir: "Download",
                 }
