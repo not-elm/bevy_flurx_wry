@@ -1,4 +1,5 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
+use crate::error::ApiResult;
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::define_api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
@@ -36,17 +37,17 @@ struct FileEntry {
 }
 
 #[command(id = "FLURX|fs::read_dir", internal)]
-fn read_dir(In(args): In<Args>) -> Action<Args, Result<Vec<FileEntry>, String>> {
+fn read_dir(In(args): In<Args>) -> Action<Args, ApiResult<Vec<FileEntry>>> {
     once::run(read_dir_system).with(args)
 }
 
 fn read_dir_system(
     In(args): In<Args>,
-    scope: Option<Res<FsScope>>,
-) -> Result<Vec<FileEntry>, String> {
+    scope: Option<Res<AllowPaths>>,
+) -> ApiResult<Vec<FileEntry>> {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
-    read_dirs(&path).map_err(|e| e.to_string())
+    Ok(read_dirs(&path)?)
 }
 
 fn read_dirs(path: &PathBuf) -> std::io::Result<Vec<FileEntry>> {
@@ -69,7 +70,6 @@ fn read_dirs(path: &PathBuf) -> std::io::Result<Vec<FileEntry>> {
 #[cfg(test)]
 //noinspection DuplicatedCode
 mod tests {
-    use std::ffi::OsString;
     use crate::fs::read_dir::{read_dir_system, Args, FileEntry};
     use crate::tests::test_app;
     use bevy::utils::default;
@@ -77,6 +77,7 @@ mod tests {
     use bevy_ecs::prelude::Commands;
     use bevy_flurx::action::once;
     use bevy_flurx::prelude::Reactor;
+    use std::ffi::OsString;
     use std::fs::{create_dir, create_dir_all};
 
     #[test]
@@ -112,7 +113,7 @@ mod tests {
                 }))
                     .await
                     .unwrap();
-                assert_eq!(entries, vec![FileEntry{
+                assert_eq!(entries, vec![FileEntry {
                     path: tmp_dir.join("hello.txt"),
                     name: OsString::from("hello.txt"),
                     children: None,
@@ -135,7 +136,7 @@ mod tests {
                 }))
                     .await
                     .unwrap();
-                assert_eq!(entries, vec![FileEntry{
+                assert_eq!(entries, vec![FileEntry {
                     path: tmp_dir.join("child"),
                     name: OsString::from("child"),
                     children: Some(vec![]),

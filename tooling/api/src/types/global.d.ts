@@ -1,4 +1,4 @@
-import {fs, app, log, invoke, listen, emit, clipboard} from "../index";
+import {fs, app, log, invoke, listen, emit, clipboard, path} from "../index";
 
 export {};
 
@@ -10,6 +10,7 @@ declare global {
         __FLURX__: {
             app: typeof app,
             fs: typeof fs,
+            path: typeof path,
             log: typeof log,
             clipboard: typeof clipboard,
             invoke: typeof invoke,

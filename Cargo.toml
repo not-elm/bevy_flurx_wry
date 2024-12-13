@@ -53,6 +53,11 @@ bevy_flurx = { version = "0.7.0" }
 serde = { version = "1.0.202", features = ["derive"] }
 serde_json = "1.0.117"
 
+[features]
+default = []
+clipboard = ["bevy_flurx_wry_api/clipboard"]
+fs = ["bevy_flurx_wry_api/fs"]
+
 [workspace.lints.clippy]
 type_complexity = "allow"
 doc_markdown = "warn"

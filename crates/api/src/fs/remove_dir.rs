@@ -1,10 +1,11 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::define_api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::path::PathBuf;
+use crate::error::ApiResult;
 
 define_api_plugin!(
     /// You'll be able to remove a dir from typescript(or js).
@@ -29,20 +30,20 @@ struct Args {
 }
 
 #[command(id = "FLURX|fs::remove_dir", internal)]
-fn remove_dir(In(args): In<Args>) -> Action<Args, Result<(), String>> {
+fn remove_dir(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(remove_dir_system).with(args)
 }
 
 fn remove_dir_system(
     In(args): In<Args>,
-    scope: Option<Res<FsScope>>,
-) -> Result<(), String> {
+    scope: Option<Res<AllowPaths>>,
+) -> ApiResult {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
     if args.recursive.is_some_and(|recursive| recursive) {
-        std::fs::remove_dir_all(path).map_err(|e| e.to_string())?;
+        std::fs::remove_dir_all(path)?;
     } else {
-        std::fs::remove_dir(path).map_err(|e| e.to_string())?;
+        std::fs::remove_dir(path)?;
     }
     Ok(())
 }

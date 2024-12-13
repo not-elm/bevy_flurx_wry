@@ -1,4 +1,4 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::define_api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
@@ -7,6 +7,7 @@ use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::io::Write;
 use std::path::PathBuf;
+use crate::error::ApiResult;
 
 define_api_plugin!(
     /// You'll be able to write a file from typescript(or js).
@@ -60,12 +61,12 @@ struct TextFileArgs {
 }
 
 #[command(id = "FLURX|fs::write_binary_file", internal)]
-fn write_binary_file(In(args): In<BinaryFileArgs>) -> Action<BinaryFileArgs, Result<(), String>> {
+fn write_binary_file(In(args): In<BinaryFileArgs>) -> Action<BinaryFileArgs, ApiResult> {
     once::run(write_file_system).with(args)
 }
 
 #[command(id = "FLURX|fs::write_text_file", internal)]
-fn write_text_file(In(args): In<TextFileArgs>) -> Action<TextFileArgs, Result<(), String>> {
+fn write_text_file(In(args): In<TextFileArgs>) -> Action<TextFileArgs, ApiResult> {
     once::run(|In(args): In<TextFileArgs>| {
         BinaryFileArgs {
             path: args.path,
@@ -81,15 +82,15 @@ fn write_text_file(In(args): In<TextFileArgs>) -> Action<TextFileArgs, Result<()
 
 fn write_file_system(
     In(args): In<BinaryFileArgs>,
-    scope: Option<Res<FsScope>>,
-) -> Result<(), String> {
+    scope: Option<Res<AllowPaths>>,
+) -> ApiResult {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
     let append = args.append.is_some_and(|append| append);
     if args.recursive.is_some_and(|recursive| recursive) {
         if let Some(parent) = path.parent() {
             if !parent.exists() {
-                std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+                std::fs::create_dir_all(parent)?;
             }
         }
     }
@@ -100,8 +101,8 @@ fn write_file_system(
         .append(append)
         .truncate(!append)
         .open(path)
-        .map_err(|e| e.to_string())?;
-    file.write_all(&args.contents).map_err(|e| e.to_string())?;
+        ?;
+    file.write_all(&args.contents)?;
     Ok(())
 }
 

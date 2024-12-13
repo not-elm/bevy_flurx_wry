@@ -1,10 +1,11 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::define_api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::path::PathBuf;
+use crate::error::ApiResult;
 
 define_api_plugin!(
     /// You'll be able to remove file from typescript(or js).
@@ -27,17 +28,18 @@ struct Args {
 }
 
 #[command(id = "FLURX|fs::remove_file", internal)]
-fn remove_file(In(args): In<Args>) -> Action<Args, Result<(), String>> {
+fn remove_file(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(remove_file_system).with(args)
 }
 
 fn remove_file_system(
     In(args): In<Args>,
-    scope: Option<Res<FsScope>>,
-) -> Result<(), String> {
+    scope: Option<Res<AllowPaths>>,
+) -> ApiResult {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
-    std::fs::remove_file(path).map_err(|e| e.to_string())
+    std::fs::remove_file(path)?;
+    Ok(())
 }
 
 
@@ -45,7 +47,7 @@ fn remove_file_system(
 //noinspection DuplicatedCode
 mod tests {
     use crate::fs::remove_file::{remove_file_system, Args};
-    use crate::fs::FsScope;
+    use crate::fs::AllowPaths;
     use crate::tests::test_app;
     use bevy::utils::default;
     use bevy_app::{Startup, Update};
@@ -81,7 +83,7 @@ mod tests {
                 let hoge_path = tmp_dir.join("remove_file_hoge2.txt");
                 std::fs::write(&hoge_path, "hoge").unwrap();
                 let result: Result<_, _> = task.will(Update, {
-                    once::res::insert().with(FsScope::default())
+                    once::res::insert().with(AllowPaths::default())
                         .then(once::run(remove_file_system).with(Args {
                             path: hoge_path.clone(),
                             ..default()

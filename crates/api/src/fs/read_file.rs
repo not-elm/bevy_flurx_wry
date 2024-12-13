@@ -1,4 +1,5 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
+use crate::error::ApiResult;
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::define_api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
@@ -41,31 +42,31 @@ struct Args {
 }
 
 #[command(id = "FLURX|fs::read_text_file", internal)]
-fn read_text_file(In(args): In<Args>) -> Action<Args, Result<String, String>> {
+fn read_text_file(In(args): In<Args>) -> Action<Args, ApiResult<String>> {
     once::run(read_text_file_system).with(args)
 }
 
 #[command(id = "FLURX|fs::read_binary_file", internal)]
-fn read_binary_file(In(args): In<Args>) -> Action<Args, Result<Vec<u8>, String>> {
+fn read_binary_file(In(args): In<Args>) -> Action<Args, ApiResult<Vec<u8>>> {
     once::run(read_binary_file_system).with(args)
 }
 
 fn read_binary_file_system(
     In(args): In<Args>,
-    scope: Option<Res<FsScope>>,
-) -> Result<Vec<u8>, String> {
+    scope: Option<Res<AllowPaths>>,
+) -> ApiResult<Vec<u8>> {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
-    std::fs::read(path).map_err(|e| e.to_string())
+    Ok(std::fs::read(path)?)
 }
 
 fn read_text_file_system(
     In(args): In<Args>,
-    scope: Option<Res<FsScope>>,
-) -> Result<String, String> {
+    scope: Option<Res<AllowPaths>>,
+) -> ApiResult<String> {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
-    std::fs::read_to_string(path).map_err(|e| e.to_string())
+    Ok(std::fs::read_to_string(path)?)
 }
 
 
@@ -73,7 +74,7 @@ fn read_text_file_system(
 //noinspection DuplicatedCode
 mod tests {
     use crate::fs::read_file::{read_text_file_system, Args};
-    use crate::fs::FsScope;
+    use crate::fs::AllowPaths;
     use crate::tests::test_app;
     use bevy::utils::default;
     use bevy_app::{Startup, Update};
@@ -108,7 +109,7 @@ mod tests {
                 let hoge_path = tmp_dir.join("read_text_file_read_text_file2.txt");
                 std::fs::write(&hoge_path, "hoge").unwrap();
                 let result: Result<String, _> = task.will(Update, {
-                    once::res::insert().with(FsScope::default())
+                    once::res::insert().with(AllowPaths::default())
                         .then(once::run(read_text_file_system).with(Args {
                             path: hoge_path,
                             ..default()

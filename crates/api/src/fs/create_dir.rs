@@ -1,10 +1,11 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::define_api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::path::PathBuf;
+use crate::error::ApiResult;
 
 define_api_plugin!(
     /// You'll be able to create dirs from typescript(or js).
@@ -26,24 +27,25 @@ struct CreateDirArgs {
 }
 
 #[command(id = "FLURX|fs::create_dir", internal)]
-fn create_dir(In(args): In<CreateDirArgs>) -> Action<CreateDirArgs, Result<(), String>> {
+fn create_dir(In(args): In<CreateDirArgs>) -> Action<CreateDirArgs, ApiResult> {
     once::run(create_dir_system).with(args)
 }
 
 fn create_dir_system(
     In(args): In<CreateDirArgs>,
-    scope: Option<Res<FsScope>>,
-) -> Result<(), String> {
+    scope: Option<Res<AllowPaths>>,
+) -> ApiResult {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
     if std::fs::exists(&path).is_ok_and(|exists| exists) {
         return Ok(());
     }
     if args.recursive.is_some_and(|recursive| recursive) {
-        std::fs::create_dir_all(path).map_err(|e| e.to_string())
+        std::fs::create_dir_all(path)?;
     } else {
-        std::fs::create_dir(path).map_err(|e| e.to_string())
+        std::fs::create_dir(path)?;
     }
+    Ok(())
 }
 
 
@@ -51,7 +53,7 @@ fn create_dir_system(
 //noinspection DuplicatedCode
 mod tests {
     use crate::fs::create_dir::{create_dir_system, CreateDirArgs};
-    use crate::fs::FsScope;
+    use crate::fs::AllowPaths;
     use crate::tests::test_app;
     use bevy::utils::default;
     use bevy_app::{Startup, Update};
@@ -113,7 +115,7 @@ mod tests {
         let mut app = test_app();
         app.add_systems(Startup, |mut commands: Commands| {
             commands.spawn(Reactor::schedule(|task| async move {
-                task.will(Update, once::res::insert().with(FsScope::default())).await;
+                task.will(Update, once::res::insert().with(AllowPaths::default())).await;
                 let tmp_dir = std::env::temp_dir();
                 let result: Result<_, _> = task.will(Update, once::run(create_dir_system).with(CreateDirArgs {
                     path: tmp_dir.join("dir"),
