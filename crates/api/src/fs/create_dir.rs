@@ -1,4 +1,4 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::define_api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
@@ -33,7 +33,7 @@ fn create_dir(In(args): In<CreateDirArgs>) -> Action<CreateDirArgs, ApiResult> {
 
 fn create_dir_system(
     In(args): In<CreateDirArgs>,
-    scope: Option<Res<FsScope>>,
+    scope: Option<Res<AllowPaths>>,
 ) -> ApiResult {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
@@ -53,7 +53,7 @@ fn create_dir_system(
 //noinspection DuplicatedCode
 mod tests {
     use crate::fs::create_dir::{create_dir_system, CreateDirArgs};
-    use crate::fs::FsScope;
+    use crate::fs::AllowPaths;
     use crate::tests::test_app;
     use bevy::utils::default;
     use bevy_app::{Startup, Update};
@@ -115,7 +115,7 @@ mod tests {
         let mut app = test_app();
         app.add_systems(Startup, |mut commands: Commands| {
             commands.spawn(Reactor::schedule(|task| async move {
-                task.will(Update, once::res::insert().with(FsScope::default())).await;
+                task.will(Update, once::res::insert().with(AllowPaths::default())).await;
                 let tmp_dir = std::env::temp_dir();
                 let result: Result<_, _> = task.will(Update, once::run(create_dir_system).with(CreateDirArgs {
                     path: tmp_dir.join("dir"),

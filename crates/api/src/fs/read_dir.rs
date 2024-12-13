@@ -1,5 +1,5 @@
 use crate::error::ApiResult;
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::define_api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
@@ -43,7 +43,7 @@ fn read_dir(In(args): In<Args>) -> Action<Args, ApiResult<Vec<FileEntry>>> {
 
 fn read_dir_system(
     In(args): In<Args>,
-    scope: Option<Res<FsScope>>,
+    scope: Option<Res<AllowPaths>>,
 ) -> ApiResult<Vec<FileEntry>> {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;

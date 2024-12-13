@@ -1,4 +1,4 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::define_api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
@@ -41,7 +41,7 @@ fn rename_file(In(args): In<Args>) -> Action<Args, ApiResult> {
 
 fn rename_file_system(
     In(args): In<Args>,
-    scope: Option<Res<FsScope>>,
+    scope: Option<Res<AllowPaths>>,
 ) -> ApiResult {
     let old_path = join_path_if_need(&args.old_dir, args.old_path);
     let new_path = join_path_if_need(&args.new_dir, args.new_path);
@@ -56,7 +56,7 @@ fn rename_file_system(
 //noinspection DuplicatedCode
 mod tests {
     use crate::fs::rename_file::{rename_file_system, Args};
-    use crate::fs::FsScope;
+    use crate::fs::AllowPaths;
     use crate::tests::test_app;
     use bevy::utils::default;
     use bevy_app::{Startup, Update};
@@ -96,7 +96,7 @@ mod tests {
                 std::fs::write(&hoge_path, "hoge").unwrap();
                 let new_path = tmp_dir.join("rename_file_new2.txt");
                 let result: Result<_, _> = task.will(Update, {
-                    once::res::insert().with(FsScope::default())
+                    once::res::insert().with(AllowPaths::default())
                         .then(once::run(rename_file_system).with(Args {
                             old_path: hoge_path.clone(),
                             new_path: new_path.clone(),

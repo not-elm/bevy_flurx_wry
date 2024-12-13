@@ -1,4 +1,4 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::define_api_plugin;
 use bevy_ecs::change_detection::Res;
 use bevy_ecs::prelude::In;
@@ -39,7 +39,7 @@ fn copy_file(In(args): In<Args>) -> Action<Args, ApiResult> {
 
 fn copy_file_system(
     In(args): In<Args>,
-    scope: Option<Res<FsScope>>,
+    scope: Option<Res<AllowPaths>>,
 ) -> ApiResult {
     let from = join_path_if_need(&args.from_base_dir, args.from);
     let to = join_path_if_need(&args.to_base_dir, args.to);
@@ -54,7 +54,7 @@ fn copy_file_system(
 //noinspection DuplicatedCode
 mod tests {
     use crate::fs::copy_file::{copy_file_system, Args};
-    use crate::fs::FsScope;
+    use crate::fs::AllowPaths;
     use crate::tests::test_app;
     use bevy::utils::default;
     use bevy_app::{Startup, Update};
@@ -88,7 +88,7 @@ mod tests {
         app.add_systems(Startup, |mut commands: Commands| {
             commands.spawn(Reactor::schedule(|task| async move {
                 // Access to any files is not permitted.
-                task.will(Update, once::res::insert().with(FsScope::default())).await;
+                task.will(Update, once::res::insert().with(AllowPaths::default())).await;
                 let tmp_dir = std::env::temp_dir();
                 let from = tmp_dir.join("source1.txt");
                 let to = tmp_dir.join("dest1.txt");
@@ -112,7 +112,7 @@ mod tests {
             commands.spawn(Reactor::schedule(|task| async move {
                 let tmp_dir = std::env::temp_dir();
                 // Access to any files is not permitted.
-                task.will(Update, once::res::insert().with(FsScope::new([
+                task.will(Update, once::res::insert().with(AllowPaths::new([
                     tmp_dir.clone(),
                 ]))).await;
                 let from = tmp_dir.join("source2.txt");

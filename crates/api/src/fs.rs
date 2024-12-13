@@ -32,16 +32,16 @@ use crate::error::{ApiError, ApiResult, FsScopeError};
 /// If this resource is not inserted in the application, api has access to all files.
 #[derive(Debug, Resource, Reflect, Default, Clone)]
 #[reflect(Resource, Default)]
-pub struct FsScope(Vec<PathBuf>);
+pub struct AllowPaths(Vec<PathBuf>);
 
-impl FsScope {
-    /// Create a [`FsScope`].
+impl AllowPaths {
+    /// Create a [AllowPaths].
     ///
     /// ## Examples
     ///
     /// ```
-    /// use bevy_flurx_wry::api::fs::FsScope;
-    /// FsScope::new(vec![
+    /// use bevy_flurx_wry::api::fs::AllowPaths;
+    /// AllowPaths::new(vec![
     ///     "./dir",
     /// ]);
     /// ```
@@ -114,7 +114,7 @@ fn join_path_if_need(base: &Option<BaseDirectory>, path: PathBuf) -> PathBuf {
 
 pub(crate) fn error_if_not_accessible(
     path: impl AsRef<Path>,
-    scope: &Option<Res<FsScope>>,
+    scope: &Option<Res<AllowPaths>>,
 ) -> ApiResult {
     if let Some(scope) = scope.as_ref() {
         if !scope.check_accessible(path) {

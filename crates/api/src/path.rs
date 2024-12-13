@@ -8,7 +8,7 @@ use bevy_flurx_ipc::command;
 use std::path::PathBuf;
 use bevy_ecs::system::Res;
 use crate::error::ApiResult;
-use crate::fs::FsScope;
+use crate::fs::AllowPaths;
 use crate::prelude::error_if_not_accessible;
 
 /// Allows you to use all path api plugins.
@@ -60,7 +60,7 @@ impl PluginGroup for AllPathPlugins {
 
 define_api_plugin!(
     /// You'll be able to obtain user's config path from typescript(or js).
-    /// 
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
@@ -366,8 +366,8 @@ fn font() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
 
 fn obtain_path(
     f: fn() -> Option<PathBuf>
-) -> impl Fn(Option<Res<FsScope>>) -> ApiResult<Option<PathBuf>>{
-    move |scope: Option<Res<FsScope>>|{
+) -> impl Fn(Option<Res<AllowPaths>>) -> ApiResult<Option<PathBuf>>{
+    move |scope: Option<Res<AllowPaths>>|{
         let Some(path) = f() else {
             return Ok(None);
         };
