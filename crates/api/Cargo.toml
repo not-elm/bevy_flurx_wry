@@ -11,7 +11,8 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 
 [features]
-default = []
+default = ["fs"]
+fs = ["dep:dirs"]
 clipboard = ["dep:arboard"]
 
 [dependencies]
@@ -22,7 +23,7 @@ bevy_reflect = { workspace = true }
 bevy_flurx_ipc = { path = "../ipc", version = "0.1.0-alpha1" }
 bevy_flurx_wry_core = { path = "../core", version = "0.1.0-alpha1" }
 serde = { workspace = true }
-dirs = "5.0.1"
+dirs = { version = "5.0.1", optional = true }
 arboard = { version = "3.4.1", optional = true }
 
 [dev-dependencies]

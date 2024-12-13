@@ -1,5 +1,6 @@
 use serde::{Serialize, Serializer};
 use std::error::Error;
+use std::fmt::{Debug, Display, Formatter};
 
 pub(crate) type ApiResult<V: Serialize = ()> = Result<V, ApiError>;
 
@@ -15,8 +16,24 @@ impl Serialize for ApiError {
     }
 }
 
-impl<E: Error + 'static> From<E> for ApiError{
+impl<E: Error + 'static> From<E> for ApiError {
     fn from(value: E) -> Self {
         Self(Box::new(value))
     }
 }
+
+pub(crate) struct FsScopeError;
+
+impl Debug for FsScopeError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        todo!()
+    }
+}
+
+impl Display for FsScopeError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        f.write_str("Access to any of specified files isn't permitted by the application. ")
+    }
+}
+
+impl Error for FsScopeError {}

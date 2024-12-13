@@ -3,7 +3,10 @@
 
 pub mod app;
 pub mod log;
+#[cfg(feature = "fs")]
 pub mod fs;
+#[cfg(feature = "fs")]
+pub mod path;
 #[cfg(feature = "clipboard")]
 pub mod clipboard;
 mod error;

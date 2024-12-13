@@ -5,6 +5,7 @@ use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::path::PathBuf;
+use crate::error::ApiResult;
 
 define_api_plugin!(
     /// You'll be able to rename a file from typescript(or js).
@@ -34,19 +35,20 @@ struct Args {
 }
 
 #[command(id = "FLURX|fs::rename_file", internal)]
-fn rename_file(In(args): In<Args>) -> Action<Args, Result<(), String>> {
+fn rename_file(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(rename_file_system).with(args)
 }
 
 fn rename_file_system(
     In(args): In<Args>,
     scope: Option<Res<FsScope>>,
-) -> Result<(), String> {
+) -> ApiResult {
     let old_path = join_path_if_need(&args.old_dir, args.old_path);
     let new_path = join_path_if_need(&args.new_dir, args.new_path);
     error_if_not_accessible(&old_path, &scope)?;
     error_if_not_accessible(&new_path, &scope)?;
-    std::fs::rename(old_path, new_path).map_err(|e| e.to_string())
+    std::fs::rename(old_path, new_path)?;
+    Ok(())
 }
 
 

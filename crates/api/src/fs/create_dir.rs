@@ -5,6 +5,7 @@ use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::path::PathBuf;
+use crate::error::ApiResult;
 
 define_api_plugin!(
     /// You'll be able to create dirs from typescript(or js).
@@ -26,24 +27,25 @@ struct CreateDirArgs {
 }
 
 #[command(id = "FLURX|fs::create_dir", internal)]
-fn create_dir(In(args): In<CreateDirArgs>) -> Action<CreateDirArgs, Result<(), String>> {
+fn create_dir(In(args): In<CreateDirArgs>) -> Action<CreateDirArgs, ApiResult> {
     once::run(create_dir_system).with(args)
 }
 
 fn create_dir_system(
     In(args): In<CreateDirArgs>,
     scope: Option<Res<FsScope>>,
-) -> Result<(), String> {
+) -> ApiResult {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
     if std::fs::exists(&path).is_ok_and(|exists| exists) {
         return Ok(());
     }
     if args.recursive.is_some_and(|recursive| recursive) {
-        std::fs::create_dir_all(path).map_err(|e| e.to_string())
+        std::fs::create_dir_all(path)?;
     } else {
-        std::fs::create_dir(path).map_err(|e| e.to_string())
+        std::fs::create_dir(path)?;
     }
+    Ok(())
 }
 
 

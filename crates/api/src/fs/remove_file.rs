@@ -5,6 +5,7 @@ use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::path::PathBuf;
+use crate::error::ApiResult;
 
 define_api_plugin!(
     /// You'll be able to remove file from typescript(or js).
@@ -27,17 +28,18 @@ struct Args {
 }
 
 #[command(id = "FLURX|fs::remove_file", internal)]
-fn remove_file(In(args): In<Args>) -> Action<Args, Result<(), String>> {
+fn remove_file(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(remove_file_system).with(args)
 }
 
 fn remove_file_system(
     In(args): In<Args>,
     scope: Option<Res<FsScope>>,
-) -> Result<(), String> {
+) -> ApiResult {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
-    std::fs::remove_file(path).map_err(|e| e.to_string())
+    std::fs::remove_file(path)?;
+    Ok(())
 }
 
 

@@ -5,6 +5,7 @@ use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::path::PathBuf;
+use crate::error::ApiResult;
 
 define_api_plugin!(
     /// You'll be able to check if the path exists from typescript(or js).
@@ -25,17 +26,17 @@ struct Args {
 }
 
 #[command(id = "FLURX|fs::exists", internal)]
-fn exists(In(args): In<Args>) -> Action<Args, Result<bool, String>> {
+fn exists(In(args): In<Args>) -> Action<Args, ApiResult<bool>> {
     once::run(exists_system).with(args)
 }
 
 fn exists_system(
     In(args): In<Args>,
     scope: Option<Res<FsScope>>,
-) -> Result<bool, String> {
+) -> ApiResult<bool> {
     let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
-    std::fs::exists(path).map_err(|e| e.to_string())
+    Ok(std::fs::exists(path)?)
 }
 
 

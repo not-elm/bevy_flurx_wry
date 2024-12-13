@@ -6,6 +6,7 @@ use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::path::PathBuf;
+use crate::error::ApiResult;
 
 define_api_plugin!(
     /// You'll be able to copy file from typescript(or js).
@@ -32,19 +33,19 @@ struct Args {
 }
 
 #[command(id = "FLURX|fs::copy_file", internal)]
-fn copy_file(In(args): In<Args>) -> Action<Args, Result<(), String>> {
+fn copy_file(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(copy_file_system).with(args)
 }
 
 fn copy_file_system(
     In(args): In<Args>,
     scope: Option<Res<FsScope>>,
-) -> Result<(), String> {
+) -> ApiResult {
     let from = join_path_if_need(&args.from_base_dir, args.from);
     let to = join_path_if_need(&args.to_base_dir, args.to);
     error_if_not_accessible(&from, &scope)?;
     error_if_not_accessible(&to, &scope)?;
-    std::fs::copy(from, to).map_err(|e| e.to_string())?;
+    std::fs::copy(from, to)?;
     Ok(())
 }
 
