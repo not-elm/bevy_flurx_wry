@@ -102,8 +102,14 @@ export const readTextFile = async (
 /**
  * Removes a file.
  */
-export const removeFile = async (filePath: string): Promise<void> => {
-    await invoke("FLURX|fs::remove_file", filePath);
+export const removeFile = async (
+    path: string,
+    options?: FsBaseDirectoryOption,
+): Promise<void> => {
+    await invoke("FLURX|fs::remove_file", {
+        path,
+        ...options
+    });
 }
 
 /**

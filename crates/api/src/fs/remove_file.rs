@@ -1,8 +1,10 @@
-use crate::fs::{error_if_not_accessible, FsScope};
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
 use crate::macros::define_api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
+use serde::Deserialize;
+use std::path::PathBuf;
 
 define_api_plugin!(
     /// You'll be able to remove file from typescript(or js).
@@ -10,21 +12,30 @@ define_api_plugin!(
     /// ## Typescript Code Example
     ///
     /// ```ts
-    /// await window.__FLURX__.fs.removeFile("./hoge.txt");
+    /// await window.__FLURX__.fs.removeFile("./hoge.txt", {
+    ///     dir: "Download"
+    /// });
     /// ```
     FsRemoveFilePlugin,
     command: remove_file
 );
 
+#[derive(Deserialize, Default)]
+struct Args {
+    path: PathBuf,
+    dir: Option<BaseDirectory>,
+}
+
 #[command(id = "FLURX|fs::remove_file", internal)]
-fn remove_file(In(args): In<String>) -> Action<String, Result<(), String>> {
+fn remove_file(In(args): In<Args>) -> Action<Args, Result<(), String>> {
     once::run(remove_file_system).with(args)
 }
 
 fn remove_file_system(
-    In(path): In<String>,
+    In(args): In<Args>,
     scope: Option<Res<FsScope>>,
 ) -> Result<(), String> {
+    let path = join_path_if_need(&args.dir, args.path);
     error_if_not_accessible(&path, &scope)?;
     std::fs::remove_file(path).map_err(|e| e.to_string())
 }
@@ -33,9 +44,10 @@ fn remove_file_system(
 #[cfg(test)]
 //noinspection DuplicatedCode
 mod tests {
-    use crate::fs::remove_file::remove_file_system;
+    use crate::fs::remove_file::{remove_file_system, Args};
     use crate::fs::FsScope;
     use crate::tests::test_app;
+    use bevy::utils::default;
     use bevy_app::{Startup, Update};
     use bevy_ecs::prelude::Commands;
     use bevy_flurx::action::once;
@@ -49,7 +61,10 @@ mod tests {
                 let tmp_dir = std::env::temp_dir();
                 let hoge_path = tmp_dir.join("remove_file_hoge1.txt");
                 std::fs::write(&hoge_path, "hoge").unwrap();
-                let result: Result<_, _> = task.will(Update, once::run(remove_file_system).with(hoge_path.to_str().unwrap().to_string())).await;
+                let result: Result<_, _> = task.will(Update, once::run(remove_file_system).with(Args {
+                    path: hoge_path.clone(),
+                    ..default()
+                })).await;
                 result.unwrap();
                 assert!(!std::fs::exists(hoge_path).unwrap());
             }));
@@ -67,7 +82,10 @@ mod tests {
                 std::fs::write(&hoge_path, "hoge").unwrap();
                 let result: Result<_, _> = task.will(Update, {
                     once::res::insert().with(FsScope::default())
-                        .then(once::run(remove_file_system).with(hoge_path.to_str().unwrap().to_string()))
+                        .then(once::run(remove_file_system).with(Args {
+                            path: hoge_path.clone(),
+                            ..default()
+                        }))
                 }).await;
                 result.unwrap_err();
                 assert!(std::fs::exists(hoge_path).unwrap());

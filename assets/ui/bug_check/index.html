@@ -45,11 +45,10 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.fs.removeDir(
-                "simpleblack.pat",
+            console.log(await window.__FLURX__.fs.removeFile(
+                "google-services.json",
                 {
                     dir: "Download",
-                    recursive: true,
                 }
             ))
         }
