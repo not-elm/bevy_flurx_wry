@@ -1,15 +1,14 @@
 //! Provides apis to obtain special system paths.
 
+use crate::fs::AllowPaths;
 use crate::macros::define_api_plugin;
+use crate::prelude::error_if_not_accessible;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
+use bevy_ecs::system::Res;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::ActionSeed;
 use bevy_flurx_ipc::command;
 use std::path::PathBuf;
-use bevy_ecs::system::Res;
-use crate::error::ApiResult;
-use crate::fs::AllowPaths;
-use crate::prelude::error_if_not_accessible;
 
 /// Allows you to use all path api plugins.
 ///
@@ -61,6 +60,8 @@ impl PluginGroup for AllPathPlugins {
 define_api_plugin!(
     /// You'll be able to obtain user's config path from typescript(or js).
     ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
@@ -85,6 +86,8 @@ define_api_plugin!(
 define_api_plugin!(
     /// You'll be able to obtain user's data path from typescript(or js).
     ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
@@ -96,6 +99,8 @@ define_api_plugin!(
 
 define_api_plugin!(
     /// You'll be able to obtain user's data path from typescript(or js).
+    ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
     ///
     /// ## Typescript Code Example
     ///
@@ -109,6 +114,8 @@ define_api_plugin!(
 define_api_plugin!(
     /// You'll be able to obtain user's audio path from typescript(or js).
     ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
@@ -120,6 +127,8 @@ define_api_plugin!(
 
 define_api_plugin!(
     /// You'll be able to obtain user's cache path from typescript(or js).
+    ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
     ///
     /// ## Typescript Code Example
     ///
@@ -133,6 +142,8 @@ define_api_plugin!(
 define_api_plugin!(
     /// You'll be able to obtain user's desktop path from typescript(or js).
     ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
@@ -144,6 +155,8 @@ define_api_plugin!(
 
 define_api_plugin!(
     /// You'll be able to obtain user's document path from typescript(or js).
+    ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
     ///
     /// ## Typescript Code Example
     ///
@@ -157,6 +170,8 @@ define_api_plugin!(
 define_api_plugin!(
     /// You'll be able to obtain user's download path from typescript(or js).
     ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
@@ -169,6 +184,8 @@ define_api_plugin!(
 define_api_plugin!(
     /// You'll be able to obtain user's executable path from typescript(or js).
     ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
@@ -180,6 +197,8 @@ define_api_plugin!(
 
 define_api_plugin!(
     /// You'll be able to obtain user's public path from typescript(or js).
+    ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
     ///
     /// ## Typescript Code Example
     ///
@@ -205,10 +224,12 @@ define_api_plugin!(
 define_api_plugin!(
     /// You'll be able to obtain user's temp path from typescript(or js).
     ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
-    /// const path: string = await window.__FLURX__.path.temp();
+    /// const path: string | null = await window.__FLURX__.path.temp();
     /// ```
     PathTempPlugin,
     command: temp
@@ -216,6 +237,8 @@ define_api_plugin!(
 
 define_api_plugin!(
     /// You'll be able to obtain user's template path from typescript(or js).
+    ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
     ///
     /// ## Typescript Code Example
     ///
@@ -229,6 +252,8 @@ define_api_plugin!(
 define_api_plugin!(
     /// You'll be able to obtain user's video path from typescript(or js).
     ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
@@ -240,6 +265,8 @@ define_api_plugin!(
 
 define_api_plugin!(
     /// You'll be able to obtain user's home path from typescript(or js).
+    ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
     ///
     /// ## Typescript Code Example
     ///
@@ -253,6 +280,8 @@ define_api_plugin!(
 define_api_plugin!(
     /// You'll be able to obtain user's picture path from typescript(or js).
     ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
@@ -265,6 +294,8 @@ define_api_plugin!(
 define_api_plugin!(
     /// You'll be able to obtain user's font path from typescript(or js).
     ///
+    /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
@@ -275,103 +306,107 @@ define_api_plugin!(
 );
 
 #[command(id = "FLURX|path::config", internal)]
-fn config() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn config() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::config_dir))
 }
 
 #[command(id = "FLURX|path::config_local", internal)]
-fn config_local() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn config_local() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::config_local_dir))
 }
 
 #[command(id = "FLURX|path::data", internal)]
-fn data() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn data() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::data_dir))
 }
 
 #[command(id = "FLURX|path::data_local", internal)]
-fn data_local() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn data_local() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::data_local_dir))
 }
 
 #[command(id = "FLURX|path::audio", internal)]
-fn audio() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn audio() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::audio_dir))
 }
 
 #[command(id = "FLURX|path::cache", internal)]
-fn cache() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn cache() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::cache_dir))
 }
 
 #[command(id = "FLURX|path::desktop", internal)]
-fn desktop() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn desktop() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::desktop_dir))
 }
 
 #[command(id = "FLURX|path::document", internal)]
-fn document() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn document() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::document_dir))
 }
 
 #[command(id = "FLURX|path::download", internal)]
-fn download() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn download() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::download_dir))
 }
 
 #[command(id = "FLURX|path::executable", internal)]
-fn executable() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn executable() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::executable_dir))
 }
 
 #[command(id = "FLURX|path::public", internal)]
-fn public() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn public() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::public_dir))
 }
 
 #[command(id = "FLURX|path::runtime", internal)]
-fn runtime() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn runtime() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::runtime_dir))
 }
 
 #[command(id = "FLURX|path::temp", internal)]
-fn temp() -> ActionSeed<(), PathBuf> {
-    once::run(std::env::temp_dir)
+fn temp() -> ActionSeed<(), Option<PathBuf>> {
+    fn path() -> Option<PathBuf> {
+        Some(std::env::temp_dir())
+    }
+    once::run(obtain_path(path))
 }
 
 #[command(id = "FLURX|path::template", internal)]
-fn template() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn template() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::template_dir))
 }
 
 #[command(id = "FLURX|path::video", internal)]
-fn video() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn video() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::video_dir))
 }
 
 #[command(id = "FLURX|path::home", internal)]
-fn home() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn home() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::home_dir))
 }
 
 #[command(id = "FLURX|path::picture", internal)]
-fn picture() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn picture() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::picture_dir))
 }
 
 #[command(id = "FLURX|path::font", internal)]
-fn font() -> ActionSeed<(), ApiResult<Option<PathBuf>>> {
+fn font() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::font_dir))
 }
 
 fn obtain_path(
     f: fn() -> Option<PathBuf>
-) -> impl Fn(Option<Res<AllowPaths>>) -> ApiResult<Option<PathBuf>>{
-    move |scope: Option<Res<AllowPaths>>|{
-        let Some(path) = f() else {
-            return Ok(None);
-        };
-        error_if_not_accessible(&path, &scope)?;
-        Ok(Some(path))
+) -> impl Fn(Option<Res<AllowPaths>>) -> Option<PathBuf> {
+    move |scope: Option<Res<AllowPaths>>| {
+        let path = f()?;
+        if error_if_not_accessible(&path, &scope).is_ok() {
+            Some(path)
+        } else {
+            None
+        }
     }
 }
