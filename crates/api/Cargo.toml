@@ -18,6 +18,7 @@ bevy_reflect = { workspace = true}
 bevy_flurx_ipc = { path = "../ipc", version = "0.1.0-alpha1" }
 bevy_flurx_wry_core = { path = "../core", version = "0.1.0-alpha1" }
 serde = { workspace = true }
+dirs = "5.0.1"
 
 [dev-dependencies]
 bevy = "0.15.0"

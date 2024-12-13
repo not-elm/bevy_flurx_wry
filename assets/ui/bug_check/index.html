@@ -7,8 +7,8 @@
 </head>
 <body>
 <div>
-    <button id="button" >button</button>
-    <img src="https://secure-dcdn.cdn.nimg.jp/nicoaccount/usericon/9749/97491199.jpg?1730550703" />
+    <button id="copy-file">copy file</button>
+    <img src="https://secure-dcdn.cdn.nimg.jp/nicoaccount/usericon/9749/97491199.jpg?1730550703"/>
     <a href="./sample.txt" download="sample.txt">download sample.txt</a>
     <div class="flex">
         <button id="new-window">
@@ -44,15 +44,15 @@
     </div>
 
     <script>
-        console.log(window.__FLURX__)
-        document.body.onclick = (e) => {
-            window.__FLURX__.emit("onclick", {
-                x: e.clientX,
-                y: e.clientY
-            });
-        };
-        document.getElementById("button").onclick = async () => {
-            console.log(await window.__FLURX__.invoke("result_action"))
+        document.getElementById("copy-file").onclick = async () => {
+            await window.__FLURX__.fs.copyFile(
+                "hello.txt",
+                "hello_moved.txt",
+                {
+                    fromBaseDir: "Desktop",
+                    toBaseDir:  "Desktop",
+                }
+            )
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";

@@ -10,7 +10,6 @@ use serde::Deserialize;
 use std::fmt::Debug;
 use std::path::PathBuf;
 use bevy_flurx::action::{once, Action};
-use bevy_flurx_wry::prelude::csp::Csp;
 
 #[derive(Component)]
 struct WebviewWindow;
@@ -34,6 +33,7 @@ fn main() {
             AppGetVersionApiPlugin,
             AppExitApiPlugin,
             LogPrintlnApiPlugin,
+            FsCopyFilePlugin,
         ))
         .add_ipc_event::<OnClickOnWebview>("onclick")
         .add_systems(Startup, (spawn_camera, spawn_webview))
@@ -72,7 +72,6 @@ fn spawn_webview(mut commands: Commands, primary_window: Query<Entity, With<Prim
             ],
             ..default()
         },
-        Csp::from("img-src 'none'"),
         AsChildBundle {
             parent: ParentWindow(primary_window.single()),
             bounds: Bounds {

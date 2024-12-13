@@ -1,15 +1,53 @@
 import {invoke} from "./core";
 
-export interface FsWriteFileOptions{
+export interface FsWriteFileOptions {
     append?: boolean,
     recursive?: boolean,
+}
+
+export interface FsBaseDirectoryOption {
+    dir?: BaseDirectory,
+}
+
+
+export type BaseDirectory =
+    "ConfigLocal" |
+    "Data" |
+    "LocalData" |
+    "Audio" |
+    "Cache" |
+    "Config" |
+    "Desktop" |
+    "Document" |
+    "Download" |
+    "Executable" |
+    "Font" |
+    "Home" |
+    "Picture" |
+    "Public" |
+    "Runtime" |
+    "Template" |
+    "Video"
+
+
+export interface CopyFileOptions {
+    fromBaseDir?: BaseDirectory,
+    toBaseDir?: BaseDirectory,
 }
 
 /**
  * Copies a file to a destination.
  */
-export const copyFile = async (source: string, destination: string): Promise<void> => {
-    await invoke("FLURX|fs::copy_file", [source, destination])
+export const copyFile = async (
+    from: string,
+    to: string,
+    options?: CopyFileOptions,
+): Promise<void> => {
+    await invoke("FLURX|fs::copy_file", {
+        from,
+        to,
+        ...options
+    })
 }
 
 /**
@@ -19,7 +57,7 @@ export const copyFile = async (source: string, destination: string): Promise<voi
  */
 export const createDir = async (
     dir: string,
-    options?: {
+    options?: FsBaseDirectoryOption & {
         recursive?: boolean,
     }
 ): Promise<void> => {
@@ -29,8 +67,14 @@ export const createDir = async (
 /**
  *  Check if a path exists.
  */
-export const exists = async (path: string): Promise<boolean> => {
-    return await invoke("FLURX|fs::exists", path);
+export const exists = async (
+    path: string,
+    options?: FsBaseDirectoryOption,
+): Promise<boolean> => {
+    return await invoke("FLURX|fs::exists", {
+        path,
+        ...options
+    });
 }
 
 /**
@@ -102,10 +146,10 @@ export const readDir = async (dirPath: string) => {
  * Remove a directory.
  */
 export const removeDir = async (
-    dir: string,
-    options: {
+    path: string,
+    options?: {
         recursive: boolean
     }
 ): Promise<void> => {
-    await invoke("FLURX|fs::remove_dir", {dir, ...options});
+    await invoke("FLURX|fs::remove_dir", {path, ...options});
 }
