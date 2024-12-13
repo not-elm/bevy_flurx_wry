@@ -10,6 +10,10 @@ keywords = ["game", "gamedev", "bevy"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 
+[features]
+default = []
+clipboard = ["dep:arboard"]
+
 [dependencies]
 bevy_app = { workspace = true }
 bevy_ecs = { workspace = true }
@@ -19,6 +23,7 @@ bevy_flurx_ipc = { path = "../ipc", version = "0.1.0-alpha1" }
 bevy_flurx_wry_core = { path = "../core", version = "0.1.0-alpha1" }
 serde = { workspace = true }
 dirs = "5.0.1"
+arboard = { version = "3.4.1", optional = true }
 
 [dev-dependencies]
 bevy = "0.15.0"

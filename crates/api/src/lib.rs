@@ -4,6 +4,9 @@
 pub mod app;
 pub mod log;
 pub mod fs;
+#[cfg(feature = "clipboard")]
+pub mod clipboard;
+mod error;
 
 #[allow(missing_docs)]
 pub mod prelude {

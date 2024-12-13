@@ -178,7 +178,7 @@ This crate is licensed under the MIT License or the Apache License 2.0.
   - [ ] the webview could be moved without dragging.
 - [ ] Api
   - [x] fs
-  - [ ] clipboard
+  - [x] clipboard
   - [ ] dialog
   - [ ] http
   - [ ] mocks

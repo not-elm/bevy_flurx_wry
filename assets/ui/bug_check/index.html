@@ -45,12 +45,8 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            const entries = await window.__FLURX__.fs.readDir("結月ゆかり_純_ver1.0", {
-                dir: "Download"
-            });
-            entries.forEach(e => {
-                console.log(e)
-            })
+            await window.__FLURX__.clipboard.setText("hello world!");
+            console.log(await window.__FLURX__.clipboard.getText());
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";

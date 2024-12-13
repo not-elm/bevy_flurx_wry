@@ -26,6 +26,7 @@ pub use remove_file::FsRemoveFilePlugin;
 pub use rename_file::FsRenameFilePlugin;
 pub use write_file::{FsWriteBinaryFilePlugin, FsWriteTextFilePlugin};
 
+
 /// Represents the list of the paths accessible from [crate::fs] api.
 ///
 /// If this resource is not inserted in the application, api has access to all files.

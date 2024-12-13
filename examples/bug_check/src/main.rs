@@ -10,6 +10,7 @@ use serde::Deserialize;
 use std::fmt::Debug;
 use std::path::PathBuf;
 use bevy_flurx::action::{once, Action};
+use bevy_flurx_wry::api::clipboard::ClipboardPlugins;
 
 #[derive(Component)]
 struct WebviewWindow;
@@ -31,6 +32,7 @@ fn main() {
             },
             AppGetNameApiPlugin,
             AppGetVersionApiPlugin,
+            ClipboardPlugins,
             AppExitApiPlugin,
             LogPrintlnApiPlugin,
             FsRemoveFilePlugin,
