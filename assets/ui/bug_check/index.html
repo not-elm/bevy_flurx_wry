@@ -45,12 +45,12 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            await window.__FLURX__.fs.createDir(
-                "sub/child",
+            console.log(await window.__FLURX__.fs.exists(
+                "ローディング (1).png",
                 {
-                    dir: "Desktop",
+                    dir: "Download",
                 }
-            )
+            ))
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";
