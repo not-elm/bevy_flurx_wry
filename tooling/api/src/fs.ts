@@ -155,9 +155,7 @@ export const readDir = async (dirPath: string) => {
  */
 export const removeDir = async (
     path: string,
-    options?: {
-        recursive: boolean
-    }
+    options?: FsDirOptions,
 ): Promise<void> => {
     await invoke("FLURX|fs::remove_dir", {path, ...options});
 }
