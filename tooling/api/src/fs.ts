@@ -1,6 +1,7 @@
 import {invoke} from "./core";
 
 export interface FsWriteFileOptions {
+    dir?: BaseDirectory,
     append?: boolean,
     recursive?: boolean,
 }
@@ -152,7 +153,7 @@ export const writeTextFile = async (
  */
 export const writeBinaryFile = async (
     path: string,
-    contents: Uint8Array,
+    contents: Uint8Array | Iterable<number> | ArrayLike<number> | ArrayBuffer,
     options?: FsWriteFileOptions
 ): Promise<void> => {
     await invoke("FLURX|fs::write_binary_file", {

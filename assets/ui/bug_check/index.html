@@ -45,12 +45,18 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.fs.renameFile(
-                "yukari.jpg",
-                "a.jpg",
+            console.log(await window.__FLURX__.fs.writeTextFile(
+                "hello.txt",
+                "hello",
                 {
-                   oldDir: "Download",
-                    newDir: "Document"
+                    dir: "Document"
+                }
+            ))
+            console.log(await window.__FLURX__.fs.writeBinaryFile(
+                "hello2",
+                [0, 1, 2],
+                {
+                    dir: "Document"
                 }
             ))
         }
