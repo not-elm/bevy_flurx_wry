@@ -45,10 +45,12 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.fs.removeFile(
-                "google-services.json",
+            console.log(await window.__FLURX__.fs.renameFile(
+                "yukari.jpg",
+                "a.jpg",
                 {
-                    dir: "Download",
+                   oldDir: "Download",
+                    newDir: "Document"
                 }
             ))
         }

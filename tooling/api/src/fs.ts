@@ -39,6 +39,11 @@ export interface CopyFileOptions {
     toBaseDir?: BaseDirectory,
 }
 
+export interface RenameFileOptions {
+    oldDir?: BaseDirectory,
+    newDir?: BaseDirectory,
+}
+
 /**
  * Copies a file to a destination.
  */
@@ -115,8 +120,16 @@ export const removeFile = async (
 /**
  * Renames a file.
  */
-export const renameFile = async (oldPath: string, newPath: string): Promise<void> => {
-    await invoke("FLURX|fs::rename_file", [oldPath, newPath]);
+export const renameFile = async (
+    oldPath: string,
+    newPath: string,
+    options?: RenameFileOptions,
+): Promise<void> => {
+    await invoke("FLURX|fs::rename_file", {
+        oldPath,
+        newPath,
+        ...options
+    });
 }
 
 /**
