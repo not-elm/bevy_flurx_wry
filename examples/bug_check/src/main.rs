@@ -4,13 +4,13 @@ use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
 use bevy::window::PrimaryWindow;
+use bevy_flurx::action::{once, Action};
+use bevy_flurx_wry::api::path::AllPathPlugins;
 use bevy_flurx_wry::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use serde::Deserialize;
 use std::fmt::Debug;
 use std::path::PathBuf;
-use bevy_flurx::action::{once, Action};
-use bevy_flurx_wry::api::clipboard::ClipboardPlugins;
 
 #[derive(Component)]
 struct WebviewWindow;
@@ -30,17 +30,7 @@ fn main() {
             FlurxWryPlugin {
                 local_root: PathBuf::from("ui").join("bug_check"),
             },
-            AppGetNameApiPlugin,
-            AppGetVersionApiPlugin,
-            ClipboardPlugins,
-            AppExitApiPlugin,
-            LogPrintlnApiPlugin,
-            FsRemoveFilePlugin,
-            FsRenameFilePlugin,
-            FsWriteTextFilePlugin,
-            FsWriteBinaryFilePlugin,
-            FsReadBinaryFilePlugin,
-            FsReadDirPlugin,
+            AllPathPlugins,
         ))
         .add_ipc_event::<OnClickOnWebview>("onclick")
         .add_systems(Startup, (spawn_camera, spawn_webview))
@@ -92,7 +82,7 @@ fn spawn_webview(mut commands: Commands, primary_window: Query<Entity, With<Prim
 }
 
 #[command]
-fn result_action() -> Action<(), Result<String, String>>{
+fn result_action() -> Action<(), Result<String, String>> {
     once::run(|| Err("error message".to_string())).with(())
 }
 
