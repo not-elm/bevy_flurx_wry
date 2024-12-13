@@ -1,5 +1,11 @@
 import {invoke} from "./core";
 
+export interface FileEntry{
+    name: string,
+    path: string,
+    children: FileEntry[] | null
+}
+
 export interface FsWriteFileOptions {
     dir?: BaseDirectory,
     append?: boolean,
@@ -173,8 +179,14 @@ export const writeBinaryFile = async (
 /**
  * List directory files.
  */
-export const readDir = async (dirPath: string) => {
-    throw new Error("not impl")
+export const readDir = async (
+    path: string,
+    options?: FsBaseDirectoryOption,
+): Promise<FileEntry[]> => {
+    return await invoke("FLURX|fs::read_dir", {
+        path,
+        ...options
+    });
 }
 
 /**

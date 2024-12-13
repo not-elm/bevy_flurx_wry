@@ -45,19 +45,12 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.fs.writeBinaryFile(
-                "hello2",
-                [0, 1, 2],
-                {
-                    dir: "Document"
-                }
-            ))
-            console.log(await window.__FLURX__.fs.readBinaryFile(
-                "hello2",
-                {
-                    dir: "Document"
-                }
-            ))
+            const entries = await window.__FLURX__.fs.readDir("結月ゆかり_純_ver1.0", {
+                dir: "Download"
+            });
+            entries.forEach(e => {
+                console.log(e)
+            })
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";

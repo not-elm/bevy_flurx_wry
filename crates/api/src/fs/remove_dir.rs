@@ -1,6 +1,5 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, FsScope};
+use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, FsScope};
 use crate::macros::define_api_plugin;
-use crate::prelude::BaseDirectory;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
@@ -14,7 +13,7 @@ define_api_plugin!(
     ///
     /// ```ts
     /// await window.__FLURX__.fs.removeDir("./dir", {
-    ///      dir: "Download", 
+    ///      dir: "Download",
     ///     recursive: true
     /// })
     /// ```

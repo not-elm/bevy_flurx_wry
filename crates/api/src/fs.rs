@@ -8,6 +8,7 @@ mod remove_file;
 mod rename_file;
 mod write_file;
 mod remove_dir;
+mod read_dir;
 
 use std::path::{Path, PathBuf};
 use bevy_ecs::prelude::ReflectResource;
@@ -19,12 +20,13 @@ pub use copy_file::FsCopyFilePlugin;
 pub use create_dir::FsCreateDirPlugin;
 pub use exists::FsExistsPlugin;
 pub use read_file::{FsReadTextFilePlugin, FsReadBinaryFilePlugin};
+pub use read_dir::FsReadDirPlugin;
 pub use remove_dir::FsRemoveDirPlugin;
 pub use remove_file::FsRemoveFilePlugin;
 pub use rename_file::FsRenameFilePlugin;
 pub use write_file::{FsWriteBinaryFilePlugin, FsWriteTextFilePlugin};
 
-#[derive(Debug, Resource, Reflect, Default)]
+#[derive(Debug, Resource, Reflect, Default, Clone)]
 #[reflect(Resource, Default)]
 pub struct FsScope(Vec<PathBuf>);
 
@@ -42,7 +44,7 @@ impl FsScope {
 }
 
 #[derive(Serialize, Deserialize, Debug, Copy, Clone, Eq, PartialEq, Hash)]
-pub enum BaseDirectory {
+enum BaseDirectory {
     ConfigLocal,
     Data,
     LocalData,
