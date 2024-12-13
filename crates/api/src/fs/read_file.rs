@@ -12,10 +12,26 @@ define_api_plugin!(
     /// ## Typescript Code Example
     ///
     /// ```ts
-    /// const contents: string = await window.__FLURX__.fs.readTextFile("./dir");
+    /// const contents: string = await window.__FLURX__.fs.readTextFile("./dir",{
+    ///     dir: "Download"
+    /// });
     /// ```
     FsReadTextFilePlugin,
     command: read_text_file
+);
+
+define_api_plugin!(
+    /// You'll be able to read a file from typescript(or js).
+    ///
+    /// ## Typescript Code Example
+    ///
+    /// ```ts
+    /// const contents: string = await window.__FLURX__.fs.readBinaryFile("./dir",{
+    ///     dir: "Download"
+    /// });
+    /// ```
+    FsReadBinaryFilePlugin,
+    command: read_binary_file
 );
 
 #[derive(Deserialize, Default)]
@@ -27,6 +43,20 @@ struct Args {
 #[command(id = "FLURX|fs::read_text_file", internal)]
 fn read_text_file(In(args): In<Args>) -> Action<Args, Result<String, String>> {
     once::run(read_text_file_system).with(args)
+}
+
+#[command(id = "FLURX|fs::read_binary_file", internal)]
+fn read_binary_file(In(args): In<Args>) -> Action<Args, Result<Vec<u8>, String>> {
+    once::run(read_binary_file_system).with(args)
+}
+
+fn read_binary_file_system(
+    In(args): In<Args>,
+    scope: Option<Res<FsScope>>,
+) -> Result<Vec<u8>, String> {
+    let path = join_path_if_need(&args.dir, args.path);
+    error_if_not_accessible(&path, &scope)?;
+    std::fs::read(path).map_err(|e| e.to_string())
 }
 
 fn read_text_file_system(
@@ -42,7 +72,7 @@ fn read_text_file_system(
 #[cfg(test)]
 //noinspection DuplicatedCode
 mod tests {
-    use crate::fs::read_text_file::{read_text_file_system, Args};
+    use crate::fs::read_file::{read_text_file_system, Args};
     use crate::fs::FsScope;
     use crate::tests::test_app;
     use bevy::utils::default;

@@ -45,16 +45,15 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.fs.writeTextFile(
-                "hello.txt",
-                "hello",
+            console.log(await window.__FLURX__.fs.writeBinaryFile(
+                "hello2",
+                [0, 1, 2],
                 {
                     dir: "Document"
                 }
             ))
-            console.log(await window.__FLURX__.fs.writeBinaryFile(
+            console.log(await window.__FLURX__.fs.readBinaryFile(
                 "hello2",
-                [0, 1, 2],
                 {
                     dir: "Document"
                 }

@@ -37,6 +37,7 @@ fn main() {
             FsRenameFilePlugin,
             FsWriteTextFilePlugin,
             FsWriteBinaryFilePlugin,
+            FsReadBinaryFilePlugin,
         ))
         .add_ipc_event::<OnClickOnWebview>("onclick")
         .add_systems(Startup, (spawn_camera, spawn_webview))

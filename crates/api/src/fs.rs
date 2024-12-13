@@ -3,25 +3,25 @@
 mod create_dir;
 mod copy_file;
 mod exists;
-mod read_text_file;
+mod read_file;
 mod remove_file;
 mod rename_file;
 mod write_file;
 mod remove_dir;
 
+use std::path::{Path, PathBuf};
 use bevy_ecs::prelude::ReflectResource;
 use bevy_ecs::system::{Res, Resource};
 use bevy_reflect::prelude::ReflectDefault;
 use bevy_reflect::Reflect;
+use serde::{Deserialize, Serialize};
 pub use copy_file::FsCopyFilePlugin;
 pub use create_dir::FsCreateDirPlugin;
 pub use exists::FsExistsPlugin;
-pub use read_text_file::FsReadTextFilePlugin;
+pub use read_file::{FsReadTextFilePlugin, FsReadBinaryFilePlugin};
 pub use remove_dir::FsRemoveDirPlugin;
 pub use remove_file::FsRemoveFilePlugin;
 pub use rename_file::FsRenameFilePlugin;
-use serde::{Deserialize, Serialize};
-use std::path::{Path, PathBuf};
 pub use write_file::{FsWriteBinaryFilePlugin, FsWriteTextFilePlugin};
 
 #[derive(Debug, Resource, Reflect, Default)]

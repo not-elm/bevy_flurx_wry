@@ -88,8 +88,14 @@ export const exists = async (
 /**
  * Reads a file as byte array.
  */
-export const readBinaryFile = async (filePath: string): Promise<Uint8Array> => {
-    return await invoke("FLURX|fs::read_binary_file", filePath);
+export const readBinaryFile = async (
+    path: string,
+    options?: FsBaseDirectoryOption,
+): Promise<Uint8Array> => {
+    return await invoke("FLURX|fs::read_binary_file", {
+        path,
+        ...options
+    });
 }
 
 /**
