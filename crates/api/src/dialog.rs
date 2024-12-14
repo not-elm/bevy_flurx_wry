@@ -1,3 +1,5 @@
+//!  Provides mechanism to control a dialog from a webview.
+
 use crate::macros::define_api_plugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_ecs::system::In;
@@ -97,6 +99,7 @@ fn ask_system(
     if let Some(dialog_type) = args.level {
         dialog = dialog.set_level(dialog_type.to_message_level());
     }
+
     let dialog_result = dialog
         .set_description(args.question_message)
         .set_buttons(buttons)
