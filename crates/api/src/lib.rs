@@ -11,6 +11,8 @@ pub mod path;
 pub mod clipboard;
 #[cfg(feature = "dialog")]
 pub mod dialog;
+#[cfg(feature = "notification")]
+pub mod notification;
 mod error;
 
 #[allow(missing_docs)]
@@ -19,6 +21,8 @@ pub mod prelude {
     pub use crate::clipboard;
     #[cfg(feature = "dialog")]
     pub use crate::dialog;
+    #[cfg(feature = "notification")]
+    pub use crate::notification;
     pub use crate::{
         app::*,
         log::*,

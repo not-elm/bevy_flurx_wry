@@ -58,6 +58,7 @@ default = []
 clipboard = ["bevy_flurx_wry_api/clipboard"]
 fs = ["bevy_flurx_wry_api/fs"]
 dialog = ["bevy_flurx_wry_api/dialog"]
+notification = ["bevy_flurx_wry_api/notification"]
 
 [workspace.lints.clippy]
 type_complexity = "allow"

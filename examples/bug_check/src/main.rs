@@ -5,13 +5,14 @@ use bevy::prelude::*;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
 use bevy::window::PrimaryWindow;
 use bevy_flurx::action::{once, Action};
+use bevy_flurx_wry::api::dialog::AllDialogPlugins;
+use bevy_flurx_wry::api::notification::NotificationSendPlugin;
 use bevy_flurx_wry::api::path::AllPathPlugins;
 use bevy_flurx_wry::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use serde::Deserialize;
 use std::fmt::Debug;
 use std::path::PathBuf;
-use bevy_flurx_wry::api::dialog::AllDialogPlugins;
 
 #[derive(Component)]
 struct WebviewWindow;
@@ -33,6 +34,7 @@ fn main() {
             },
             AllPathPlugins,
             AllDialogPlugins,
+            NotificationSendPlugin,
         ))
         .add_ipc_event::<OnClickOnWebview>("onclick")
         .add_systems(Startup, (spawn_camera, spawn_webview))

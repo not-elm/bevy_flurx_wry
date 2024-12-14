@@ -4,6 +4,7 @@ export * as fs from "./fs";
 export * as dialog from "./dialog";
 export * as path from "./path";
 export * as clipboard from "./clipboard";
+export * as notification from "./notification";
 export * from "./core";
 
 
