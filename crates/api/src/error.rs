@@ -2,7 +2,7 @@ use serde::{Serialize, Serializer};
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
 
-pub(crate) type ApiResult<V: Serialize = ()> = Result<V, ApiError>;
+pub(crate) type ApiResult<V = ()> = Result<V, ApiError>;
 
 #[derive(Debug)]
 pub(crate) struct ApiError(Box<dyn Error>);
