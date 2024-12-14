@@ -45,20 +45,11 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            const paths = await window.__FLURX__.dialog.save({
-                title: "message",
-                filters: [
-                    {
-                        name: "image",
-                        extensions: [".png", "jpg"]
-                    },
-                    {
-                        name: "text",
-                        extensions: [".txt"]
-                    }
-                ]
+            await window.__FLURX__.notification.send("send message", {
+                title: "title",
+                icon: ""
             });
-            console.log("aa", paths);
+            console.log("aa");
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";
