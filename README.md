@@ -179,7 +179,7 @@ This crate is licensed under the MIT License or the Apache License 2.0.
 - [ ] Api
   - [x] fs
   - [x] clipboard
-  - [ ] dialog
+  - [x] dialog
   - [ ] http
   - [ ] mocks
   - [ ] notification

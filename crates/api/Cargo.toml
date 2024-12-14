@@ -14,7 +14,7 @@ readme = "README.md"
 default = ["dialog"]
 fs = ["dep:dirs"]
 clipboard = ["dep:arboard"]
-dialog = ["dep:rfd"]
+dialog = ["dep:rfd", "fs"]
 
 [dependencies]
 bevy_app = { workspace = true }

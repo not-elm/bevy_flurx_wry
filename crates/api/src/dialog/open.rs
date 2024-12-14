@@ -1,18 +1,22 @@
+use crate::fs::AllowPaths;
 use crate::macros::define_api_plugin;
-use bevy_ecs::system::In;
+use bevy_ecs::system::{In, ResMut};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use rfd::FileDialog;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use crate::dialog::DialogFilter;
 
 define_api_plugin!(
     /// You'll be able to open a file/directory selection dialog.
     ///
+    ///  The selected path will be registered to [AllowPaths] until the application closed.
+    ///
     /// ## Typescript Code Example
     ///
     /// ```ts
-    /// await window.__FLURX__.dialog.open("question");
+    /// await window.__FLURX__.dialog.open();
     /// ```
     DialogOpenPlugin,
     command: open
@@ -25,6 +29,7 @@ struct Args {
     default_path: Option<String>,
     directory: Option<bool>,
     multiple: Option<bool>,
+    filters: Option<Vec<DialogFilter>>,
 }
 
 #[derive(Serialize)]
@@ -35,10 +40,29 @@ enum SelectedPaths {
 
 #[command(id = "FLURX|dialog::open", internal)]
 fn open(In(args): In<Args>) -> Action<Args, SelectedPaths> {
-    once::run(system).with(args)
+    once::run(open_system).with(args)
 }
 
-fn system(In(args): In<Args>) -> SelectedPaths {
+fn open_system(
+    In(args): In<Args>,
+    allows: Option<ResMut<AllowPaths>>,
+) -> SelectedPaths {
+    let paths = select_paths(args);
+    if let Some(mut allows) = allows {
+        match &paths {
+            SelectedPaths::Single(Some(path)) => {
+                allows.add(path.clone());
+            }
+            SelectedPaths::Multiple(Some(paths)) => {
+                allows.add_all(paths.clone());
+            }
+            _ => {}
+        }
+    }
+    paths
+}
+
+fn select_paths(args: Args) -> SelectedPaths {
     let mut dialog = FileDialog::new();
     dialog = dialog.set_can_create_directories(true);
     if let Some(title) = args.title {
@@ -46,6 +70,11 @@ fn system(In(args): In<Args>) -> SelectedPaths {
     }
     if let Some(default_path) = args.default_path {
         dialog = dialog.set_directory(default_path);
+    }
+    if let Some(filters) = args.filters{
+        for filter in filters{
+            dialog = dialog.add_filter(filter.name, &filter.extensions);
+        }
     }
     match (args.directory.unwrap_or(false), args.multiple.unwrap_or(false)) {
         (true, true) => SelectedPaths::Multiple(dialog.pick_folders()),

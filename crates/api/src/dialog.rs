@@ -1,6 +1,7 @@
 //!  Provides mechanism to control a dialog from a webview.
 
 mod open;
+mod save;
 
 use crate::macros::define_api_plugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
@@ -12,6 +13,7 @@ use rfd::{MessageButtons, MessageDialogResult, MessageLevel};
 use serde::Deserialize;
 
 pub use open::DialogOpenPlugin;
+pub use save::DialogSavePlugin;
 
 /// Allows you to use all dialog plugins
 ///
@@ -21,6 +23,7 @@ pub use open::DialogOpenPlugin;
 /// - [DialogConfirmPlugin]
 /// - [DialogMessagePlugin]
 /// - [DialogOpenPlugin]
+/// - [DialogSavePlugin]
 pub struct AllDialogPlugins;
 impl PluginGroup for AllDialogPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -29,6 +32,7 @@ impl PluginGroup for AllDialogPlugins {
             .add(DialogConfirmPlugin)
             .add(DialogMessagePlugin)
             .add(DialogOpenPlugin)
+            .add(DialogSavePlugin)
     }
 }
 
@@ -67,6 +71,12 @@ define_api_plugin!(
     DialogMessagePlugin,
     command: message
 );
+
+#[derive(Deserialize)]
+struct DialogFilter{
+    pub name: String,
+    pub extensions: Vec<String>
+}
 
 #[derive(Default, Deserialize)]
 struct Args {

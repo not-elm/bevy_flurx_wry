@@ -12,6 +12,18 @@ export interface OpenFileDialogOptions {
     defaultPath?: string,
     directory?: boolean,
     multiple?: boolean,
+    filters?: DialogFilter[],
+}
+
+export interface SaveFileDialogOptions {
+    title?: string,
+    defaultPath?: string,
+    filters?: DialogFilter[],
+}
+
+export interface DialogFilter {
+    name: string,
+    extensions: string[]
 }
 
 /**
@@ -97,4 +109,21 @@ export const open = async <T extends OpenFileDialogOptions>(
     const isSingle = (r: Single | Multiple): r is Single => !!(r as Single)?.Single
     // @ts-ignore
     return isSingle(result) ? result.Single : result.Multiple;
+};
+
+/**
+ * Open a file save dialog.
+ *
+ *
+ *  @return string: select file path ; null: if canceled
+ *
+ * @example
+ * import {dialog} from "@bevy_flurx_wry/api";
+ *
+ *  const selectedPath: string | null = await dialog.save();
+ */
+export const save = async (
+    options?: SaveFileDialogOptions
+): Promise<string | null> => {
+    return await invoke("FLURX|dialog::save", options);
 };
