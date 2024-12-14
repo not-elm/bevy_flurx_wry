@@ -9,15 +9,22 @@ pub mod fs;
 pub mod path;
 #[cfg(feature = "clipboard")]
 pub mod clipboard;
+#[cfg(feature = "dialog")]
+pub mod dialog;
 mod error;
 
 #[allow(missing_docs)]
 pub mod prelude {
+    #[cfg(feature = "clipboard")]
+    pub use crate::clipboard;
+    #[cfg(feature = "dialog")]
+    pub use crate::dialog;
     pub use crate::{
         app::*,
-        fs::*,
         log::*,
     };
+    #[cfg(feature = "fs")]
+    pub use crate::{fs, path};
 }
 
 mod macros {

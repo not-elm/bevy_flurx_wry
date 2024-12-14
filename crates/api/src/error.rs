@@ -2,7 +2,7 @@ use serde::{Serialize, Serializer};
 use std::error::Error;
 use std::fmt::{Debug, Display, Formatter};
 
-pub(crate) type ApiResult<V: Serialize = ()> = Result<V, ApiError>;
+pub(crate) type ApiResult<V = ()> = Result<V, ApiError>;
 
 #[derive(Debug)]
 pub(crate) struct ApiError(Box<dyn Error>);
@@ -22,18 +22,22 @@ impl<E: Error + 'static> From<E> for ApiError {
     }
 }
 
-pub(crate) struct FsScopeError;
+pub(crate) struct NotPermittedPath;
 
-impl Debug for FsScopeError {
+impl NotPermittedPath {
+    const MESSAGE: &'static str = "Try to access to any of specified files isn't permitted by the application. ";
+}
+
+impl Debug for NotPermittedPath {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
+        f.write_str(NotPermittedPath::MESSAGE)
     }
 }
 
-impl Display for FsScopeError {
+impl Display for NotPermittedPath {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.write_str("Access to any of specified files isn't permitted by the application. ")
+        f.write_str(NotPermittedPath::MESSAGE)
     }
 }
 
-impl Error for FsScopeError {}
+impl Error for NotPermittedPath {}

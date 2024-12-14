@@ -10,22 +10,22 @@ mod write_file;
 mod remove_dir;
 mod read_dir;
 
-use std::path::{Path, PathBuf};
+use crate::error::{ApiError, ApiResult, NotPermittedPath};
 use bevy_ecs::prelude::ReflectResource;
 use bevy_ecs::system::{Res, Resource};
 use bevy_reflect::prelude::ReflectDefault;
 use bevy_reflect::Reflect;
-use serde::{Deserialize, Serialize};
 pub use copy_file::FsCopyFilePlugin;
 pub use create_dir::FsCreateDirPlugin;
 pub use exists::FsExistsPlugin;
-pub use read_file::{FsReadTextFilePlugin, FsReadBinaryFilePlugin};
 pub use read_dir::FsReadDirPlugin;
+pub use read_file::{FsReadBinaryFilePlugin, FsReadTextFilePlugin};
 pub use remove_dir::FsRemoveDirPlugin;
 pub use remove_file::FsRemoveFilePlugin;
 pub use rename_file::FsRenameFilePlugin;
+use serde::{Deserialize, Serialize};
+use std::path::{Path, PathBuf};
 pub use write_file::{FsWriteBinaryFilePlugin, FsWriteTextFilePlugin};
-use crate::error::{ApiError, ApiResult, FsScopeError};
 
 /// Represents the list of the paths accessible from [crate::fs] api.
 ///
@@ -47,6 +47,18 @@ impl AllowPaths {
     /// ```
     pub fn new<P: Into<PathBuf>>(allows: impl IntoIterator<Item=P>) -> Self {
         Self(allows.into_iter().map(|p| p.into()).collect())
+    }
+
+    /// Adds a path that allows access to the file system. 
+    #[inline]
+    pub fn add(&mut self, path: PathBuf) {
+        self.0.push(path);
+    }
+
+     /// Adds paths that allows access to the file system. 
+    #[inline]
+    pub fn add_all(&mut self, paths: impl IntoIterator<Item=PathBuf>) {
+        self.0.extend(paths);
     }
 
     fn check_accessible(&self, path: impl AsRef<Path>) -> bool {
@@ -118,7 +130,7 @@ pub(crate) fn error_if_not_accessible(
 ) -> ApiResult {
     if let Some(scope) = scope.as_ref() {
         if !scope.check_accessible(path) {
-            return Err(ApiError::from(FsScopeError));
+            return Err(ApiError::from(NotPermittedPath));
         }
     }
     Ok(())

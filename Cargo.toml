@@ -57,6 +57,7 @@ serde_json = "1.0.117"
 default = []
 clipboard = ["bevy_flurx_wry_api/clipboard"]
 fs = ["bevy_flurx_wry_api/fs"]
+dialog = ["bevy_flurx_wry_api/dialog"]
 
 [workspace.lints.clippy]
 type_complexity = "allow"

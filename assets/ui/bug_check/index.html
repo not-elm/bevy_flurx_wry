@@ -45,23 +45,20 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-           console.log(await window.__FLURX__.path.config());
-           console.log(await window.__FLURX__.path.configLocal());
-           console.log(await window.__FLURX__.path.data());
-           console.log(await window.__FLURX__.path.dataLocal());
-           console.log(await window.__FLURX__.path.publicDir());
-           console.log(await window.__FLURX__.path.cache());
-           console.log(await window.__FLURX__.path.video());
-           console.log(await window.__FLURX__.path.desktop());
-           console.log(await window.__FLURX__.path.audio());
-           console.log(await window.__FLURX__.path.document());
-           console.log(await window.__FLURX__.path.download());
-           console.log(await window.__FLURX__.path.executable());
-           console.log(await window.__FLURX__.path.home());
-           console.log(await window.__FLURX__.path.picture());
-           console.log(await window.__FLURX__.path.temp());
-           console.log(await window.__FLURX__.path.template());
-           console.log(await window.__FLURX__.path.video());
+            const paths = await window.__FLURX__.dialog.save({
+                title: "message",
+                filters: [
+                    {
+                        name: "image",
+                        extensions: [".png", "jpg"]
+                    },
+                    {
+                        name: "text",
+                        extensions: [".txt"]
+                    }
+                ]
+            });
+            console.log("aa", paths);
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";

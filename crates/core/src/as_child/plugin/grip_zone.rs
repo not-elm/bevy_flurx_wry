@@ -17,9 +17,11 @@ use bevy_window::Window;
 use bevy_winit::WinitWindows;
 use mouse_rs::Mouse;
 use serde::Deserialize;
+use wry::raw_window_handle::HasWindowHandle;
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 use wry::raw_window_handle::RawWindowHandle;
-use wry::raw_window_handle::HasWindowHandle;
+#[cfg(target_os = "windows")]
+use wry::WebViewExtWindows;
 
 pub struct GripZonePlugin;
 
@@ -131,15 +133,13 @@ fn grip_zone_grab(
         match window_handle {
             #[cfg(target_os = "windows")]
             RawWindowHandle::Win32(handle) => {
-                use wry::WebViewExtWindows;
                 _webview.reparent(handle.hwnd.get()).output_log_if_failed();
             }
-            #[cfg(target_os = "macos")]
+            #[cfg(any(target_os = "macos", target_os = "ios"))]
             RawWindowHandle::AppKit(_) => {
-                {
-                    use wry::WebViewExtMacOS;
-                    _webview.reparent(weview.ns_window()).output_log_if_failed();
-                }
+                use wry::WebViewExtMacOS;
+                use objc2::rc::Retained;
+                _webview.reparent(Retained::into_raw(_webview.ns_window())).output_log_if_failed();
             }
             _ => {}
         }

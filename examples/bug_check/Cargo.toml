@@ -10,6 +10,7 @@ bevy_flurx = "0.7.0"
 bevy_flurx_wry = { path = "../..",  features = [
     "clipboard",
     "fs",
+    "dialog"
 ]}
 bevy-inspector-egui = "0.28.0"
 serde = { version = "1.0.202", features = ["derive"] }

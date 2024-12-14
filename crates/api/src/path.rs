@@ -1,8 +1,7 @@
 //! Provides apis to obtain special system paths.
 
-use crate::fs::AllowPaths;
+use crate::fs::{error_if_not_accessible, AllowPaths};
 use crate::macros::define_api_plugin;
-use crate::prelude::error_if_not_accessible;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_ecs::system::Res;
 use bevy_flurx::action::once;
