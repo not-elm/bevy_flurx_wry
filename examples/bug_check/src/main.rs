@@ -11,6 +11,7 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use serde::Deserialize;
 use std::fmt::Debug;
 use std::path::PathBuf;
+use bevy_flurx_wry::api::dialog::AllDialogPlugins;
 
 #[derive(Component)]
 struct WebviewWindow;
@@ -31,6 +32,7 @@ fn main() {
                 local_root: PathBuf::from("ui").join("bug_check"),
             },
             AllPathPlugins,
+            AllDialogPlugins,
         ))
         .add_ipc_event::<OnClickOnWebview>("onclick")
         .add_systems(Startup, (spawn_camera, spawn_webview))

@@ -1,4 +1,4 @@
-import {fs, app, log, invoke, listen, emit, clipboard, path} from "../index";
+import {fs, app, log, invoke, listen, emit, clipboard, path, dialog} from "../index";
 
 export {};
 
@@ -13,6 +13,7 @@ declare global {
             path: typeof path,
             log: typeof log,
             clipboard: typeof clipboard,
+            dialog: typeof dialog,
             invoke: typeof invoke,
             listen: typeof listen,
             emit: typeof emit,

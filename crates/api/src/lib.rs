@@ -9,6 +9,9 @@ pub mod fs;
 pub mod path;
 #[cfg(feature = "clipboard")]
 pub mod clipboard;
+#[cfg(feature = "dialog")]
+pub mod dialog;
+
 mod error;
 
 #[allow(missing_docs)]
