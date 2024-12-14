@@ -15,17 +15,19 @@ use serde::Deserialize;
 ///
 /// - [DialogAskPlugin]
 /// - [DialogConfirmPlugin]
+/// - [DialogMessagePlugin]
 pub struct AllDialogPlugins;
 impl PluginGroup for AllDialogPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(DialogAskPlugin)
             .add(DialogConfirmPlugin)
+            .add(DialogMessagePlugin)
     }
 }
 
 define_api_plugin!(
-    /// You'll be able to control a dialog to ask the user yes/no from typescript(or js).
+    /// You'll be able to control a dialog to ask the user yes/no from a webview.
     ///
     /// ## Typescript Code Example
     ///
@@ -37,7 +39,7 @@ define_api_plugin!(
 );
 
 define_api_plugin!(
-    /// You'll be able to control a dialog to confirm ok/cancel with the user from typescript(or js).
+    /// You'll be able to control a dialog to confirm ok/cancel with the user from a webview.
     ///
     /// ## Typescript Code Example
     ///
@@ -46,6 +48,18 @@ define_api_plugin!(
     /// ```
     DialogConfirmPlugin,
     command: confirm
+);
+
+define_api_plugin!(
+    /// You'll be able to control a dialog to show a message dialog from a webview.
+    ///
+    /// ## Typescript Code Example
+    ///
+    /// ```ts
+    /// await window.__FLURX__.dialog.message("question");
+    /// ```
+    DialogMessagePlugin,
+    command: message
 );
 
 #[derive(Default, Deserialize)]
@@ -85,6 +99,13 @@ fn ask(In(args): In<Args>) -> Action<Args, bool> {
 fn confirm(In(args): In<Args>) -> Action<Args, bool> {
     once::run(|In(args): In<Args>| {
         ask_system(args, MessageButtons::OkCancel)
+    }).with(args)
+}
+
+#[command(id = "FLURX|dialog::message", internal)]
+fn message(In(args): In<Args>) -> Action<Args, bool> {
+    once::run(|In(args): In<Args>| {
+        ask_system(args, MessageButtons::Ok)
     }).with(args)
 }
 

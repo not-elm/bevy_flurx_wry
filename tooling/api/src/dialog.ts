@@ -42,3 +42,21 @@ export const confirm = async (
         ...option
     });
 };
+
+/**
+ * Shows a message dialog.
+ *
+ * @example
+ * import {dialog} from "@bevy_flurx_wry/api";
+ *
+ *  await dialog.message("message");
+ */
+export const message = async (
+    message: string,
+    option?: ConfirmDialogOptions,
+): Promise<void> => {
+    await invoke("FLURX|dialog::message", {
+        questionMessage: message,
+        ...option
+    });
+};
