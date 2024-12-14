@@ -12,8 +12,8 @@ importers:
         specifier: ^4.4.0
         version: 4.4.0
       pnpm:
-        specifier: ^9.1.4
-        version: 9.1.4
+        specifier: ^9.15.0
+        version: 9.15.0
     devDependencies:
       '@rollup/plugin-terser':
         specifier: ^0.4.4
@@ -291,8 +291,8 @@ packages:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
 
-  pnpm@9.1.4:
-    resolution: {integrity: sha512-nfnPJ8kXFWRsfWddHJyOQfb86IJG8TGMGqah7RrrPE8DL830umPMacT+bWNCeRdrU1hyfY8sweZbZfQ84vi/sA==}
+  pnpm@9.15.0:
+    resolution: {integrity: sha512-duI3l2CkMo7EQVgVvNZije5yevN3mqpMkU45RBVsQpmSGon5djge4QfUHxLPpLZmgcqccY8GaPoIMe1MbYulbA==}
     engines: {node: '>=18.12'}
     hasBin: true
 
@@ -563,7 +563,7 @@ snapshots:
 
   picomatch@2.3.1: {}
 
-  pnpm@9.1.4: {}
+  pnpm@9.15.0: {}
 
   process@0.11.10: {}
 
