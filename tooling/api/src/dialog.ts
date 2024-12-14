@@ -2,13 +2,12 @@ import {invoke} from "./core";
 
 export type dialogLevel = "info" | "warn" | "error";
 
-export interface AskDialogOptions {
+export interface ConfirmDialogOptions {
     title?: string,
     level?: dialogLevel,
 }
 
 /**
- *  ユーザーに確認求めるダイアログを表示します。
  * Shows a dialog to confirm yes/no with the user.
  *
  * @example
@@ -18,9 +17,27 @@ export interface AskDialogOptions {
  */
 export const ask = async (
     questionMessage: string,
-    option?: AskDialogOptions,
+    option?: ConfirmDialogOptions,
 ): Promise<boolean> => {
     return await invoke("FLURX|dialog::ask", {
+        questionMessage,
+        ...option
+    });
+};
+
+/**
+ * Shows a dialog to confirm ok/cancel with the user.
+ *
+ * @example
+ * import {dialog} from "@bevy_flurx_wry/api";
+ *
+ * const yes: boolean = await dialog.confirm("question");
+ */
+export const confirm = async (
+    questionMessage: string,
+    option?: ConfirmDialogOptions,
+): Promise<boolean> => {
+    return await invoke("FLURX|dialog::confirm", {
         questionMessage,
         ...option
     });

@@ -4,7 +4,7 @@ use bevy_ecs::system::In;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Action;
 use bevy_flurx_ipc::command;
-use rfd::{MessageDialogResult, MessageLevel};
+use rfd::{MessageButtons, MessageDialogResult, MessageLevel};
 use serde::Deserialize;
 
 /// Allows you to use all dialog plugins
@@ -12,16 +12,18 @@ use serde::Deserialize;
 /// ## Plugins
 ///
 /// - [DialogAskPlugin]
+/// - [DialogConfirmPlugin]
 pub struct AllDialogPlugins;
 impl PluginGroup for AllDialogPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(DialogAskPlugin)
+            .add(DialogConfirmPlugin)
     }
 }
 
 define_api_plugin!(
-    /// You will be able to control a dialog for asking from typescript(or js).
+    /// You'll be able to control a dialog to ask the user yes/no from typescript(or js).
     ///
     /// ## Typescript Code Example
     ///
@@ -30,6 +32,18 @@ define_api_plugin!(
     /// ```
     DialogAskPlugin,
     command: ask
+);
+
+define_api_plugin!(
+    /// You'll be able to control a dialog to confirm ok/cancel with the user from typescript(or js).
+    ///
+    /// ## Typescript Code Example
+    ///
+    /// ```ts
+    /// const isOk: bool = await window.__FLURX__.dialog.confirm("question");
+    /// ```
+    DialogConfirmPlugin,
+    command: confirm
 );
 
 #[derive(Default, Deserialize)]
@@ -60,11 +74,21 @@ impl DialogLevel {
 
 #[command(id = "FLURX|dialog::ask", internal)]
 fn ask(In(args): In<Args>) -> Action<Args, bool> {
-    once::run(ask_system).with(args)
+    once::run(|In(args): In<Args>| {
+        ask_system(args, MessageButtons::YesNo)
+    }).with(args)
+}
+
+#[command(id = "FLURX|dialog::confirm", internal)]
+fn confirm(In(args): In<Args>) -> Action<Args, bool> {
+    once::run(|In(args): In<Args>| {
+        ask_system(args, MessageButtons::OkCancel)
+    }).with(args)
 }
 
 fn ask_system(
-    In(args): In<Args>,
+    args: Args,
+    buttons: MessageButtons,
 ) -> bool {
     let mut dialog = rfd::MessageDialog::new();
     if let Some(title) = args.title {
@@ -75,7 +99,7 @@ fn ask_system(
     }
     let dialog_result = dialog
         .set_description(args.question_message)
-        .set_buttons(rfd::MessageButtons::YesNo)
+        .set_buttons(buttons)
         .show();
     matches!(dialog_result, MessageDialogResult::Ok | MessageDialogResult::Yes)
 }

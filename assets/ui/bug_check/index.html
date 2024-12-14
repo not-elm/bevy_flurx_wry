@@ -45,15 +45,15 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.dialog.ask("question message?", {
+            console.log(await window.__FLURX__.dialog.confirm("question message?", {
                 title: "Info Title",
                 level: "info",
             }));
-            console.log(await window.__FLURX__.dialog.ask("question message?", {
+            console.log(await window.__FLURX__.dialog.confirm("question message?", {
                 title: "Warning Title",
                 level: "warn",
             }));
-            console.log(await window.__FLURX__.dialog.ask("question message?", {
+            console.log(await window.__FLURX__.dialog.confirm("question message?", {
                 title: "Error Title",
                 level: "error",
             }));
