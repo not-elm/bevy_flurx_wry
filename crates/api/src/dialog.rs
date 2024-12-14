@@ -1,5 +1,7 @@
 //!  Provides mechanism to control a dialog from a webview.
 
+mod open;
+
 use crate::macros::define_api_plugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_ecs::system::In;
@@ -9,6 +11,8 @@ use bevy_flurx_ipc::command;
 use rfd::{MessageButtons, MessageDialogResult, MessageLevel};
 use serde::Deserialize;
 
+pub use open::DialogOpenPlugin;
+
 /// Allows you to use all dialog plugins
 ///
 /// ## Plugins
@@ -16,6 +20,7 @@ use serde::Deserialize;
 /// - [DialogAskPlugin]
 /// - [DialogConfirmPlugin]
 /// - [DialogMessagePlugin]
+/// - [DialogOpenPlugin]
 pub struct AllDialogPlugins;
 impl PluginGroup for AllDialogPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -23,6 +28,7 @@ impl PluginGroup for AllDialogPlugins {
             .add(DialogAskPlugin)
             .add(DialogConfirmPlugin)
             .add(DialogMessagePlugin)
+            .add(DialogOpenPlugin)
     }
 }
 
@@ -127,3 +133,4 @@ fn ask_system(
         .show();
     matches!(dialog_result, MessageDialogResult::Ok | MessageDialogResult::Yes)
 }
+

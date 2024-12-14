@@ -7,6 +7,13 @@ export interface ConfirmDialogOptions {
     level?: dialogLevel,
 }
 
+export interface OpenFileDialogOptions {
+    title?: string,
+    defaultPath?: string,
+    directory?: boolean,
+    multiple?: boolean,
+}
+
 /**
  * Shows a dialog to confirm yes/no with the user.
  *
@@ -59,4 +66,35 @@ export const message = async (
         questionMessage: message,
         ...option
     });
+};
+
+
+interface Single {
+    Single: string | null
+}
+
+interface Multiple {
+    Multiple: string[] | null
+}
+
+type OpenDialogResult<T extends OpenFileDialogOptions> =
+    T["multiple"] extends true ? Multiple : Single
+
+
+/**
+ * Shows a message dialog.
+ *
+ * @example
+ * import {dialog} from "@bevy_flurx_wry/api";
+ *
+ *  const selectedPaths: string[] | null = await dialog.open({multiple: true});
+ *  const selectedPath: string | null = await dialog.open({multiple: false});
+ */
+export const open = async <T extends OpenFileDialogOptions>(
+    options?: T
+): Promise<T["multiple"] extends true ? string[] | null : string | null> => {
+    const result: OpenDialogResult<T> = await invoke("FLURX|dialog::open", options);
+    const isSingle = (r: Single | Multiple): r is Single => !!(r as Single)?.Single
+    // @ts-ignore
+    return isSingle(result) ? result.Single : result.Multiple;
 };
