@@ -29,6 +29,9 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 mouse-rs = "0.4.2"
 
+[target."cfg(any(target_os = \"ios\", target_os = \"macos\"))".dependencies]
+objc2 = { version = "0.5" }
+
 [dev-dependencies]
 bevy = "0.15.0"
 bevy_flurx_wry = { path = "../.." }
