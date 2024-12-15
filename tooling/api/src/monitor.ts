@@ -21,24 +21,24 @@ export interface Monitor {
  *  Returns the monitor infos.
  *
  *  @example
- * import {appWindow, Monitor} from "@bevy_flurx_wry/api";
+ * import {monitor, Monitor} from "@bevy_flurx_wry/api";
  *
- * const monitors: Monitor[] = await appWindow.availableMonitors();
+ * const monitors: Monitor[] = await monitor.availables();
  */
-export const availableMonitors = async (): Promise<Monitor[]> => {
-    return await invoke("FLURX|window::available_monitors");
+export const availables = async (): Promise<Monitor[]> => {
+    return await invoke("FLURX|monitor::availables");
 }
 
 /**
  *  Returns the current monitor info.
  *
  *  @example
- * import {appWindow, Monitor} from "@bevy_flurx_wry/api";
+ * import {monitor, Monitor} from "@bevy_flurx_wry/api";
  *
- * const monitor: Monitor | null = await appWindow.currentMonitor();
+ * const currentMonitor: Monitor | null = await monitor.current();
  */
-export const currentMonitor = async (): Promise<Monitor | null> => {
-    return await invoke("FLURX|window::current_monitor");
+export const current = async (): Promise<Monitor | null> => {
+    return await invoke("FLURX|monitor::current");
 }
 
 /**

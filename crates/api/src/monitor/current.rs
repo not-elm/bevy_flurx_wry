@@ -18,11 +18,11 @@ api_plugin!(
     /// ```ts
     /// const monitor = await window.__FLURX__.window.currentMonitor();
     /// ```
-    WindowCurrentMonitorsPlugin,
+    MonitorCurrentPlugin,
     command: current_monitor
 );
 
-#[command(id = "FLURX|window::current_monitor", internal)]
+#[command(id = "FLURX|monitor::current", internal)]
 fn current_monitor(WebviewEntity(entity): WebviewEntity) -> Action<(), Option<Monitor>> {
     once::run(current_monitor_system).with(entity).omit_input().with(())
 }

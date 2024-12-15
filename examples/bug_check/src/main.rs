@@ -14,7 +14,7 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use serde::Deserialize;
 use std::fmt::Debug;
 use std::path::PathBuf;
-use bevy_flurx_wry::api::monitor::AllWindowPlugins;
+use bevy_flurx_wry::api::monitor::AllMonitorPlugins;
 
 #[derive(Component)]
 struct WebviewWindow;
@@ -38,7 +38,7 @@ fn main() {
             AllDialogPlugins,
             NotificationSendPlugin,
             AllOsPlugins,
-            AllWindowPlugins,
+            AllMonitorPlugins,
         ))
         .add_ipc_event::<OnClickOnWebview>("onclick")
         .add_systems(Startup, (spawn_camera, spawn_webview))

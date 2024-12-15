@@ -16,13 +16,13 @@ api_plugin!(
     /// ## Typescript Code Example
     ///
     /// ```ts
-    /// const monitors = await window.__FLURX__.window.availableMonitors();
+    /// const monitors = await window.__FLURX__.monitor.availables();
     /// ```
-    WindowAvailableMonitorsPlugin,
+    MonitorAvailablesPlugin,
     command: available_monitors
 );
 
-#[command(id = "FLURX|window::available_monitors", internal)]
+#[command(id = "FLURX|monitor::availables", internal)]
 fn available_monitors(WebviewEntity(entity): WebviewEntity) -> Action<(), Vec<Monitor>> {
     once::run(available_monitors_system).with(entity).omit_input().with(())
 }

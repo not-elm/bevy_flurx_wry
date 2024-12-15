@@ -11,13 +11,13 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 
 [features]
-default = ["dialog", "notification", "os", "window"]
+default = ["dialog", "notification", "os", "monitor"]
 fs = ["dep:dirs"]
 clipboard = ["dep:arboard"]
 dialog = ["dep:rfd", "fs"]
 notification = ["dep:notify-rust"]
 os = ["dep:sysinfo", "dep:sys-locale"]
-window = ["dep:bevy_winit"]
+monitor = ["dep:bevy_winit"]
 
 [dependencies]
 bevy_app = { workspace = true }

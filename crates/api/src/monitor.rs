@@ -1,26 +1,29 @@
-mod available_monitors;
-mod current_monitor;
+//!  Provides the utility apis to read the monitor information. 
+
+mod availables;
+mod current;
 mod primary;
 
-pub use crate::monitor::available_monitors::WindowAvailableMonitorsPlugin;
-pub use crate::monitor::current_monitor::WindowCurrentMonitorsPlugin;
-pub use crate::monitor::primary::MonitorPrimaryPlugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use serde::Serialize;
 
-/// Allows  you to use all window plugins.
+pub use crate::monitor::availables::MonitorAvailablesPlugin;
+pub use crate::monitor::current::MonitorCurrentPlugin;
+pub use crate::monitor::primary::MonitorPrimaryPlugin;
+
+/// Allows  you to use all monitor plugins.
 ///
 /// ## Plugins
 ///
-/// - [WindowAvailableMonitorsPlugin]
-/// - [WindowCurrentMonitorsPlugin]
+/// - [MonitorAvailablesPlugin]
+/// - [MonitorCurrentPlugin]
 /// - [MonitorPrimaryPlugin]
-pub struct AllWindowPlugins;
-impl PluginGroup for AllWindowPlugins {
+pub struct AllMonitorPlugins;
+impl PluginGroup for AllMonitorPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
-            .add(WindowAvailableMonitorsPlugin)
-            .add(WindowCurrentMonitorsPlugin)
+            .add(MonitorAvailablesPlugin)
+            .add(MonitorCurrentPlugin)
             .add(MonitorPrimaryPlugin)
     }
 }
