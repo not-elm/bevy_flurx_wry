@@ -84,3 +84,15 @@ export const longOsVersion = async (): Promise<string | null> => {
 export const kernelVersion = async (): Promise<string | null> => {
     return await invoke("FLURX|os::kernel_version");
 }
+
+/**
+ * Get the system name.
+ *
+ * @example
+ * import {os} from "@bevy_flurx_wry/api";
+ *
+ * const name: string | null = await os.systemName();
+ */
+export const systemName = async (): Promise<string | null> => {
+    return await invoke("FLURX|os::system_name");
+}

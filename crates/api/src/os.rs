@@ -3,6 +3,7 @@
 mod family;
 mod os_version;
 mod kernel_version;
+mod system_name;
 
 use crate::macros::api_plugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
@@ -12,6 +13,7 @@ use bevy_flurx_ipc::command;
 pub use crate::os::family::OsFamilyPlugin;
 pub use crate::os::os_version::{OsVersionPlugin, OsLongVersionPlugin};
 pub use crate::os::kernel_version::OsKernelVersionPlugin;
+pub use crate::os::system_name::OsSystemNamePlugin;
 
 /// Allows you to use all os plugins.
 ///
@@ -22,6 +24,7 @@ pub use crate::os::kernel_version::OsKernelVersionPlugin;
 /// - [OsVersionPlugin]
 /// - [OsLongVersionPlugin]
 /// - [OsKernelVersionPlugin]
+/// - [OsSystemNamePlugin]
 pub struct AllOsPlugins;
 impl PluginGroup for AllOsPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -31,6 +34,7 @@ impl PluginGroup for AllOsPlugins {
             .add(OsVersionPlugin)
             .add(OsLongVersionPlugin)
             .add(OsKernelVersionPlugin)
+            .add(OsSystemNamePlugin)
     }
 }
 
