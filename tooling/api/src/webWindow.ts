@@ -7,7 +7,19 @@ export class WebWindow{
     ) {
     }
     async title(): Promise<string>{
-        return await invoke("FLURX|web_window::title", this.identifier)
+        return await invoke("FLURX|web_window::title", this.identifier);
+    }
+
+    /**
+     *  Center the window.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     * await WebWindow.current().center();
+     */
+    async center(): Promise<void>{
+        await invoke("FLURX|web_window::center", this.identifier);
     }
 
     static current(): WebWindow{

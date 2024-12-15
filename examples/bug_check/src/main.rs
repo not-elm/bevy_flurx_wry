@@ -3,7 +3,7 @@
 use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
-use bevy::window::PrimaryWindow;
+use bevy::window::{PrimaryWindow, WindowResolution};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_wry::api::dialog::AllDialogPlugins;
 use bevy_flurx_wry::api::notification::NotificationSendPlugin;
@@ -30,7 +30,13 @@ struct OnClickOnWebview {
 fn main() {
     App::new()
         .add_plugins((
-            DefaultPlugins,
+            DefaultPlugins.set(WindowPlugin{
+                primary_window: Some(Window{
+                    resolution: WindowResolution::new(500., 500.),
+                    ..default()
+                }),
+                ..default()
+            }),
             WorldInspectorPlugin::new(),
             FlurxWryPlugin {
                 local_root: PathBuf::from("ui").join("bug_check"),
@@ -82,7 +88,7 @@ fn spawn_webview(mut commands: Commands, primary_window: Query<Entity, With<Prim
         AsChildBundle {
             parent: ParentWindow(primary_window.single()),
             bounds: Bounds {
-                size: Vec2::new(500., 500.),
+                size: Vec2::new(300., 300.),
                 position: Vec2::new(100., 100.),
                 ..default()
             },

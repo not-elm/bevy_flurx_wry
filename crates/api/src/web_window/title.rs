@@ -1,5 +1,5 @@
 use crate::macros::api_plugin;
-use crate::web_window::WebWindowParams;
+use crate::web_window::WebWinitWindowParams;
 use bevy_ecs::prelude::In;
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
@@ -23,7 +23,7 @@ fn title(In(args): In<String>) -> Action<String, Option<String>> {
 
 fn system(
     In(identifier): In<String>,
-    web_views: WebWindowParams,
+    web_views: WebWinitWindowParams,
 ) -> Option<String> {
     let window = web_views.winit_window(&identifier)?;
     Some(window.title())

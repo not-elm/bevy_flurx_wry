@@ -1,12 +1,15 @@
 mod title;
+mod center;
 
+pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::title::WebWindowTitlePlugin;
-use bevy_core::Name;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
+use bevy_core::Name;
 use bevy_ecs::prelude::{Entity, NonSend, Query};
 use bevy_ecs::system::SystemParam;
+use bevy_ecs::world::Mut;
 use bevy_flurx_wry_core::prelude::ParentWindow;
-use bevy_window::WindowWrapper;
+use bevy_window::{Window, WindowWrapper};
 use bevy_winit::WinitWindows;
 
 /// Allows you to use all window plugins.
@@ -14,24 +17,41 @@ use bevy_winit::WinitWindows;
 ///## Plugins
 ///
 /// - [WebWindowTitlePlugin]
+/// - [WebWindowCenterPlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(WebWindowTitlePlugin)
+            .add(WebWindowCenterPlugin)
     }
 }
-
 #[derive(SystemParam)]
-struct WebWindowParams<'w, 's> {
-    parent: Query<'w, 's, (Entity, &'static Name, Option<&'static ParentWindow>)>,
-    web_views: NonSend<'w, WinitWindows>,
+struct WebWinitWindowParams<'w, 's> {
+    views: Query<'w, 's, (
+        Entity,
+        Option<&'static Name>,
+        Option<&'static mut Window>,
+        Option<&'static ParentWindow>,
+    )>,
+    
+    windows: NonSend<'w, WinitWindows>,
 }
 
-impl WebWindowParams<'_, '_> {
+impl WebWinitWindowParams<'_, '_> {
+    fn bevy_window_mut(&mut self, identifier: &str) -> Option<Mut<bevy_window::Window>> {
+        let entity = self.entity(identifier)?;
+        self.views.get_mut(entity).ok().and_then(|query| query.2)
+    }
+
     fn winit_window(&self, identifier: &str) -> Option<&WindowWrapper<winit::window::Window>> {
-        let entity = self.parent.iter().find_map(|(entity, name, parent)| {
-            if name.as_str() != identifier {
+        let entity = self.entity(identifier)?;
+        self.windows.get_window(entity)
+    }
+
+    fn entity(&self, identifier: &str) -> Option<Entity> {
+        self.views.iter().find_map(|(entity, name, _, parent)| {
+            if name.as_ref().map(|n|n.as_str()).unwrap_or_default() != identifier {
                 return None;
             }
             if let Some(parent) = parent {
@@ -39,7 +59,6 @@ impl WebWindowParams<'_, '_> {
             } else {
                 Some(entity)
             }
-        })?;
-        self.web_views.get_window(entity)
+        })
     }
 }
