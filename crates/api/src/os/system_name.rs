@@ -8,7 +8,7 @@ api_plugin!(
     /// ## Typescript Code Example
     ///
     /// ```ts
-    /// const version: string | null = await window.__FLURX__.os.systemName();
+    /// const name: string | null = await window.__FLURX__.os.systemName();
     /// ```
     OsSystemNamePlugin,
     command: system_name
