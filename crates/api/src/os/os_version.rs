@@ -16,9 +16,5 @@ api_plugin!(
 
 #[command(id = "FLURX|os::os_version", internal)]
 fn os_version() -> Action<(), Option<String>> {
-    fn f() -> Option<String> {
-        sysinfo::System::os_version()
-    }
-
-    once::run(f).with(())
+    once::run(sysinfo::System::os_version).with(())
 }

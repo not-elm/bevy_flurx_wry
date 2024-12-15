@@ -50,7 +50,7 @@ export const family = async (): Promise<Family | null> => {
 }
 
 /**
- * Get the system version from a webview.
+ * Get the system version.
  *
  * @example
  * import {os} from "@bevy_flurx_wry/api";
@@ -59,4 +59,16 @@ export const family = async (): Promise<Family | null> => {
  */
 export const version = async (): Promise<string | null> => {
     return await invoke("FLURX|os::os_version");
+}
+
+/**
+ * Get the kernel version.
+ *
+ * @example
+ * import {os} from "@bevy_flurx_wry/api";
+ *
+ * const kernelVersion: string | null = await os.kernelVersion();
+ */
+export const kernelVersion = async (): Promise<string | null> => {
+    return await invoke("FLURX|os::kernel_version");
 }
