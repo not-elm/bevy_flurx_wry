@@ -4,6 +4,7 @@ mod hide;
 mod inner_size;
 mod is_decorated;
 mod is_focused;
+mod is_fullscreen;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
@@ -19,6 +20,7 @@ use bevy_winit::WinitWindows;
 use crate::web_window::inner_size::WebWindowInnerSizePlugin;
 use crate::web_window::is_decorated::WebWindowIsDecoratedPlugin;
 use crate::web_window::is_focused::WebWindowIsFocusedPlugin;
+use crate::web_window::is_fullscreen::WebWindowIsFullscreenPlugin;
 
 /// Allows you to use all window plugins.
 ///
@@ -30,6 +32,7 @@ use crate::web_window::is_focused::WebWindowIsFocusedPlugin;
 /// - [WebWindowInnerSizePlugin]
 /// - [WebWindowIsDecoratedPlugin]
 /// - [WebWindowIsFocusedPlugin]
+/// - [WebWindowIsFullscreenPlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -40,6 +43,7 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowInnerSizePlugin)
             .add(WebWindowIsDecoratedPlugin)
             .add(WebWindowIsFocusedPlugin)
+            .add(WebWindowIsFullscreenPlugin)
     }
 }
 #[derive(SystemParam)]

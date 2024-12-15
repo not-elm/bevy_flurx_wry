@@ -69,6 +69,18 @@ export class WebWindow {
         return await invoke("FLURX|web_window::is_focused", this.identifier);
     }
 
+    /**
+     *  Get a current fullscreen state.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     * const isFullscreen: boolean = await WebWindow.current().isFullscreen();
+     */
+    async isFullscreen(): Promise<boolean> {
+        return await invoke("FLURX|web_window::is_fullscreen", this.identifier);
+    }
+
     static current(): WebWindow {
         return new WebWindow("<CURRENT_IDENTIFIER>");
     }

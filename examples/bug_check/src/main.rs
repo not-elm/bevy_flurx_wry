@@ -3,7 +3,7 @@
 use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
-use bevy::window::{PrimaryWindow, WindowResolution};
+use bevy::window::{PrimaryWindow, WindowMode, WindowResolution};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_wry::api::dialog::AllDialogPlugins;
 use bevy_flurx_wry::api::notification::NotificationSendPlugin;
@@ -33,6 +33,7 @@ fn main() {
             DefaultPlugins.set(WindowPlugin{
                 primary_window: Some(Window{
                     resolution: WindowResolution::new(500., 500.),
+                    mode: WindowMode::Fullscreen(MonitorSelection::Primary),
                     ..default()
                 }),
                 ..default()
