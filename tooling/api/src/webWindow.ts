@@ -275,6 +275,6 @@ export class WebWindow {
     }
 
     static current(): WebWindow {
-        return new WebWindow("<CURRENT_IDENTIFIER>");
+        return new WebWindow(window.__FLURX__.windowIdentifier);
     }
 }

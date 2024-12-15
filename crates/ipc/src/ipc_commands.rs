@@ -70,7 +70,6 @@ impl Payload {
     where
         Args: DeserializeOwned,
     {
-        println!("args: {:?}", self.args);
         let args = serde_json::from_str::<Args>(self.args.as_ref().unwrap()).unwrap_or_else(|e| {
             panic!(
                 "failed deserialize ipc args type<{}>error:\n {e}",

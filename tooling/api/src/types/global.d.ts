@@ -22,6 +22,7 @@ declare global {
             postMessage: (message: string) => void;
         },
         __FLURX__: {
+            windowIdentifier: string,
             app: typeof app,
             fs: typeof fs,
             path: typeof path,

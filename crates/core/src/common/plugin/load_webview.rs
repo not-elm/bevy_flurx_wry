@@ -118,7 +118,6 @@ fn feed_configs1<'a>(
         .with_clipboard(enable_clipboard.0)
         .with_visible(visible.0)
         .with_incognito(incognito.0);
-
     match background {
         Background::Unspecified => builder,
         Background::Transparent => builder.with_transparent(true),
@@ -149,11 +148,11 @@ fn feed_configs2<'a>(
         .with_focused(focused.0)
         .with_hotkeys_zoom(hotkeys_zoom.0)
         .with_initialization_script(&format!(
-            "{}{}",
+            "{}{}{}",
             include_str!("../../../scripts/api.js"),
-            include_str!("../../../scripts/gripZone.js")
-        ).replace("<CURRENT_IDENTIFIER>", &identifier));
-
+            include_str!("../../../scripts/gripZone.js"),
+            include_str!("../../../scripts/windowIdentifier.js").replace("<WINDOW_IDENTIFIER>", &identifier),
+        ));
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);
     }
