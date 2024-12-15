@@ -165,6 +165,18 @@ export class WebWindow {
         await invoke("FLURX|web_window::maximize", this.identifier);
     }
 
+    /**
+     *  Minimizes the window.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     *  await WebWindow.current().minimize();
+     */
+    async minimize(): Promise<void> {
+        await invoke("FLURX|web_window::minimize", this.identifier);
+    }
+
     static current(): WebWindow {
         return new WebWindow("<CURRENT_IDENTIFIER>");
     }
