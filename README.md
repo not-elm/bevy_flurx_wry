@@ -183,7 +183,7 @@ This crate is licensed under the MIT License or the Apache License 2.0.
   - [ ] http
   - [ ] mocks
   - [x] notification
-  - [ ] os
+  - [x] os
   - [x] path
   - [ ] process
   - [ ] shell
