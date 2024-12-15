@@ -7,6 +7,7 @@ mod is_focused;
 mod is_fullscreen;
 mod is_maximized;
 mod is_maximizable;
+mod is_minimizable;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
@@ -25,6 +26,7 @@ use bevy_ecs::world::Mut;
 use bevy_flurx_wry_core::prelude::ParentWindow;
 use bevy_window::{Window, WindowWrapper};
 use bevy_winit::WinitWindows;
+use crate::web_window::is_minimizable::WebWindowIsMinimizablePlugin;
 
 /// Allows you to use all window plugins.
 ///
@@ -39,6 +41,7 @@ use bevy_winit::WinitWindows;
 /// - [WebWindowIsFullscreenPlugin]
 /// - [WebWindowIsMaximizedPlugin]
 /// - [WebWindowIsMaximizablePlugin]
+/// - [WebWindowIsMinimizablePlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -52,6 +55,7 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowIsFullscreenPlugin)
             .add(WebWindowIsMaximizedPlugin)
             .add(WebWindowIsMaximizablePlugin)
+            .add(WebWindowIsMinimizablePlugin)
     }
 }
 #[derive(SystemParam)]
