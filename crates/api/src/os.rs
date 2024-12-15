@@ -1,6 +1,7 @@
 //! Provides the utility actions to read a system information.
 
 mod family;
+mod os_version;
 
 use crate::macros::api_plugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
@@ -8,6 +9,7 @@ use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 
 pub use crate::os::family::OsFamilyPlugin;
+pub use crate::os::os_version::OsVersionPlugin;
 
 /// Allows you to use all os plugins.
 ///
@@ -15,12 +17,14 @@ pub use crate::os::family::OsFamilyPlugin;
 ///
 /// - [OsArchPlugin]
 /// - [OsFamilyPlugin]
+/// - [OsVersionPlugin]
 pub struct AllOsPlugins;
 impl PluginGroup for AllOsPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(OsArchPlugin)
             .add(OsFamilyPlugin)
+            .add(OsVersionPlugin)
     }
 }
 

@@ -48,3 +48,15 @@ export const arch = async (): Promise<Arch> => {
 export const family = async (): Promise<Family | null> => {
     return await invoke("FLURX|os::family");
 }
+
+/**
+ * Get the system version from a webview.
+ *
+ * @example
+ * import {os} from "@bevy_flurx_wry/api";
+ *
+ * const osVersion: string | null = await os.version();
+ */
+export const version = async (): Promise<string | null> => {
+    return await invoke("FLURX|os::os_version");
+}
