@@ -2,6 +2,7 @@ use crate::macros::api_plugin;
 use crate::web_window::WebWinitWindowParams;
 use bevy_ecs::prelude::In;
 use bevy_flurx::action::{once, Action};
+use winit::window::WindowButtons;
 use bevy_flurx_ipc::command;
 
 api_plugin!(
@@ -10,14 +11,14 @@ api_plugin!(
     /// ## Typescript Code Example
     ///
     /// ```ts
-    /// await window.__FLURX__.Webview.current().isMaximized();
+    /// await window.__FLURX__.Webview.current().isMaximizable();
     /// ```
-    WebWindowIsMaximizedPlugin,
-    command: is_maximized
+    WebWindowIsMaximizablePlugin,
+    command: is_maximizable
 );
 
-#[command(id = "FLURX|web_window::is_maximized", internal)]
-fn is_maximized(In(args): In<String>) -> Action<String, bool> {
+#[command(id = "FLURX|web_window::is_maximizable", internal)]
+fn is_maximizable(In(args): In<String>) -> Action<String, bool> {
     once::run(system).with(args)
 }
 
@@ -28,5 +29,5 @@ fn system(
     let Some(window) = web_views.winit_window(&identifier) else {
         return false;
     };
-    window.is_maximized()
+    window.enabled_buttons().contains(WindowButtons::MAXIMIZE)
 }

@@ -6,9 +6,16 @@ mod is_decorated;
 mod is_focused;
 mod is_fullscreen;
 mod is_maximized;
+mod is_maximizable;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
+use crate::web_window::inner_size::WebWindowInnerSizePlugin;
+use crate::web_window::is_decorated::WebWindowIsDecoratedPlugin;
+use crate::web_window::is_focused::WebWindowIsFocusedPlugin;
+use crate::web_window::is_fullscreen::WebWindowIsFullscreenPlugin;
+use crate::web_window::is_maximizable::WebWindowIsMaximizablePlugin;
+use crate::web_window::is_maximized::WebWindowIsMaximizedPlugin;
 pub use crate::web_window::title::WebWindowTitlePlugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_core::Name;
@@ -18,11 +25,6 @@ use bevy_ecs::world::Mut;
 use bevy_flurx_wry_core::prelude::ParentWindow;
 use bevy_window::{Window, WindowWrapper};
 use bevy_winit::WinitWindows;
-use crate::web_window::inner_size::WebWindowInnerSizePlugin;
-use crate::web_window::is_decorated::WebWindowIsDecoratedPlugin;
-use crate::web_window::is_focused::WebWindowIsFocusedPlugin;
-use crate::web_window::is_fullscreen::WebWindowIsFullscreenPlugin;
-use crate::web_window::is_maximized::WebWindowIsMaximizedPlugin;
 
 /// Allows you to use all window plugins.
 ///
@@ -36,6 +38,7 @@ use crate::web_window::is_maximized::WebWindowIsMaximizedPlugin;
 /// - [WebWindowIsFocusedPlugin]
 /// - [WebWindowIsFullscreenPlugin]
 /// - [WebWindowIsMaximizedPlugin]
+/// - [WebWindowIsMaximizablePlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -48,6 +51,7 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowIsFocusedPlugin)
             .add(WebWindowIsFullscreenPlugin)
             .add(WebWindowIsMaximizedPlugin)
+            .add(WebWindowIsMaximizablePlugin)
     }
 }
 #[derive(SystemParam)]

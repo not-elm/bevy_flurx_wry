@@ -3,19 +3,20 @@
 use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 use bevy::reflect::erased_serde::__private::serde::Serialize;
-use bevy::window::{PrimaryWindow, WindowMode, WindowResolution};
+use bevy::window::{PrimaryWindow, WindowResolution};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_wry::api::dialog::AllDialogPlugins;
+use bevy_flurx_wry::api::monitor::AllMonitorPlugins;
 use bevy_flurx_wry::api::notification::NotificationSendPlugin;
 use bevy_flurx_wry::api::os::AllOsPlugins;
 use bevy_flurx_wry::api::path::AllPathPlugins;
+use bevy_flurx_wry::prelude::web_window::AllWebWindowPlugins;
 use bevy_flurx_wry::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use serde::Deserialize;
 use std::fmt::Debug;
 use std::path::PathBuf;
-use bevy_flurx_wry::api::monitor::AllMonitorPlugins;
-use bevy_flurx_wry::prelude::web_window::AllWebWindowPlugins;
+
 
 #[derive(Component)]
 struct WebviewWindow;
@@ -30,8 +31,8 @@ struct OnClickOnWebview {
 fn main() {
     App::new()
         .add_plugins((
-            DefaultPlugins.set(WindowPlugin{
-                primary_window: Some(Window{
+            DefaultPlugins.set(WindowPlugin {
+                primary_window: Some(Window {
                     resolution: WindowResolution::new(500., 500.),
                     ..default()
                 }),

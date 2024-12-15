@@ -93,6 +93,18 @@ export class WebWindow {
         return await invoke("FLURX|web_window::is_maximized", this.identifier);
     }
 
+    /**
+     *  Return the window is isMaximizable.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     * const isMaximizable: boolean = await WebWindow.current().isMaximizable();
+     */
+    async isMaximizable(): Promise<boolean> {
+        return await invoke("FLURX|web_window::is_maximizable", this.identifier);
+    }
+
     static current(): WebWindow {
         return new WebWindow("<CURRENT_IDENTIFIER>");
     }
