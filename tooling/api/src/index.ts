@@ -9,5 +9,6 @@ export * as os from "./os";
 export * as monitor from "./monitor";
 export * from "./core";
 export {Monitor, PhysicalSize, PhysicalPosition} from "./monitor";
+export {WebWindow} from "./webWindow";
 
 

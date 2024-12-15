@@ -17,6 +17,8 @@ pub mod notification;
 pub mod os;
 #[cfg(feature = "monitor")]
 pub mod monitor;
+#[cfg(feature = "window")]
+pub mod web_window;
 mod error;
 
 #[allow(missing_docs)]
@@ -25,8 +27,12 @@ pub mod prelude {
     pub use crate::clipboard;
     #[cfg(feature = "dialog")]
     pub use crate::dialog;
+    #[cfg(feature = "monitor")]
+    pub use crate::monitor;
     #[cfg(feature = "notification")]
     pub use crate::notification;
+    #[cfg(feature = "window")]
+    pub use crate::web_window;
     pub use crate::{
         app::*,
         log::*,
