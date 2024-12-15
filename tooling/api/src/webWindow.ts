@@ -46,7 +46,7 @@ export class WebWindow {
     }
 
     /**
-     *  Get a current decorated state.
+     *  Returns whether the window is decorated.
      *
      *  @example
      * import {WebWindow} from "@bevy_flurx_wry/api";
@@ -58,14 +58,14 @@ export class WebWindow {
     }
 
     /**
-     *  Get a current focus state.
+     *  Returns whether the window has focused.
      *
      *  @example
      * import {WebWindow} from "@bevy_flurx_wry/api";
      *
-     * const isDecorated: boolean = await WebWindow.current().isFocused();
+     * const hasFocused: boolean = await WebWindow.current().hasFocused();
      */
-    async isFocused(): Promise<boolean> {
+    async hasFocused(): Promise<boolean> {
         return await invoke("FLURX|web_window::is_focused", this.identifier);
     }
 
@@ -82,7 +82,7 @@ export class WebWindow {
     }
 
     /**
-     *  Return the window is maximized.
+     *  Returns whether the window is maximized.
      *
      *  @example
      * import {WebWindow} from "@bevy_flurx_wry/api";
@@ -94,7 +94,7 @@ export class WebWindow {
     }
 
     /**
-     *  Return the window is isMaximizable.
+     *  Returns whether the window can be maximized.
      *
      *  @example
      * import {WebWindow} from "@bevy_flurx_wry/api";
@@ -106,7 +106,7 @@ export class WebWindow {
     }
 
     /**
-     *  Return the window is minimizable.
+     *  Returns whether the window can be minimized.
      *
      *  @example
      * import {WebWindow} from "@bevy_flurx_wry/api";
@@ -118,7 +118,7 @@ export class WebWindow {
     }
 
     /**
-     *  Return is minimized the window.
+     *  Returns whether the window is minimized.
      *
      *  @example
      * import {WebWindow} from "@bevy_flurx_wry/api";
@@ -127,6 +127,18 @@ export class WebWindow {
      */
     async isMinimized(): Promise<boolean> {
         return await invoke("FLURX|web_window::is_minimized", this.identifier);
+    }
+
+    /**
+     *  Returns whether the window can be resized.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     * const isResizable: boolean = await WebWindow.current().isResizable();
+     */
+    async isResizable(): Promise<boolean> {
+        return await invoke("FLURX|web_window::is_resizable", this.identifier);
     }
 
     static current(): WebWindow {
