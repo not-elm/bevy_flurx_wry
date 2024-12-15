@@ -189,6 +189,18 @@ export class WebWindow {
         await invoke("FLURX|web_window::minimize", this.identifier);
     }
 
+     /**
+     *  Sets whether window have enabled decorations?
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     *  await WebWindow.current().setDecorations(true);
+     */
+    async setDecorations(decorations: boolean): Promise<void> {
+        await invoke("FLURX|web_window::set_decorations", [this.identifier, decorations]);
+    }
+
     static current(): WebWindow {
         return new WebWindow("<CURRENT_IDENTIFIER>");
     }

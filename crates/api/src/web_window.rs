@@ -14,6 +14,7 @@ mod is_visible;
 mod maximize;
 mod minimize;
 mod show;
+mod set_decorations;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
@@ -38,6 +39,7 @@ use crate::web_window::is_resizable::WebWindowIsResizablePlugin;
 use crate::web_window::is_visible::WebWindowIsVisiblePlugin;
 use crate::web_window::maximize::WebWindowMaximizePlugin;
 use crate::web_window::minimize::WebWindowMinimizePlugin;
+use crate::web_window::set_decorations::WebWindowSetDecorationsPlugin;
 use crate::web_window::show::WebWindowShowPlugin;
 
 /// Allows you to use all window plugins.
@@ -60,6 +62,7 @@ use crate::web_window::show::WebWindowShowPlugin;
 /// - [WebWindowIsVisiblePlugin]
 /// - [WebWindowMaximizePlugin]
 /// - [WebWindowMinimizePlugin]
+/// - [WebWindowSetDecorationsPlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -80,6 +83,7 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowIsVisiblePlugin)
             .add(WebWindowMaximizePlugin)
             .add(WebWindowMinimizePlugin)
+            .add(WebWindowSetDecorationsPlugin)
     }
 }
 #[derive(SystemParam)]
