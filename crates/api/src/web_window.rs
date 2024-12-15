@@ -19,6 +19,8 @@ mod set_window_mode;
 mod focus;
 mod un_focus;
 mod set_cursor_hit_test;
+mod un_maximize;
+mod un_minimize;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 use crate::web_window::focus::WebWindowFocusPlugin;
@@ -41,6 +43,8 @@ use crate::web_window::set_window_mode::WebWindowSetWindowModePlugin;
 use crate::web_window::show::WebWindowShowPlugin;
 pub use crate::web_window::title::WebWindowTitlePlugin;
 use crate::web_window::un_focus::WebWindowUnFocusPlugin;
+use crate::web_window::un_maximize::WebWindowUnMaximizePlugin;
+use crate::web_window::un_minimize::WebWindowUnMinimizePlugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_core::Name;
 use bevy_ecs::prelude::{Entity, NonSend, Query};
@@ -69,7 +73,9 @@ use bevy_winit::WinitWindows;
 /// - [WebWindowIsResizablePlugin]
 /// - [WebWindowIsVisiblePlugin]
 /// - [WebWindowMaximizePlugin]
+/// - [WebWindowUnMaximizePlugin]
 /// - [WebWindowMinimizePlugin]
+/// - [WebWindowUnMinimizePlugin]
 /// - [WebWindowSetDecorationsPlugin]
 /// - [WebWindowSetWindowModePlugin]
 /// - [WebWindowFocusPlugin]
@@ -94,7 +100,9 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowIsResizablePlugin)
             .add(WebWindowIsVisiblePlugin)
             .add(WebWindowMaximizePlugin)
+            .add(WebWindowUnMaximizePlugin)
             .add(WebWindowMinimizePlugin)
+            .add(WebWindowUnMinimizePlugin)
             .add(WebWindowSetDecorationsPlugin)
             .add(WebWindowSetWindowModePlugin)
             .add(WebWindowFocusPlugin)

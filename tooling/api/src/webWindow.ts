@@ -179,6 +179,18 @@ export class WebWindow {
     }
 
     /**
+     *  UnMaximizes the window.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     *  await WebWindow.current().unMaximize();
+     */
+    async unMaximize(): Promise<void> {
+        await invoke("FLURX|web_window::un_maximize", this.identifier);
+    }
+
+    /**
      *  Minimizes the window.
      *
      *  @example
@@ -188,6 +200,18 @@ export class WebWindow {
      */
     async minimize(): Promise<void> {
         await invoke("FLURX|web_window::minimize", this.identifier);
+    }
+
+     /**
+     *  UnMinimizes the window.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     *  await WebWindow.current().unMinimize();
+     */
+    async unMinimize(): Promise<void> {
+        await invoke("FLURX|web_window::un_minimize", this.identifier);
     }
 
     /**
