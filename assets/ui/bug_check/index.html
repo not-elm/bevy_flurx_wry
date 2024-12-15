@@ -44,10 +44,11 @@
     </div>
 
     <script>
+        const sleep = (time) => new Promise(resolve => {
+            setTimeout(() => resolve(), time)
+        });
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.monitor.availables());
-            console.log(await window.__FLURX__.monitor.current());
-            console.log(await window.__FLURX__.monitor.primary());
+            await window.__FLURX__.WebWindow.current().setCursorHitTest(false);
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";

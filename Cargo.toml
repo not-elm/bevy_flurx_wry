@@ -36,6 +36,7 @@ serde_json = { workspace = true }
 workspace = true
 
 [workspace.dependencies]
+bevy_core = { version = "0.15.0" }
 bevy_winit = "0.15.0"
 bevy_render = "0.15.0"
 bevy_app = { version = "0.15.0" }

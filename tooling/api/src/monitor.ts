@@ -1,14 +1,4 @@
-import {invoke} from "./core";
-
-export interface PhysicalPosition {
-    x: number,
-    y: number,
-}
-
-export interface PhysicalSize {
-    width: number,
-    height: number,
-}
+import {invoke, PhysicalPosition, PhysicalSize} from "./core";
 
 export interface Monitor {
     name: string | null,

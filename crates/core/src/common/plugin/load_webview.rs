@@ -8,14 +8,16 @@ use crate::common::plugin::load_webview::ipc::IpcHandlerParams;
 use crate::common::plugin::load_webview::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
+use crate::prelude::csp::Csp;
 use crate::WryLocalRoot;
 use bevy_app::{App, Plugin, PreUpdate};
+use bevy_core::Name;
 use bevy_ecs::prelude::{Commands, Entity, NonSend, NonSendMut, Or, Query, Res, With, Without};
 use bevy_window::Window;
 use bevy_winit::WinitWindows;
+use rand::distributions::DistString;
 use std::ops::Deref;
 use wry::{WebView, WebViewBuilder};
-use crate::prelude::csp::Csp;
 
 mod ipc;
 mod protocol;
@@ -43,6 +45,7 @@ type Configs2<'a> = (
     &'a UserAgent,
     &'a WebviewUri,
     Option<&'a Csp>,
+    Option<&'a Name>,
 );
 
 type ConfigsPlatformSpecific<'a> = (&'a Theme, &'a BrowserAcceleratorKeys, &'a UseHttpsScheme);
@@ -80,7 +83,7 @@ fn load_web_views(
         let builder = ipc_params.feed_ipc(webview_entity, builder);
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
         let builder = feed_configs1(builder, configs1);
-        let builder = feed_configs2(builder, configs2, &local_root);
+        let builder = feed_configs2(builder, &mut commands, webview_entity, configs2, &local_root);
         let builder = feed_platform_configs(builder, configs_platform);
         let webview = build_webview(builder, webview_entity, parent_window, &windows).unwrap();
         commands
@@ -129,9 +132,19 @@ fn feed_configs1<'a>(
 
 fn feed_configs2<'a>(
     builder: WebViewBuilder<'a>,
-    (focused, hotkeys_zoom, user_agent, uri, csp): Configs2,
+    commands: &mut Commands,
+    entity: Entity,
+    (focused, hotkeys_zoom, user_agent, uri, csp, name): Configs2,
     local_root: &WryLocalRoot,
 ) -> WebViewBuilder<'a> {
+    let identifier = if let Some(name) = name {
+        name.to_string()
+    } else {
+        let mut rng = rand::thread_rng();
+        let random_code = rand::distributions::Alphanumeric.sample_string(&mut rng, 32);
+        commands.entity(entity).insert(Name::new(random_code.clone()));
+        random_code
+    };
     let mut builder = builder
         .with_focused(focused.0)
         .with_hotkeys_zoom(hotkeys_zoom.0)
@@ -139,7 +152,7 @@ fn feed_configs2<'a>(
             "{}{}",
             include_str!("../../../scripts/api.js"),
             include_str!("../../../scripts/gripZone.js")
-        ));
+        ).replace("<CURRENT_IDENTIFIER>", &identifier));
 
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);
