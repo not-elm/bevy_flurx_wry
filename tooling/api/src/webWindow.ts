@@ -238,6 +238,18 @@ export class WebWindow {
         await invoke("FLURX|web_window::set_window_mode", [this.identifier, mode]);
     }
 
+     /**
+     *  Modifies whether the window catches cursor events.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     *  await WebWindow.current().setCursorHitTest(true);
+     */
+    async setCursorHitTest(hitTest: boolean): Promise<void> {
+        await invoke("FLURX|web_window::set_cursor_hit_test", [this.identifier, hitTest]);
+    }
+
     static current(): WebWindow {
         return new WebWindow("<CURRENT_IDENTIFIER>");
     }

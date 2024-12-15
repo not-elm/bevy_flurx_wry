@@ -17,9 +17,11 @@ mod show;
 mod set_decorations;
 mod set_window_mode;
 mod focus;
-mod unfocus;
+mod un_focus;
+mod set_cursor_hit_test;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
+use crate::web_window::focus::WebWindowFocusPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
 use crate::web_window::inner_size::WebWindowInnerSizePlugin;
 use crate::web_window::is_decorated::WebWindowIsDecoratedPlugin;
@@ -27,7 +29,18 @@ use crate::web_window::is_focused::WebWindowIsFocusedPlugin;
 use crate::web_window::is_fullscreen::WebWindowIsFullscreenPlugin;
 use crate::web_window::is_maximizable::WebWindowIsMaximizablePlugin;
 use crate::web_window::is_maximized::WebWindowIsMaximizedPlugin;
+use crate::web_window::is_minimizable::WebWindowIsMinimizablePlugin;
+use crate::web_window::is_minimized::WebWindowIsMinimizedPlugin;
+use crate::web_window::is_resizable::WebWindowIsResizablePlugin;
+use crate::web_window::is_visible::WebWindowIsVisiblePlugin;
+use crate::web_window::maximize::WebWindowMaximizePlugin;
+use crate::web_window::minimize::WebWindowMinimizePlugin;
+use crate::web_window::set_cursor_hit_test::WebWindowSetCursorHitTestPlugin;
+use crate::web_window::set_decorations::WebWindowSetDecorationsPlugin;
+use crate::web_window::set_window_mode::WebWindowSetWindowModePlugin;
+use crate::web_window::show::WebWindowShowPlugin;
 pub use crate::web_window::title::WebWindowTitlePlugin;
+use crate::web_window::un_focus::WebWindowUnFocusPlugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_core::Name;
 use bevy_ecs::prelude::{Entity, NonSend, Query};
@@ -36,17 +49,6 @@ use bevy_ecs::world::Mut;
 use bevy_flurx_wry_core::prelude::ParentWindow;
 use bevy_window::{Window, WindowWrapper};
 use bevy_winit::WinitWindows;
-use crate::web_window::focus::WebWindowFocusPlugin;
-use crate::web_window::is_minimizable::WebWindowIsMinimizablePlugin;
-use crate::web_window::is_minimized::WebWindowIsMinimizedPlugin;
-use crate::web_window::is_resizable::WebWindowIsResizablePlugin;
-use crate::web_window::is_visible::WebWindowIsVisiblePlugin;
-use crate::web_window::maximize::WebWindowMaximizePlugin;
-use crate::web_window::minimize::WebWindowMinimizePlugin;
-use crate::web_window::set_decorations::WebWindowSetDecorationsPlugin;
-use crate::web_window::set_window_mode::WebWindowSetWindowModePlugin;
-use crate::web_window::show::WebWindowShowPlugin;
-use crate::web_window::unfocus::WebWindowUnFocusPlugin;
 
 /// Allows you to use all window plugins.
 ///
@@ -72,6 +74,7 @@ use crate::web_window::unfocus::WebWindowUnFocusPlugin;
 /// - [WebWindowSetWindowModePlugin]
 /// - [WebWindowFocusPlugin]
 /// - [WebWindowUnFocusPlugin]
+/// - [WebWindowSetCursorHitTestPlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -96,6 +99,7 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowSetWindowModePlugin)
             .add(WebWindowFocusPlugin)
             .add(WebWindowUnFocusPlugin)
+            .add(WebWindowSetCursorHitTestPlugin)
     }
 }
 #[derive(SystemParam)]
