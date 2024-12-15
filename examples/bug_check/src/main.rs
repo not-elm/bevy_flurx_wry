@@ -33,7 +33,6 @@ fn main() {
             DefaultPlugins.set(WindowPlugin{
                 primary_window: Some(Window{
                     resolution: WindowResolution::new(500., 500.),
-                    mode: WindowMode::Fullscreen(MonitorSelection::Primary),
                     ..default()
                 }),
                 ..default()
