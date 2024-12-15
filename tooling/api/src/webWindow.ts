@@ -153,6 +153,18 @@ export class WebWindow {
         return await invoke("FLURX|web_window::is_visible", this.identifier);
     }
 
+    /**
+     *  Maximizes the window.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     *  await WebWindow.current().maximize();
+     */
+    async maximize(): Promise<void> {
+        await invoke("FLURX|web_window::maximize", this.identifier);
+    }
+
     static current(): WebWindow {
         return new WebWindow("<CURRENT_IDENTIFIER>");
     }

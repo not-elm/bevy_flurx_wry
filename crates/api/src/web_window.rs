@@ -11,6 +11,7 @@ mod is_minimizable;
 mod is_minimized;
 mod is_resizable;
 mod is_visible;
+mod maximize;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
@@ -33,6 +34,7 @@ use crate::web_window::is_minimizable::WebWindowIsMinimizablePlugin;
 use crate::web_window::is_minimized::WebWindowIsMinimizedPlugin;
 use crate::web_window::is_resizable::WebWindowIsResizablePlugin;
 use crate::web_window::is_visible::WebWindowIsVisiblePlugin;
+use crate::web_window::maximize::WebWindowMaximizePlugin;
 
 /// Allows you to use all window plugins.
 ///
@@ -51,6 +53,7 @@ use crate::web_window::is_visible::WebWindowIsVisiblePlugin;
 /// - [WebWindowIsMinimizedPlugin]
 /// - [WebWindowIsResizablePlugin]
 /// - [WebWindowIsVisiblePlugin]
+/// - [WebWindowMaximizePlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -68,6 +71,7 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowIsMinimizedPlugin)
             .add(WebWindowIsResizablePlugin)
             .add(WebWindowIsVisiblePlugin)
+            .add(WebWindowMaximizePlugin)
     }
 }
 #[derive(SystemParam)]
