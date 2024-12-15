@@ -1,5 +1,6 @@
 import {invoke, PhysicalSize} from "./core";
 
+export type WindowMode =  "fullscreen" | "borderless" | "windowed";
 
 export class WebWindow {
     private constructor(
@@ -189,7 +190,7 @@ export class WebWindow {
         await invoke("FLURX|web_window::minimize", this.identifier);
     }
 
-     /**
+    /**
      *  Sets whether window have enabled decorations?
      *
      *  @example
@@ -199,6 +200,42 @@ export class WebWindow {
      */
     async setDecorations(decorations: boolean): Promise<void> {
         await invoke("FLURX|web_window::set_decorations", [this.identifier, decorations]);
+    }
+
+    /**
+     *  Sets  the window focus.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     *  await WebWindow.current().focus();
+     */
+    async focus(): Promise<void> {
+        await invoke("FLURX|web_window::focus", this.identifier);
+    }
+
+     /**
+     *  UnFocus the window.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     *  await WebWindow.current().unFocus();
+     */
+    async unFocus(): Promise<void> {
+        await invoke("FLURX|web_window::un_focus", this.identifier);
+    }
+
+    /**
+     *  Sets the window fullscreen.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     *  await WebWindow.current().setWindowMode("fullscreen");
+     */
+    async setWindowMode(mode: WindowMode): Promise<void> {
+        await invoke("FLURX|web_window::set_window_mode", [this.identifier, mode]);
     }
 
     static current(): WebWindow {

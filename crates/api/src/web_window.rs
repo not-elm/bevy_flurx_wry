@@ -15,6 +15,9 @@ mod maximize;
 mod minimize;
 mod show;
 mod set_decorations;
+mod set_window_mode;
+mod focus;
+mod unfocus;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
@@ -33,6 +36,7 @@ use bevy_ecs::world::Mut;
 use bevy_flurx_wry_core::prelude::ParentWindow;
 use bevy_window::{Window, WindowWrapper};
 use bevy_winit::WinitWindows;
+use crate::web_window::focus::WebWindowFocusPlugin;
 use crate::web_window::is_minimizable::WebWindowIsMinimizablePlugin;
 use crate::web_window::is_minimized::WebWindowIsMinimizedPlugin;
 use crate::web_window::is_resizable::WebWindowIsResizablePlugin;
@@ -40,7 +44,9 @@ use crate::web_window::is_visible::WebWindowIsVisiblePlugin;
 use crate::web_window::maximize::WebWindowMaximizePlugin;
 use crate::web_window::minimize::WebWindowMinimizePlugin;
 use crate::web_window::set_decorations::WebWindowSetDecorationsPlugin;
+use crate::web_window::set_window_mode::WebWindowSetWindowModePlugin;
 use crate::web_window::show::WebWindowShowPlugin;
+use crate::web_window::unfocus::WebWindowUnFocusPlugin;
 
 /// Allows you to use all window plugins.
 ///
@@ -63,6 +69,9 @@ use crate::web_window::show::WebWindowShowPlugin;
 /// - [WebWindowMaximizePlugin]
 /// - [WebWindowMinimizePlugin]
 /// - [WebWindowSetDecorationsPlugin]
+/// - [WebWindowSetWindowModePlugin]
+/// - [WebWindowFocusPlugin]
+/// - [WebWindowUnFocusPlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -84,6 +93,9 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowMaximizePlugin)
             .add(WebWindowMinimizePlugin)
             .add(WebWindowSetDecorationsPlugin)
+            .add(WebWindowSetWindowModePlugin)
+            .add(WebWindowFocusPlugin)
+            .add(WebWindowUnFocusPlugin)
     }
 }
 #[derive(SystemParam)]
