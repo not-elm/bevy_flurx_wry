@@ -1,7 +1,9 @@
 mod title;
 mod center;
+mod hide;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
+pub use crate::web_window::hide::WebWindowHidePlugin;
 pub use crate::web_window::title::WebWindowTitlePlugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_core::Name;
@@ -18,12 +20,14 @@ use bevy_winit::WinitWindows;
 ///
 /// - [WebWindowTitlePlugin]
 /// - [WebWindowCenterPlugin]
+/// - [WebWindowHidePlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(WebWindowTitlePlugin)
             .add(WebWindowCenterPlugin)
+            .add(WebWindowHidePlugin)
     }
 }
 #[derive(SystemParam)]
@@ -34,7 +38,7 @@ struct WebWinitWindowParams<'w, 's> {
         Option<&'static mut Window>,
         Option<&'static ParentWindow>,
     )>,
-    
+
     windows: NonSend<'w, WinitWindows>,
 }
 
@@ -51,7 +55,7 @@ impl WebWinitWindowParams<'_, '_> {
 
     fn entity(&self, identifier: &str) -> Option<Entity> {
         self.views.iter().find_map(|(entity, name, _, parent)| {
-            if name.as_ref().map(|n|n.as_str()).unwrap_or_default() != identifier {
+            if name.as_ref().map(|n| n.as_str()).unwrap_or_default() != identifier {
                 return None;
             }
             if let Some(parent) = parent {
