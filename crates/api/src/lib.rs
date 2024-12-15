@@ -15,6 +15,8 @@ pub mod dialog;
 pub mod notification;
 #[cfg(feature = "os")]
 pub mod os;
+#[cfg(feature = "window")]
+pub mod window;
 mod error;
 
 #[allow(missing_docs)]

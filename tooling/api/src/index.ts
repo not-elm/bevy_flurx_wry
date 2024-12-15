@@ -6,6 +6,7 @@ export * as path from "./path";
 export * as clipboard from "./clipboard";
 export * as notification from "./notification";
 export * as os from "./os";
+export * as appWindow from "./window";
 export * from "./core";
 
 
