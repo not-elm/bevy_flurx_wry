@@ -1,3 +1,5 @@
+//! Provides the mechanism to control the window from the webview.
+
 mod title;
 mod center;
 mod hide;
