@@ -1,5 +1,5 @@
 use crate::macros::api_plugin;
-use crate::window::{Monitor, PhysicalPosition, PhysicalSize};
+use crate::monitor::{Monitor, PhysicalPosition, PhysicalSize};
 use bevy_ecs::entity::Entity;
 use bevy_ecs::prelude::In;
 use bevy_ecs::system::{NonSend, Query};

@@ -14,7 +14,7 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use serde::Deserialize;
 use std::fmt::Debug;
 use std::path::PathBuf;
-use bevy_flurx_wry::api::window::AllWindowPlugins;
+use bevy_flurx_wry::api::monitor::AllWindowPlugins;
 
 #[derive(Component)]
 struct WebviewWindow;

@@ -1,8 +1,10 @@
 mod available_monitors;
 mod current_monitor;
+mod primary;
 
-pub use crate::window::available_monitors::WindowAvailableMonitorsPlugin;
-pub use crate::window::current_monitor::WindowCurrentMonitorsPlugin;
+pub use crate::monitor::available_monitors::WindowAvailableMonitorsPlugin;
+pub use crate::monitor::current_monitor::WindowCurrentMonitorsPlugin;
+pub use crate::monitor::primary::MonitorPrimaryPlugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use serde::Serialize;
 
@@ -12,12 +14,14 @@ use serde::Serialize;
 ///
 /// - [WindowAvailableMonitorsPlugin]
 /// - [WindowCurrentMonitorsPlugin]
+/// - [MonitorPrimaryPlugin]
 pub struct AllWindowPlugins;
 impl PluginGroup for AllWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(WindowAvailableMonitorsPlugin)
             .add(WindowCurrentMonitorsPlugin)
+            .add(MonitorPrimaryPlugin)
     }
 }
 

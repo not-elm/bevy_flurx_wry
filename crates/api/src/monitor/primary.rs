@@ -1,4 +1,5 @@
-use crate::window::{Monitor, PhysicalPosition, PhysicalSize};
+use crate::macros::api_plugin;
+use crate::monitor::{Monitor, PhysicalPosition, PhysicalSize};
 use bevy_ecs::entity::Entity;
 use bevy_ecs::prelude::In;
 use bevy_ecs::system::{NonSend, Query};
@@ -6,43 +7,40 @@ use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::OmitInput;
 use bevy_flurx_ipc::command;
 use bevy_flurx_ipc::component::WebviewEntity;
-use bevy_winit::WinitWindows;
 use bevy_flurx_wry_core::prelude::ParentWindow;
-use crate::macros::api_plugin;
+use bevy_winit::WinitWindows;
 
 api_plugin!(
-    /// You'll be able to get a describing the monitor infos from a webview.
+    /// You'll be able to get the current monitor info from a webview.
     ///
     /// ## Typescript Code Example
     ///
     /// ```ts
-    /// const monitors = await window.__FLURX__.window.availableMonitors();
+    /// const monitor = await window.__FLURX__.monitor.primary();
     /// ```
-    WindowAvailableMonitorsPlugin,
-    command: available_monitors
+    MonitorPrimaryPlugin,
+    command: primary
 );
 
-#[command(id = "FLURX|window::available_monitors", internal)]
-fn available_monitors(WebviewEntity(entity): WebviewEntity) -> Action<(), Vec<Monitor>> {
-    once::run(available_monitors_system).with(entity).omit_input().with(())
+#[command(id = "FLURX|monitor::primary", internal)]
+fn primary(WebviewEntity(entity): WebviewEntity) -> Action<(), Option<Monitor>> {
+    once::run(primary_system).with(entity).omit_input().with(())
 }
 
 //noinspection DuplicatedCode
-fn available_monitors_system(
+fn primary_system(
     In(entity): In<Entity>,
     parent: Query<&ParentWindow>,
     web_views: NonSend<WinitWindows>,
-) -> Vec<Monitor> {
-    let entity = if let Ok(parent) = parent.get(entity){
+) -> Option<Monitor> {
+    let entity = if let Ok(parent) = parent.get(entity) {
         parent.0
-    }else{
+    } else {
         entity
     };
-    let Some(win) = web_views.get_window(entity) else {
-        return Vec::with_capacity(0);
-    };
-    win
-        .available_monitors()
+
+    web_views.get_window(entity)?
+        .primary_monitor()
         .map(|m| {
             let size = m.size();
             let p = m.position();
@@ -59,5 +57,4 @@ fn available_monitors_system(
                 scale_factor: m.scale_factor(),
             }
         })
-        .collect()
 }
