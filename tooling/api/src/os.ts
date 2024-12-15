@@ -21,6 +21,7 @@ export type Arch =
     "hexagon" |
     "loongarch64";
 
+export type Family = "unix" | "windows" | "itron" | "wasm";
 
 /**
  * Get a describing the architecture of the CPU.
@@ -32,4 +33,18 @@ export type Arch =
  */
 export const arch = async (): Promise<Arch> => {
     return await invoke("FLURX|os::arch");
+}
+
+/**
+ * Get a describing the family of the operating system.
+ *
+ *  This value may be null if the family is unknown.
+ *
+ * @example
+ * import {os} from "@bevy_flurx_wry/api";
+ *
+ * const arch: os.Family | null = await os.family();
+ */
+export const family = async (): Promise<Family | null> => {
+    return await invoke("FLURX|os::family");
 }

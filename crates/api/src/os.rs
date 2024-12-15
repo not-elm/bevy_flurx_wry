@@ -1,21 +1,26 @@
-//! 
+//! Provides the utility actions to read a system information.
 
-use bevy_app::{PluginGroup, PluginGroupBuilder};
+mod family;
+
 use crate::macros::api_plugin;
+use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 
+pub use crate::os::family::OsFamilyPlugin;
 
 /// Allows you to use all os plugins.
 ///
 /// ## Plugins
 ///
-/// - [OsArchPlugin] 
+/// - [OsArchPlugin]
+/// - [OsFamilyPlugin]
 pub struct AllOsPlugins;
 impl PluginGroup for AllOsPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(OsArchPlugin)
+            .add(OsFamilyPlugin)
     }
 }
 

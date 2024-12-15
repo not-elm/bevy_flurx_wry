@@ -1,4 +1,4 @@
-//!  Provides the utility system actions.
+//!  Provides mechanism to control a dialog from a webview.
 
 mod open;
 mod save;
