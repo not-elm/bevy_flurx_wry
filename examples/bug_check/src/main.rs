@@ -73,7 +73,7 @@ fn spawn_camera(mut commands: Commands) {
 }
 
 fn spawn_webview(mut commands: Commands, primary_window: Query<Entity, With<PrimaryWindow>>) {
-    commands.spawn((
+    commands.entity(primary_window.single()).insert((
         WebviewWindow,
         WryWebViewBundle {
             // uri: WebviewUri::relative_local("second.html"),
@@ -85,15 +85,15 @@ fn spawn_webview(mut commands: Commands, primary_window: Query<Entity, With<Prim
             ],
             ..default()
         },
-        AsChildBundle {
-            parent: ParentWindow(primary_window.single()),
-            bounds: Bounds {
-                size: Vec2::new(300., 300.),
-                position: Vec2::new(100., 100.),
-                ..default()
-            },
-            ..default()
-        },
+        // AsChildBundle {
+        //     parent: ParentWindow(primary_window.single()),
+        //     bounds: Bounds {
+        //         size: Vec2::new(300., 300.),
+        //         position: Vec2::new(100., 100.),
+        //         ..default()
+        //     },
+        //     ..default()
+        // },
     ));
 }
 

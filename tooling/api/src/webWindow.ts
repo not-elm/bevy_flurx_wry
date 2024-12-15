@@ -57,6 +57,18 @@ export class WebWindow {
         return await invoke("FLURX|web_window::is_decorated", this.identifier);
     }
 
+    /**
+     *  Get a current focus state.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     * const isDecorated: boolean = await WebWindow.current().isFocused();
+     */
+    async isFocused(): Promise<boolean> {
+        return await invoke("FLURX|web_window::is_focused", this.identifier);
+    }
+
     static current(): WebWindow {
         return new WebWindow("<CURRENT_IDENTIFIER>");
     }
