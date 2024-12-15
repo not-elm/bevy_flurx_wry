@@ -141,6 +141,18 @@ export class WebWindow {
         return await invoke("FLURX|web_window::is_resizable", this.identifier);
     }
 
+    /**
+     *  Returns whether the window is visible.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     * const isVisible: boolean = await WebWindow.current().isVisible();
+     */
+    async isVisible(): Promise<boolean> {
+        return await invoke("FLURX|web_window::is_visible", this.identifier);
+    }
+
     static current(): WebWindow {
         return new WebWindow("<CURRENT_IDENTIFIER>");
     }

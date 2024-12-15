@@ -5,19 +5,19 @@ use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 
 api_plugin!(
-    /// You'll be able to get the window is minimizable from a webview.
+    /// You'll be able to get whether the window is visible from a webview.
     ///
     /// ## Typescript Code Example
     ///
     /// ```ts
-    /// await window.__FLURX__.Webview.current().isMinimizable();
+    /// await window.__FLURX__.Webview.current().isVisible();
     /// ```
-    WebWindowIsMinimizedPlugin,
-    command: is_minimized
+    WebWindowIsVisiblePlugin,
+    command: is_visible
 );
 
-#[command(id = "FLURX|web_window::is_minimized", internal)]
-fn is_minimized(In(args): In<String>) -> Action<String, bool> {
+#[command(id = "FLURX|web_window::is_visible", internal)]
+fn is_visible(In(args): In<String>) -> Action<String, bool> {
     once::run(system).with(args)
 }
 
@@ -28,5 +28,5 @@ fn system(
     let Some(window) = web_views.winit_window(&identifier) else {
         return false;
     };
-    window.is_minimized().unwrap_or_default()
+    window.is_visible().unwrap_or_default()
 }
