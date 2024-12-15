@@ -45,7 +45,7 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.WebWindow.current().innerSize());
+            console.log(await window.__FLURX__.WebWindow.current().isDecorated());
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";

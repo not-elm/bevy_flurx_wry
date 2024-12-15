@@ -27,5 +27,6 @@ fn system(
     mut web_views: WebWinitWindowParams,
 ) -> Option<PhysicalSize<u32>> {
     let window = web_views.bevy_window_mut(&identifier)?;
+   
     Some(PhysicalSize::new(window.physical_width(), window.physical_height()))
 }
