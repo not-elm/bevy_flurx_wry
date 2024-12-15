@@ -1,13 +1,13 @@
 //! Provides the mechanism to access the system notification.
 
 use crate::error::ApiResult;
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 use bevy_ecs::system::In;
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to send a notification from a webview.
     ///
     /// ## Typescript Code Example

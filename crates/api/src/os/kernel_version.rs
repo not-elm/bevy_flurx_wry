@@ -1,0 +1,20 @@
+use crate::macros::api_plugin;
+use bevy_flurx::action::{once, Action};
+use bevy_flurx_ipc::command;
+
+api_plugin!(
+    /// You'll be able to get the kernel version from a webview.
+    ///
+    /// ## Typescript Code Example
+    ///
+    /// ```ts
+    /// const version: string | null = await window.__FLURX__.os.kernelVersion();
+    /// ```
+    OsKernelVersionPlugin,
+    command: kernel_version
+);
+
+#[command(id = "FLURX|os::kernel_version", internal)]
+fn kernel_version() -> Action<(), Option<String>> {
+    once::run(sysinfo::System::kernel_version).with(())
+}

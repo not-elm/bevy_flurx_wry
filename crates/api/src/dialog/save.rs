@@ -1,6 +1,6 @@
 use crate::dialog::DialogFilter;
 use crate::fs::AllowPaths;
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 use bevy_app::Update;
 use bevy_ecs::system::{In, ResMut};
 use bevy_flurx::action::once;
@@ -10,7 +10,7 @@ use rfd::AsyncFileDialog;
 use serde::Deserialize;
 use std::path::PathBuf;
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to open a file save dialog.
     ///
     ///  The selected path will be registered to [AllowPaths] until the application closed.

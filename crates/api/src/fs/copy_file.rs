@@ -1,5 +1,5 @@
 use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 use bevy_ecs::change_detection::Res;
 use bevy_ecs::prelude::In;
 use bevy_flurx::action::{once, Action};
@@ -8,7 +8,7 @@ use serde::Deserialize;
 use std::path::PathBuf;
 use crate::error::ApiResult;
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to copy file from typescript(or js).
     ///
     /// ## Typescript Code Example

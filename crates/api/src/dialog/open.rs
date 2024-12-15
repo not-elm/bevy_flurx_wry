@@ -1,5 +1,5 @@
 use crate::fs::AllowPaths;
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 use bevy_ecs::system::{In, ResMut};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use crate::dialog::DialogFilter;
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to open a file/directory selection dialog.
     ///
     ///  The selected path will be registered to [AllowPaths] until the application closed.

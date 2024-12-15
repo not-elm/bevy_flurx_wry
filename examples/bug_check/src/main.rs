@@ -7,6 +7,7 @@ use bevy::window::PrimaryWindow;
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_wry::api::dialog::AllDialogPlugins;
 use bevy_flurx_wry::api::notification::NotificationSendPlugin;
+use bevy_flurx_wry::api::os::AllOsPlugins;
 use bevy_flurx_wry::api::path::AllPathPlugins;
 use bevy_flurx_wry::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
@@ -35,6 +36,7 @@ fn main() {
             AllPathPlugins,
             AllDialogPlugins,
             NotificationSendPlugin,
+            AllOsPlugins,
         ))
         .add_ipc_event::<OnClickOnWebview>("onclick")
         .add_systems(Startup, (spawn_camera, spawn_webview))

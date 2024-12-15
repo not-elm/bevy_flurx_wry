@@ -1,7 +1,7 @@
 //! Provides apis to obtain special system paths.
 
 use crate::fs::{error_if_not_accessible, AllowPaths};
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_ecs::system::Res;
 use bevy_flurx::action::once;
@@ -56,7 +56,7 @@ impl PluginGroup for AllPathPlugins {
     }
 }
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's config path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -70,7 +70,7 @@ define_api_plugin!(
     command: config
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's config local path from typescript(or js).
     ///
     /// ## Typescript Code Example
@@ -82,7 +82,7 @@ define_api_plugin!(
     command: config_local
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's data path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -96,7 +96,7 @@ define_api_plugin!(
     command: data_local
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's data path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -110,7 +110,7 @@ define_api_plugin!(
     command: data
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's audio path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -124,7 +124,7 @@ define_api_plugin!(
     command: audio
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's cache path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -138,7 +138,7 @@ define_api_plugin!(
     command: cache
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's desktop path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -152,7 +152,7 @@ define_api_plugin!(
     command: desktop
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's document path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -166,7 +166,7 @@ define_api_plugin!(
     command: document
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's download path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -180,7 +180,7 @@ define_api_plugin!(
     command: download
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's executable path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -194,7 +194,7 @@ define_api_plugin!(
     command: executable
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's public path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -208,7 +208,7 @@ define_api_plugin!(
     command: public
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's runtime path from typescript(or js).
     ///
     /// ## Typescript Code Example
@@ -220,7 +220,7 @@ define_api_plugin!(
     command: runtime
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's temp path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -234,7 +234,7 @@ define_api_plugin!(
     command: temp
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's template path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -248,7 +248,7 @@ define_api_plugin!(
     command: template
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's video path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -262,7 +262,7 @@ define_api_plugin!(
     command: video
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's home path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -276,7 +276,7 @@ define_api_plugin!(
     command: home
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's picture path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.
@@ -290,7 +290,7 @@ define_api_plugin!(
     command: picture
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to obtain user's font path from typescript(or js).
     ///
     /// If the path doesn't exist or is not permitted by [AllowPaths], will be null.

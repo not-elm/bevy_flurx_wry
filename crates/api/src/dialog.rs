@@ -3,7 +3,7 @@
 mod open;
 mod save;
 
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_ecs::system::In;
 use bevy_flurx::action::once;
@@ -36,7 +36,7 @@ impl PluginGroup for AllDialogPlugins {
     }
 }
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to control a dialog to ask the user yes/no from a webview.
     ///
     /// ## Typescript Code Example
@@ -48,7 +48,7 @@ define_api_plugin!(
     command: ask
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to control a dialog to confirm ok/cancel with the user from a webview.
     ///
     /// ## Typescript Code Example
@@ -60,7 +60,7 @@ define_api_plugin!(
     command: confirm
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to control a dialog to show a message dialog from a webview.
     ///
     /// ## Typescript Code Example

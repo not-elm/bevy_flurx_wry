@@ -45,11 +45,7 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            await window.__FLURX__.notification.send("send message", {
-                title: "title",
-                icon: ""
-            });
-            console.log("aa");
+            console.log(await window.__FLURX__.os.locale());
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";

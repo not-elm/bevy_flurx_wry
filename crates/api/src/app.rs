@@ -1,12 +1,12 @@
 //! Provides mechanism to control the application such as reading metadata, exiting the application, etc.
 
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 use bevy_app::AppExit;
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::ActionSeed;
 use bevy_flurx_ipc::command;
 
-define_api_plugin!(
+api_plugin!(
     /// You will be able to get the application name from typescript(or js).
     ///
     /// ## Typescript Code Example
@@ -18,7 +18,7 @@ define_api_plugin!(
     command: get_name
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You will be able to get the application version from typescript(or js).
     ///
     /// ## Typescript Code Example
@@ -30,7 +30,7 @@ define_api_plugin!(
     command: get_version
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You will be able to exit application from typescript(or js).
     ///
     /// ## Typescript Code Example
