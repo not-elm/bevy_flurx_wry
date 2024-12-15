@@ -108,3 +108,15 @@ export const systemName = async (): Promise<string | null> => {
 export const hostName = async (): Promise<string | null> => {
     return await invoke("FLURX|os::host_name");
 }
+
+/**
+ * Get the preferred locale for the system.
+ *
+ * @example
+ * import {os} from "@bevy_flurx_wry/api";
+ *
+ * const locale: string | null = await os.locale();
+ */
+export const locale = async (): Promise<string | null> => {
+    return await invoke("FLURX|os::locale");
+}

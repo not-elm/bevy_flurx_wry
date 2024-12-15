@@ -5,6 +5,7 @@ mod os_version;
 mod kernel_version;
 mod system_name;
 mod host_name;
+mod locale;
 
 use crate::macros::api_plugin;
 use bevy_app::{PluginGroup, PluginGroupBuilder};
@@ -15,6 +16,7 @@ pub use crate::os::family::OsFamilyPlugin;
 pub use crate::os::host_name::OsHostNamePlugin;
 pub use crate::os::os_version::{OsVersionPlugin, OsLongVersionPlugin};
 pub use crate::os::kernel_version::OsKernelVersionPlugin;
+pub use crate::os::locale::OsLocalePlugin;
 pub use crate::os::system_name::OsSystemNamePlugin;
 
 /// Allows you to use all os plugins.
@@ -28,6 +30,7 @@ pub use crate::os::system_name::OsSystemNamePlugin;
 /// - [OsKernelVersionPlugin]
 /// - [OsSystemNamePlugin]
 /// - [OsHostNamePlugin]
+/// - [OsLocalePlugin]
 pub struct AllOsPlugins;
 impl PluginGroup for AllOsPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -39,6 +42,7 @@ impl PluginGroup for AllOsPlugins {
             .add(OsKernelVersionPlugin)
             .add(OsSystemNamePlugin)
             .add(OsHostNamePlugin)
+            .add(OsLocalePlugin)
     }
 }
 
