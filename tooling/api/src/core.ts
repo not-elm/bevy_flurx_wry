@@ -17,7 +17,7 @@ export interface PhysicalSize {
 }
 
 const isOk = <Out>(args: unknown): args is Ok<Out> => {
-    if (args && typeof (args) !== "object") {
+    if (!args || (args && typeof (args) !== "object")) {
         return false;
     }
     const ok = args as Ok<Out>;
@@ -25,7 +25,7 @@ const isOk = <Out>(args: unknown): args is Ok<Out> => {
 }
 
 const isErr = (args: unknown): args is Err => {
-    if (args && typeof (args) !== "object") {
+    if (!args || (args && typeof (args) !== "object")) {
         return false;
     }
     const err = args as Err;
@@ -67,9 +67,9 @@ export const invoke = <Out>(
                 Reflect.deleteProperty(window.__FLURX__, prop);
                 if (isOk(args)) {
                     resolve(args.Ok);
-                } else if(isErr(args)) {
+                } else if (isErr(args)) {
                     reject(args.Err);
-                } else{
+                } else {
                     resolve(args);
                 }
             },

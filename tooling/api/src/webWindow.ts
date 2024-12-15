@@ -36,6 +36,18 @@ export class WebWindow {
     }
 
     /**
+     *  Shows the window.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     * await WebWindow.current().show();
+     */
+    async show(): Promise<void> {
+        await invoke("FLURX|web_window::show", this.identifier);
+    }
+
+    /**
      *  @example
      * import {WebWindow, PhysicalSize} from "@bevy_flurx_wry/api";
      *

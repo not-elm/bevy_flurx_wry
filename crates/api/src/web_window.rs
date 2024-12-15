@@ -13,6 +13,7 @@ mod is_resizable;
 mod is_visible;
 mod maximize;
 mod minimize;
+mod show;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
@@ -37,6 +38,7 @@ use crate::web_window::is_resizable::WebWindowIsResizablePlugin;
 use crate::web_window::is_visible::WebWindowIsVisiblePlugin;
 use crate::web_window::maximize::WebWindowMaximizePlugin;
 use crate::web_window::minimize::WebWindowMinimizePlugin;
+use crate::web_window::show::WebWindowShowPlugin;
 
 /// Allows you to use all window plugins.
 ///
@@ -45,6 +47,7 @@ use crate::web_window::minimize::WebWindowMinimizePlugin;
 /// - [WebWindowTitlePlugin]
 /// - [WebWindowCenterPlugin]
 /// - [WebWindowHidePlugin]
+/// - [WebWindowShowPlugin]
 /// - [WebWindowInnerSizePlugin]
 /// - [WebWindowIsDecoratedPlugin]
 /// - [WebWindowIsFocusedPlugin]
@@ -64,6 +67,7 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowTitlePlugin)
             .add(WebWindowCenterPlugin)
             .add(WebWindowHidePlugin)
+            .add(WebWindowShowPlugin)
             .add(WebWindowInnerSizePlugin)
             .add(WebWindowIsDecoratedPlugin)
             .add(WebWindowIsFocusedPlugin)

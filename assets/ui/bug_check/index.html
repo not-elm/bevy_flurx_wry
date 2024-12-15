@@ -45,7 +45,12 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.WebWindow.current().minimize());
+            await window.__FLURX__.WebWindow.current().hide();
+            console.log("DADAD")
+            setTimeout(() => {
+                console.log("DADADA");
+                window.__FLURX__.WebWindow.current().show()
+            }, 1000)
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";
