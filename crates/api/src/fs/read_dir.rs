@@ -1,6 +1,6 @@
 use crate::error::ApiResult;
 use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use std::ffi::OsString;
 use std::path::PathBuf;
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to check if the path exists from typescript(or js).
     ///
     /// ## Typescript Code Example

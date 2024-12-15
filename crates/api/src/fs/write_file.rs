@@ -1,5 +1,5 @@
 use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::Pipe;
@@ -9,7 +9,7 @@ use std::io::Write;
 use std::path::PathBuf;
 use crate::error::ApiResult;
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to write a file from typescript(or js).
     ///
     /// ## Typescript Code Example
@@ -26,7 +26,7 @@ define_api_plugin!(
 );
 
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to write a file from typescript(or js).
     ///
     /// ## Typescript Code Example

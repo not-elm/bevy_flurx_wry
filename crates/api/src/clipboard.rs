@@ -6,7 +6,7 @@ use bevy_ecs::prelude::In;
 use bevy_flurx::action::Action;
 use bevy_flurx::action::once;
 use bevy_flurx_ipc::command;
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 
 
 /// Allows you to use all clipboard plugins.
@@ -24,7 +24,7 @@ impl PluginGroup for ClipboardPlugins{
     }
 }
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to set a text to the system clipboard.
     ///
     /// ## Typescript Code Example
@@ -36,7 +36,7 @@ define_api_plugin!(
     command: set_text
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to get a text from the system clipboard.
     ///
     /// ## Typescript Code Example

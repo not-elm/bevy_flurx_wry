@@ -1,13 +1,13 @@
 use crate::error::ApiResult;
 use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
-use crate::macros::define_api_plugin;
+use crate::macros::api_plugin;
 use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::path::PathBuf;
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to read a file as a UTF-8 encoded string from typescript(or js).
     ///
     /// ## Typescript Code Example
@@ -21,7 +21,7 @@ define_api_plugin!(
     command: read_text_file
 );
 
-define_api_plugin!(
+api_plugin!(
     /// You'll be able to read a file from typescript(or js).
     ///
     /// ## Typescript Code Example

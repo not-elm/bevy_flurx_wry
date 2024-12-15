@@ -13,6 +13,8 @@ pub mod clipboard;
 pub mod dialog;
 #[cfg(feature = "notification")]
 pub mod notification;
+#[cfg(feature = "os")]
+pub mod os;
 mod error;
 
 #[allow(missing_docs)]
@@ -32,7 +34,7 @@ pub mod prelude {
 }
 
 mod macros {
-    macro_rules! define_api_plugin {
+    macro_rules! api_plugin {
         (
             $(#[$meta:meta])*
             $plugin_name: ident,
@@ -55,7 +57,7 @@ mod macros {
         };
     }
 
-    pub(crate) use define_api_plugin;
+    pub(crate) use api_plugin;
 }
 
 
