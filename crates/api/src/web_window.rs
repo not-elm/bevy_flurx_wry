@@ -8,6 +8,7 @@ mod is_fullscreen;
 mod is_maximized;
 mod is_maximizable;
 mod is_minimizable;
+mod is_minimized;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
@@ -27,6 +28,7 @@ use bevy_flurx_wry_core::prelude::ParentWindow;
 use bevy_window::{Window, WindowWrapper};
 use bevy_winit::WinitWindows;
 use crate::web_window::is_minimizable::WebWindowIsMinimizablePlugin;
+use crate::web_window::is_minimized::WebWindowIsMinimizedPlugin;
 
 /// Allows you to use all window plugins.
 ///
@@ -42,6 +44,7 @@ use crate::web_window::is_minimizable::WebWindowIsMinimizablePlugin;
 /// - [WebWindowIsMaximizedPlugin]
 /// - [WebWindowIsMaximizablePlugin]
 /// - [WebWindowIsMinimizablePlugin]
+/// - [WebWindowIsMinimizedPlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -56,6 +59,7 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowIsMaximizedPlugin)
             .add(WebWindowIsMaximizablePlugin)
             .add(WebWindowIsMinimizablePlugin)
+            .add(WebWindowIsMinimizedPlugin)
     }
 }
 #[derive(SystemParam)]

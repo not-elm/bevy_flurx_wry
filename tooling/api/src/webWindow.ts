@@ -117,6 +117,18 @@ export class WebWindow {
         return await invoke("FLURX|web_window::is_minimizable", this.identifier);
     }
 
+    /**
+     *  Return is minimized the window.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     * const isMinimized: boolean = await WebWindow.current().isMinimized();
+     */
+    async isMinimized(): Promise<boolean> {
+        return await invoke("FLURX|web_window::is_minimized", this.identifier);
+    }
+
     static current(): WebWindow {
         return new WebWindow("<CURRENT_IDENTIFIER>");
     }
