@@ -6,6 +6,8 @@ export * as path from "./path";
 export * as clipboard from "./clipboard";
 export * as notification from "./notification";
 export * as os from "./os";
+export * as monitor from "./monitor";
 export * from "./core";
+export {Monitor, PhysicalSize, PhysicalPosition} from "./monitor";
 
 

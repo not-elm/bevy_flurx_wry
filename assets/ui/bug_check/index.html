@@ -45,7 +45,9 @@
 
     <script>
         document.getElementById("copy-file").onclick = async () => {
-            console.log(await window.__FLURX__.os.locale());
+            console.log(await window.__FLURX__.monitor.availables());
+            console.log(await window.__FLURX__.monitor.current());
+            console.log(await window.__FLURX__.monitor.primary());
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";
