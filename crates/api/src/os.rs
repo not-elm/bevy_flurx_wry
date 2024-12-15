@@ -10,7 +10,7 @@ use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 
 pub use crate::os::family::OsFamilyPlugin;
-pub use crate::os::os_version::OsVersionPlugin;
+pub use crate::os::os_version::{OsVersionPlugin, OsLongVersionPlugin};
 pub use crate::os::kernel_version::OsKernelVersionPlugin;
 
 /// Allows you to use all os plugins.
@@ -20,6 +20,7 @@ pub use crate::os::kernel_version::OsKernelVersionPlugin;
 /// - [OsArchPlugin]
 /// - [OsFamilyPlugin]
 /// - [OsVersionPlugin]
+/// - [OsLongVersionPlugin]
 /// - [OsKernelVersionPlugin]
 pub struct AllOsPlugins;
 impl PluginGroup for AllOsPlugins {
@@ -28,6 +29,7 @@ impl PluginGroup for AllOsPlugins {
             .add(OsArchPlugin)
             .add(OsFamilyPlugin)
             .add(OsVersionPlugin)
+            .add(OsLongVersionPlugin)
             .add(OsKernelVersionPlugin)
     }
 }

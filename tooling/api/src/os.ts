@@ -62,6 +62,18 @@ export const version = async (): Promise<string | null> => {
 }
 
 /**
+ * Get the system version.
+ *
+ * @example
+ * import {os} from "@bevy_flurx_wry/api";
+ *
+ * const osVersion: string | null = await os.longOsVersion();
+ */
+export const longOsVersion = async (): Promise<string | null> => {
+    return await invoke("FLURX|os::long_os_version");
+}
+
+/**
  * Get the kernel version.
  *
  * @example
