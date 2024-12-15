@@ -1,4 +1,4 @@
-import {invoke} from "./core";
+import {invoke, PhysicalSize} from "./core";
 
 
 export class WebWindow{
@@ -22,7 +22,7 @@ export class WebWindow{
         await invoke("FLURX|web_window::center", this.identifier);
     }
 
-        /**
+    /**
      *  Hide the window.
      *
      *  @example
@@ -32,6 +32,16 @@ export class WebWindow{
      */
     async hide(): Promise<void>{
         await invoke("FLURX|web_window::hide", this.identifier);
+    }
+
+    /**
+     *  @example
+     * import {WebWindow, PhysicalSize} from "@bevy_flurx_wry/api";
+     *
+     * const size: PhysicalSize = await WebWindow.current().innerSize();
+     */
+    async innerSize(): Promise<PhysicalSize>{
+        return await invoke("FLURX|web_window::inner_size", this.identifier);
     }
 
     static current(): WebWindow{

@@ -1,6 +1,7 @@
 mod title;
 mod center;
 mod hide;
+mod inner_size;
 
 pub use crate::web_window::center::WebWindowCenterPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
@@ -13,6 +14,7 @@ use bevy_ecs::world::Mut;
 use bevy_flurx_wry_core::prelude::ParentWindow;
 use bevy_window::{Window, WindowWrapper};
 use bevy_winit::WinitWindows;
+use crate::web_window::inner_size::WebWindowInnerSizePlugin;
 
 /// Allows you to use all window plugins.
 ///
@@ -21,6 +23,7 @@ use bevy_winit::WinitWindows;
 /// - [WebWindowTitlePlugin]
 /// - [WebWindowCenterPlugin]
 /// - [WebWindowHidePlugin]
+/// - [WebWindowInnerSizePlugin]
 pub struct AllWebWindowPlugins;
 impl PluginGroup for AllWebWindowPlugins {
     fn build(self) -> PluginGroupBuilder {
@@ -28,6 +31,7 @@ impl PluginGroup for AllWebWindowPlugins {
             .add(WebWindowTitlePlugin)
             .add(WebWindowCenterPlugin)
             .add(WebWindowHidePlugin)
+            .add(WebWindowInnerSizePlugin)
     }
 }
 #[derive(SystemParam)]

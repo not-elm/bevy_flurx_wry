@@ -6,6 +6,16 @@ interface Err {
     "Err": any
 }
 
+export interface PhysicalPosition {
+    x: number,
+    y: number,
+}
+
+export interface PhysicalSize {
+    width: number,
+    height: number,
+}
+
 const isOk = <Out>(args: unknown): args is Ok<Out> => {
     if (args && typeof (args) !== "object") {
         return false;
