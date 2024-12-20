@@ -48,7 +48,7 @@
             setTimeout(() => resolve(), time)
         });
         document.getElementById("copy-file").onclick = async () => {
-            await window.__FLURX__.WebWindow.current().setCursorHitTest(false);
+            await window.__FLURX__.dialog.save()
         }
         document.getElementById("navigation").onclick = () => {
             window.location = "./second.html";

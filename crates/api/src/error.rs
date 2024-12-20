@@ -5,7 +5,7 @@ use std::fmt::{Debug, Display, Formatter};
 pub(crate) type ApiResult<V = ()> = Result<V, ApiError>;
 
 #[derive(Debug)]
-pub(crate) struct ApiError(Box<dyn Error>);
+pub(crate) struct ApiError(Box<dyn Error + Send + Sync>);
 
 impl Serialize for ApiError {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
@@ -16,7 +16,7 @@ impl Serialize for ApiError {
     }
 }
 
-impl<E: Error + 'static> From<E> for ApiError {
+impl<E: Error + Send + Sync + 'static> From<E> for ApiError {
     fn from(value: E) -> Self {
         Self(Box::new(value))
     }

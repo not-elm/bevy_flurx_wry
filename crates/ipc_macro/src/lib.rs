@@ -1,5 +1,8 @@
 //! This crate provides macros to support `bevy_flurx_ipc`.
 
+mod command;
+
+use crate::command::expand_call_fn;
 use darling::ast::NestedMeta;
 use darling::util::Flag;
 use darling::FromMeta;
@@ -8,7 +11,6 @@ use proc_macro2::{Ident, Span};
 use quote::quote;
 use syn::ItemFn;
 use syn::__private::TokenStream2;
-
 
 /// Convert the function to `ipc-command`.
 ///
@@ -32,26 +34,26 @@ use syn::__private::TokenStream2;
 /// use bevy_flurx_wry::ipc::component::WebviewEntity;
 ///
 /// #[command]
-/// fn case1() -> ActionSeed<(), String>{
+/// fn pattern1() -> ActionSeed<(), String>{
 ///     once::run(|| "output is returned to Javascript".to_string())
 /// }
 ///
 /// #[command]
-/// fn case2(WebviewEntity(entity): WebviewEntity) -> ActionSeed{
+/// fn pattern2(WebviewEntity(entity): WebviewEntity) -> ActionSeed{
 ///     once::run(move ||{
 ///         println!("{entity:?}");
 ///     })
 /// }
 ///
 /// #[command]
-/// fn case3(In(message): In<String>) -> ActionSeed {
+/// fn pattern3(In(message): In<String>) -> ActionSeed {
 ///     once::run(move ||{
 ///         println!("message from javascript: {message}");
 ///     })
 /// }
 ///
 /// #[command]
-/// fn case4(In(message): In<String>, WebviewEntity(entity): WebviewEntity) -> ActionSeed{
+/// fn pattern4(In(message): In<String>, WebviewEntity(entity): WebviewEntity) -> ActionSeed{
 ///     once::run(move ||{
 ///         println!("{message} {entity:?}");
 ///     })
@@ -71,29 +73,29 @@ use syn::__private::TokenStream2;
 /// use bevy_flurx_wry::ipc::component::WebviewEntity;
 ///
 /// #[command]
-/// async fn case1() -> String{
+/// async fn pattern1() -> String{
 ///     "output is returned to Javascript".to_string()
 /// }
 ///
 /// #[command]
-/// async fn case2(In(message): In<String>){
+/// async fn pattern2(In(message): In<String>){
 ///     println!("{message}");
 /// }
 ///
 /// #[command]
-/// async fn case3(task: ReactiveTask) {
+/// async fn pattern3(task: ReactorTask) {
 ///     task.will(Update, once::run(||{})).await
 /// }
 ///
 /// #[command]
-/// async fn case4(In(message): In<String>, task: ReactiveTask){
+/// async fn pattern4(In(message): In<String>, task: ReactorTask){
 ///     task.will(Update, once::run(move ||{
 ///         println!("{message}");
 ///     })).await;
 /// }
 ///
 /// #[command]
-/// async fn case5(In(message): In<String>, WebviewEntity(entity): WebviewEntity, task: ReactiveTask){
+/// async fn pattern5(In(message): In<String>, WebviewEntity(entity): WebviewEntity, task: ReactorTask){
 ///     // `task command` also allows you to use repetition.
 ///     for _ in 0..3{
 ///         let message = message.clone();
@@ -113,28 +115,37 @@ pub fn command(attr: TokenStream, input: TokenStream) -> TokenStream {
 
 fn parse_command(input: TokenStream, attribute: Option<Attribute>) -> syn::Result<TokenStream2> {
     let custom_id = attribute.as_ref().and_then(|attr| attr.id.clone());
-    let mut f = syn::parse::<ItemFn>(input)?;
-    let fn_ident = f.sig.ident.clone();
+    let f = syn::parse::<ItemFn>(input)?;
+    let fn_ident = &f.sig.ident.clone();
     let ipc_id = custom_id.unwrap_or(fn_ident.to_string());
-    let crate_name = if attribute.is_some_and(|attr| attr.internal.is_present()) {
+    let is_internal = attribute.is_some_and(|attr| attr.internal.is_present());
+    let call_fn = expand_call_fn(&f, is_internal);
+    let crate_name = if is_internal {
         "bevy_flurx_ipc"
     } else {
         "bevy_flurx_wry"
     };
     let crate_name = Ident::new(crate_name, Span::call_site());
-    f.sig.ident = Ident::new("internal", Span::call_site());
+    let fn_ident = &f.sig.ident;
     let visibility = &f.vis;
 
     Ok(quote! {
         #[allow(missing_docs)]
         #visibility fn #fn_ident() -> #crate_name::prelude::IpcHandler{
-            #f
-            use #crate_name::prelude::Functor;
-            #crate_name::prelude::IpcHandler::new(#ipc_id, ||{
-                internal
+            #crate_name::prelude::IpcHandler::new(#ipc_id, |commands, ipc_cmd|{
+                #f
+                #call_fn
             })
         }
     })
+}
+
+fn base_module(is_internal: bool) -> TokenStream2 {
+    if is_internal {
+        quote! {  bevy_flurx_ipc::prelude:: }
+    } else {
+        quote! {  bevy_flurx_wry::prelude:: }
+    }
 }
 
 fn parse_attribute(attr: TokenStream) -> Option<Attribute> {

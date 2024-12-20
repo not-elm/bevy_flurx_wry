@@ -14,6 +14,10 @@ readme = "../../README.md"
 name = "progress"
 path = "tests/index.rs"
 
+[[test]]
+name = "progressdada"
+path = "tests/test02_with_inputs.rs"
+
 [dependencies]
 bevy_app = { workspace = true }
 bevy_reflect = { workspace = true }

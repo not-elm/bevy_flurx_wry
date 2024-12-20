@@ -61,7 +61,7 @@ fn action_command(
 async fn task_command(
     In(n): In<usize>, // The input from javascript
     WebviewEntity(entity): WebviewEntity,
-    task: ReactiveTask,
+    task: ReactorTask,
 ) -> usize  {
    task.will(Update, once::run(fibonacci).with((entity, n))).await
 }

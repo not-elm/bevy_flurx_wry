@@ -6,11 +6,11 @@ use bevy_flurx_ipc::component::IpcHandlers;
 use bevy_flurx_ipc_macro::command;
 
 #[command(internal)]
-fn hello() -> ActionSeed{
-    once::run(||{})
+fn hello() -> ActionSeed {
+    once::run(|| {})
 }
 
-fn main(){
+fn main() {
     IpcHandlers::new(hello);
     IpcHandlers::default().with(hello);
 }

@@ -125,5 +125,7 @@ export const open = async <T extends OpenFileDialogOptions>(
 export const save = async (
     options?: SaveFileDialogOptions
 ): Promise<string | null> => {
-    return await invoke("FLURX|dialog::save", options);
+    return await invoke("FLURX|dialog::save", {
+        ...options,
+    });
 };
