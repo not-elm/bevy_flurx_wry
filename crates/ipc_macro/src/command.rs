@@ -3,13 +3,10 @@ mod action_command;
 
 use crate::command::action_command::expand_action_command;
 use crate::command::async_command::expand_async_command;
+use proc_macro2::TokenStream;
+use quote::quote;
 use syn::ItemFn;
 use syn::__private::TokenStream2;
-
-
-
-
-
 
 pub fn expand_call_fn(
     f: &ItemFn,
@@ -22,3 +19,24 @@ pub fn expand_call_fn(
     }
 }
 
+enum Input {
+    In,
+    WebviewEntity,
+    Task,
+}
+
+impl Input {
+    pub fn to_token(&self, module_name: &TokenStream) -> TokenStream2 {
+        match self {
+            Self::In => quote! {
+                ipc_cmd.payload.deserialize_args()
+            },
+            Self::WebviewEntity => quote! {
+                #module_name  WebviewEntity(ipc_cmd.entity)
+            },
+            Self::Task => quote! {
+                task.clone()
+            },
+        }
+    }
+}

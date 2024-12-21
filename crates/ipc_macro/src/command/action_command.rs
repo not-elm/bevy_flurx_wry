@@ -1,18 +1,9 @@
 use crate::base_module;
+use crate::command::Input;
+use proc_macro2::TokenStream;
 use quote::quote;
 use syn::__private::TokenStream2;
 use syn::{FnArg, ItemFn, Type};
-
-enum ActionCommand {
-    /// without inputs
-    Pattern1,
-    /// With the args,
-    Pattern2,
-    /// With WebviewEntity(entity)
-    Pattern3,
-    /// With the args and Webview entity 
-    Pattern4,
-}
 
 pub fn expand_action_command(
     f: &ItemFn,
@@ -20,24 +11,8 @@ pub fn expand_action_command(
 ) -> TokenStream2 {
     let fn_ident = &f.sig.ident;
     let module_name = base_module(is_internal);
-    let webview_entity = quote! {
-        #module_name  WebviewEntity(ipc_cmd.entity)
-    };
-    let args = quote! { ipc_cmd.payload.deserialize_args()};
-    match check_action_command_type(f) {
-        ActionCommand::Pattern1 => {
-            _expand_action_command(is_internal, &module_name, quote! { #fn_ident() })
-        }
-        ActionCommand::Pattern2 => {
-            _expand_action_command(is_internal, &module_name, quote! { #fn_ident(#args) })
-        }
-        ActionCommand::Pattern3 => {
-            _expand_action_command(is_internal, &module_name, quote! { #fn_ident(#webview_entity) })
-        }
-        ActionCommand::Pattern4 => {
-            _expand_action_command(is_internal, &module_name, quote! { #fn_ident(#args, #webview_entity) })
-        }
-    }
+    let inputs = parse_action_command_inputs(f, &module_name);
+    _expand_action_command(is_internal, &module_name, quote! { #fn_ident(#(#inputs,)*) })
 }
 
 fn _expand_action_command(
@@ -66,9 +41,8 @@ fn _expand_action_command(
     }
 }
 
-fn check_action_command_type(f: &ItemFn) -> ActionCommand {
-    let mut has_in = false;
-    let mut has_webview_entity = false;
+fn parse_action_command_inputs(f: &ItemFn, module_name: &TokenStream) -> Vec<TokenStream> {
+    let mut inputs = Vec::with_capacity(2);
     for arg in f
         .sig
         .inputs
@@ -83,15 +57,10 @@ fn check_action_command_type(f: &ItemFn) -> ActionCommand {
             continue;
         };
         match last_segment.ident.to_string().as_str() {
-            "In" => has_in = true,
-            "WebviewEntity" => has_webview_entity = true,
+            "In" => inputs.push(Input::In.to_token(module_name)),
+            "WebviewEntity" => inputs.push(Input::WebviewEntity.to_token(module_name)),
             _ => continue,
         }
     }
-    match (has_in, has_webview_entity) {
-        (false, false) => ActionCommand::Pattern1,
-        (true, false) => ActionCommand::Pattern2,
-        (false, true) => ActionCommand::Pattern3,
-        (true, true) => ActionCommand::Pattern4,
-    }
+    inputs
 }

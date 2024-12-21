@@ -1,26 +1,9 @@
 use crate::base_module;
+use crate::command::Input;
+use proc_macro2::TokenStream;
 use quote::quote;
 use syn::__private::TokenStream2;
 use syn::{FnArg, ItemFn, Type};
-
-enum AsyncCommand {
-    /// Without inputs
-    Pattern1,
-    /// With args
-    Pattern2,
-    /// With Webview entity,
-    Pattern3,
-    /// With Reactor Task
-    Pattern4,
-    /// With args and Webview entity
-    Pattern5,
-    /// With args and Reactor task
-    Pattern6,
-    /// With Webview entity and Reactor Task
-    Pattern7,
-    /// With args, Webview Entity and Reactor Task
-    Pattern8,
-}
 
 pub fn expand_async_command(
     f: &ItemFn,
@@ -28,35 +11,8 @@ pub fn expand_async_command(
 ) -> TokenStream2 {
     let fn_ident = &f.sig.ident;
     let module_name = base_module(is_internal);
-    let webview_entity = quote! {
-        #module_name  WebviewEntity(ipc_cmd.entity)
-    };
-    match check_async_command_type(f) {
-        AsyncCommand::Pattern1 => {
-            expand_call(is_internal, &module_name, quote! { #fn_ident().await; })
-        }
-        AsyncCommand::Pattern2 => {
-            expand_call(is_internal, &module_name, quote! { #fn_ident(ipc_cmd.payload.deserialize_args()).await; })
-        }
-        AsyncCommand::Pattern3 => {
-            expand_call(is_internal, &module_name, quote! { #fn_ident(#webview_entity).await; })
-        }
-        AsyncCommand::Pattern4 => {
-            expand_call(is_internal, &module_name, quote! { #fn_ident(task.clone()).await; })
-        }
-        AsyncCommand::Pattern5 => {
-            expand_call(is_internal, &module_name, quote! { #fn_ident(ipc_cmd.payload.deserialize_args(), #webview_entity).await; })
-        }
-        AsyncCommand::Pattern6 => {
-            expand_call(is_internal, &module_name, quote! { #fn_ident(ipc_cmd.payload.deserialize_args(), task.clone()).await; })
-        }
-        AsyncCommand::Pattern7 => {
-            expand_call(is_internal, &module_name, quote! { #fn_ident(#webview_entity, task.clone()).await; })
-        }
-        AsyncCommand::Pattern8 => {
-            expand_call(is_internal, &module_name, quote! { #fn_ident(ipc_cmd.payload.deserialize_args(), #webview_entity, task.clone()).await; })
-        }
-    }
+    let inputs = parse_async_command_inputs(f, &module_name);
+    expand_call(is_internal, &module_name, quote! { #fn_ident(#(#inputs,)*).await; })
 }
 
 fn expand_call(is_internal: bool, module_name: &TokenStream2, f: TokenStream2) -> TokenStream2 {
@@ -77,10 +33,8 @@ fn expand_call(is_internal: bool, module_name: &TokenStream2, f: TokenStream2) -
     }
 }
 
-fn check_async_command_type(f: &ItemFn) -> AsyncCommand {
-    let mut has_in = false;
-    let mut has_webview_entity = false;
-    let mut has_task = false;
+fn parse_async_command_inputs(f: &ItemFn, module_name: &TokenStream) -> Vec<TokenStream> {
+    let mut args = Vec::with_capacity(3);
     for arg in f
         .sig
         .inputs
@@ -95,20 +49,11 @@ fn check_async_command_type(f: &ItemFn) -> AsyncCommand {
             continue;
         };
         match last_segment.ident.to_string().as_str() {
-            "In" => has_in = true,
-            "WebviewEntity" => has_webview_entity = true,
-            "ReactorTask" => has_task = true,
+            "In" => args.push(Input::In.to_token(module_name)),
+            "WebviewEntity" => args.push(Input::WebviewEntity.to_token(module_name)),
+            "ReactorTask" => args.push(Input::Task.to_token(module_name)),
             _ => continue,
         }
     }
-    match (has_in, has_webview_entity, has_task) {
-        (false, false, false) => AsyncCommand::Pattern1,
-        (true, false, false) => AsyncCommand::Pattern2,
-        (false, true, false) => AsyncCommand::Pattern3,
-        (false, false, true) => AsyncCommand::Pattern4,
-        (true, true, false) => AsyncCommand::Pattern5,
-        (true, false, true) => AsyncCommand::Pattern6,
-        (false, true, true) => AsyncCommand::Pattern7,
-        (true, true, true) => AsyncCommand::Pattern8,
-    }
+    args
 }

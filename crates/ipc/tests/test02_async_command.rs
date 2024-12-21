@@ -48,6 +48,34 @@ async fn pattern8(
     _task: ReactorTask,
 ) {}
 
+#[command(internal)]
+async fn pattern9(
+    _entity: WebviewEntity,
+    In(_args): In<()>,
+    _task: ReactorTask,
+) {}
+
+#[command(internal)]
+async fn pattern10(
+    _task: ReactorTask,
+    _entity: WebviewEntity,
+    In(_args): In<()>,
+) {}
+
+#[command(internal)]
+async fn pattern11(
+    _entity: WebviewEntity,
+    _task: ReactorTask,
+    In(_args): In<()>,
+) {}
+
+#[command(internal)]
+async fn pattern12(
+    In(_args): In<()>,
+    _task: ReactorTask,
+    _entity: WebviewEntity,
+) {}
+
 fn main() {
     ipc_handlers![
         pattern1,
@@ -58,5 +86,9 @@ fn main() {
         pattern6,
         pattern7,
         pattern8,
+        pattern9,
+        pattern10,
+        pattern11,
+        pattern12,
     ];
 }
