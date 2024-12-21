@@ -25,47 +25,30 @@ use syn::__private::TokenStream2;
 /// The function that returns [`Action`](bevy_flurx::prelude::Action) or [`ActionSeed`](bevy_flurx::prelude::ActionSeed) 
 /// is tentatively called `action command`.
 ///
-/// You can optionally specify arguments from Javascript and [`WebviewEntity`](bevy_flurx_ipc::prelude::WebviewEntity) as arguments.
-///
+/// The function has the following two arguments; each argument is optional.
+/// -  [In](bevy::prelude::In)<D: [`DeserializeOwned`](serde::de::DeserializeOwned)>: The Deserialized values passed from the webview.
+/// - [`WebviewEntity`](bevy_flurx_ipc::prelude::WebviewEntity) :  The webview entity that holds ipc-handlers.
+/// 
 /// ```no_run
 /// use bevy::prelude::*;
 /// use bevy_flurx::prelude::*;
-/// use bevy_flurx_wry::ipc::command;
-/// use bevy_flurx_wry::ipc::component::WebviewEntity;
+/// use bevy_flurx_wry::prelude::*;
 ///
 /// #[command]
-/// fn pattern1() -> ActionSeed<(), String>{
-///     once::run(|| "output is returned to Javascript".to_string())
-/// }
-///
-/// #[command]
-/// fn pattern2(WebviewEntity(entity): WebviewEntity) -> ActionSeed{
-///     once::run(move ||{
-///         println!("{entity:?}");
-///     })
-/// }
-///
-/// #[command]
-/// fn pattern3(In(message): In<String>) -> ActionSeed {
-///     once::run(move ||{
-///         println!("message from javascript: {message}");
-///     })
-/// }
-///
-/// #[command]
-/// fn pattern4(In(message): In<String>, WebviewEntity(entity): WebviewEntity) -> ActionSeed{
-///     once::run(move ||{
-///         println!("{message} {entity:?}");
-///     })
+/// fn action_command(In(args): In<String>, entity: WebviewEntity) -> Action<(String, WebviewEntity), String>{
+///     once::run(|In(_): In<(String, WebviewEntity)>| "output is returned to Javascript".to_string()).with((args, entity))
 /// }
 /// ```
 ///
-/// ### Task Command
+/// ### Async Command
 ///
-/// Asynchronous functions that return output to Javascript are called `task action`.
+/// Asynchronous functions that return output to Javascript are called `async command`.
 ///
-/// This allows for more advanced implementations than `action command`, such as conditional branching and repetition.
-///
+/// The function has the following two arguments; each argument is optional.
+/// -  [In](bevy::prelude::In)<D: [`DeserializeOwned`](serde::de::DeserializeOwned)>: The Deserialized values passed from the webview.
+/// - [`WebviewEntity`](bevy_flurx_ipc::prelude::WebviewEntity) :  The webview entity that holds ipc-handlers.
+/// - [`ReactorTask`]: Please see [here](https://docs.rs/bevy_flurx/latest/bevy_flurx/prelude/struct.Reactor.html#method.schedule) for details.
+///  
 /// ```no_run
 /// use bevy::prelude::*;
 /// use bevy_flurx::prelude::*;
@@ -73,36 +56,12 @@ use syn::__private::TokenStream2;
 /// use bevy_flurx_wry::ipc::component::WebviewEntity;
 ///
 /// #[command]
-/// async fn pattern1() -> String{
-///     "output is returned to Javascript".to_string()
-/// }
-///
-/// #[command]
-/// async fn pattern2(In(message): In<String>){
-///     println!("{message}");
-/// }
-///
-/// #[command]
-/// async fn pattern3(task: ReactorTask) {
-///     task.will(Update, once::run(||{})).await
-/// }
-///
-/// #[command]
-/// async fn pattern4(In(message): In<String>, task: ReactorTask){
-///     task.will(Update, once::run(move ||{
-///         println!("{message}");
-///     })).await;
-/// }
-///
-/// #[command]
-/// async fn pattern5(In(message): In<String>, WebviewEntity(entity): WebviewEntity, task: ReactorTask){
-///     // `task command` also allows you to use repetition.
-///     for _ in 0..3{
-///         let message = message.clone();
-///         task.will(Update, once::run(move ||{
-///             println!("{entity:?} {message}");
-///         })).await;    
-///     }
+/// async fn async_command(
+///     In(message): In<String>,
+///     _entity: WebviewEntity,
+///     task: ReactorTask,
+/// ) -> String{
+///     task.will(Update, once::run(|In(message): In<String>|message).with(message)).await
 /// }
 /// ```
 #[proc_macro_attribute]

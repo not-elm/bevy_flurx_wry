@@ -1,4 +1,4 @@
-//! Defines a handler that executes the [`Action`] of the command.
+//! Defines a handler that executes the [`Action`](bevy_flurx::prelude::Action) of the command.
 
 use crate::ipc_commands::IpcCommand;
 use bevy_ecs::prelude::{Component, Entity};

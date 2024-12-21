@@ -41,7 +41,7 @@ pub struct IpcRawEventBody {
     pub payload: String,
 }
 
-/// The ipc commands that exists only one in the [`World`](bevy::prelude::World).
+/// The ipc commands that exists only one in the [`World`](bevy_ecs::prelude::World).
 #[repr(transparent)]
 #[derive(Resource, Clone, Default)]
 pub struct IpcRawEvents(Arc<Mutex<Vec<IpcRawEvent>>>);

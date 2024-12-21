@@ -29,7 +29,7 @@ pub mod prelude {
     }
 }
 
-/// Create the [`IpcHandlers`]from the commands.
+/// Create the [`IpcHandlers`](prelude::IpcHandlers)from the commands.
 ///
 /// ```no_run
 ///

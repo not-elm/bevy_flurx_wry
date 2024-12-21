@@ -8,7 +8,7 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 
-/// The ipc commands that exists only one in the [`World`](bevy::prelude::World).
+/// The ipc commands that exists only one in the [`World`](bevy_ecs::prelude::World).
 #[derive(Resource, Clone, Default)]
 pub struct IpcCommands(Arc<Mutex<Vec<IpcCommand>>>);
 

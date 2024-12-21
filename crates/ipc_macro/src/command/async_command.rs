@@ -1,8 +1,26 @@
 use crate::base_module;
-use crate::command::AsyncCommand;
 use quote::quote;
 use syn::__private::TokenStream2;
 use syn::{FnArg, ItemFn, Type};
+
+enum AsyncCommand {
+    /// Without inputs
+    Pattern1,
+    /// With args
+    Pattern2,
+    /// With Webview entity,
+    Pattern3,
+    /// With Reactor Task
+    Pattern4,
+    /// With args and Webview entity
+    Pattern5,
+    /// With args and Reactor task
+    Pattern6,
+    /// With Webview entity and Reactor Task
+    Pattern7,
+    /// With args, Webview Entity and Reactor Task
+    Pattern8,
+}
 
 pub fn expand_async_command(
     f: &ItemFn,
@@ -30,13 +48,13 @@ pub fn expand_async_command(
             expand_call(is_internal, &module_name, quote! { #fn_ident(ipc_cmd.payload.deserialize_args(), #webview_entity).await; })
         }
         AsyncCommand::Pattern6 => {
-            expand_call(is_internal, &module_name, quote! { #fn_ident(ipc_cmd.payload.deserialize_args(), #webview_entity, task.clone()).await; })
+            expand_call(is_internal, &module_name, quote! { #fn_ident(ipc_cmd.payload.deserialize_args(), task.clone()).await; })
         }
         AsyncCommand::Pattern7 => {
             expand_call(is_internal, &module_name, quote! { #fn_ident(#webview_entity, task.clone()).await; })
         }
         AsyncCommand::Pattern8 => {
-            expand_call(is_internal, &module_name, quote! { #fn_ident(ipc_cmd.payload.deserialize_args(), task.clone()).await; })
+            expand_call(is_internal, &module_name, quote! { #fn_ident(ipc_cmd.payload.deserialize_args(), #webview_entity, task.clone()).await; })
         }
     }
 }
@@ -89,8 +107,8 @@ fn check_async_command_type(f: &ItemFn) -> AsyncCommand {
         (false, true, false) => AsyncCommand::Pattern3,
         (false, false, true) => AsyncCommand::Pattern4,
         (true, true, false) => AsyncCommand::Pattern5,
-        (true, true, true) => AsyncCommand::Pattern6,
+        (true, false, true) => AsyncCommand::Pattern6,
         (false, true, true) => AsyncCommand::Pattern7,
-        (true, false, true) => AsyncCommand::Pattern8,
+        (true, true, true) => AsyncCommand::Pattern8,
     }
 }

@@ -1,8 +1,18 @@
 use crate::base_module;
-use crate::command::ActionCommand;
 use quote::quote;
 use syn::__private::TokenStream2;
 use syn::{FnArg, ItemFn, Type};
+
+enum ActionCommand {
+    /// without inputs
+    Pattern1,
+    /// With the args,
+    Pattern2,
+    /// With WebviewEntity(entity)
+    Pattern3,
+    /// With the args and Webview entity 
+    Pattern4,
+}
 
 pub fn expand_action_command(
     f: &ItemFn,
