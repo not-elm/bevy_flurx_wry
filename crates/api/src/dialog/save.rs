@@ -4,9 +4,9 @@ use crate::macros::api_plugin;
 use bevy_app::Update;
 use bevy_ecs::system::{In, ResMut};
 use bevy_flurx::action::once;
-use bevy_flurx::task::ReactiveTask;
+use bevy_flurx::task::ReactorTask;
 use bevy_flurx_ipc::command;
-use rfd::AsyncFileDialog;
+use rfd::FileDialog;
 use serde::Deserialize;
 use std::path::PathBuf;
 
@@ -33,8 +33,8 @@ struct Args {
 }
 
 #[command(id = "FLURX|dialog::save", internal)]
-async fn save(In(args): In<Args>, task: ReactiveTask) -> Option<PathBuf> {
-    let path = select_save_path(args).await;
+async fn save(In(args): In<Args>, task: ReactorTask) -> Option<PathBuf> {
+    let path = select_save_path(args);
     task.will(Update, once::run(save_system).with(path.clone())).await;
     path
 }
@@ -50,8 +50,8 @@ fn save_system(
     }
 }
 
-async fn select_save_path(args: Args) -> Option<PathBuf> {
-    let mut dialog = AsyncFileDialog::new();
+fn select_save_path(args: Args) -> Option<PathBuf> {
+    let mut dialog = FileDialog::new();
     dialog = dialog.set_can_create_directories(true);
     if let Some(title) = args.title {
         dialog = dialog.set_title(title);
@@ -64,6 +64,6 @@ async fn select_save_path(args: Args) -> Option<PathBuf> {
             dialog = dialog.add_filter(filter.name, &filter.extensions);
         }
     }
-    dialog.save_file().await.map(|h| h.path().to_path_buf())
+    dialog.save_file()
 }
 

@@ -3,13 +3,12 @@
 use crate::component::{IpcHandlers, WebviewEntity};
 use bevy_app::{App, Plugin, Update};
 use bevy_ecs::prelude::{Commands, Entity, Event, Query, Res, Resource};
-use bevy_flurx::prelude::Reactor;
 use bevy_reflect::Reflect;
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 
-/// The ipc commands that exists only one in the [`World`](bevy::prelude::World).
+/// The ipc commands that exists only one in the [`World`](bevy_ecs::prelude::World).
 #[derive(Resource, Clone, Default)]
 pub struct IpcCommands(Arc<Mutex<Vec<IpcCommand>>>);
 
@@ -70,6 +69,7 @@ impl Payload {
     where
         Args: DeserializeOwned,
     {
+        println!("{:?}", self.args);
         let args = serde_json::from_str::<Args>(self.args.as_ref().unwrap()).unwrap_or_else(|e| {
             panic!(
                 "failed deserialize ipc args type<{}>error:\n {e}",
@@ -115,9 +115,7 @@ fn receive_ipc_commands(
             continue;
         };
         if let Some(ipc_fn) = handlers.get(&cmd.payload.id) {
-            commands.spawn(Reactor::schedule(move |task| async move {
-                ipc_fn(task, cmd).await;
-            }));
+            ipc_fn(&mut commands, cmd);
         }
     }
 }

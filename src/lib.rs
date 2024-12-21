@@ -1,5 +1,5 @@
 #![allow(clippy::doc_markdown)]
-#![doc=include_str!("../README.md")]
+#![doc = include_str!("../README.md")]
 
 /// Provides the minimum functionality required to display webview.
 pub mod core {

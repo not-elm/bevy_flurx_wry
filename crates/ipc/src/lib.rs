@@ -1,6 +1,5 @@
 //! This library facilitates communication between the `webview` and `bevy`.
 
-
 use bevy_app::{App, Plugin};
 use bevy_flurx::FlurxPlugin;
 
@@ -13,21 +12,24 @@ pub mod component;
 pub mod ipc_commands;
 pub mod ipc_events;
 
-
 #[allow(missing_docs)]
 pub mod prelude {
-    pub use bevy_flurx_ipc_macro::command;
-
     pub use crate::{
         component::*,
-        FlurxIpcPlugin,
         ipc_commands::*,
         ipc_events::*,
         ipc_handlers,
+        FlurxIpcPlugin,
     };
+    pub use bevy_flurx_ipc_macro::command;
+    use serde::Serialize;
+
+    pub fn to_string<O: Serialize>(output: O) -> String {
+        serde_json::to_string(&output).expect("Failed to deserialize output value.")
+    }
 }
 
-/// Create the [`IpcHandlers`]from the commands.
+/// Create the [`IpcHandlers`](prelude::IpcHandlers)from the commands.
 ///
 /// ```no_run
 ///
@@ -64,7 +66,7 @@ impl Plugin for FlurxIpcPlugin {
         if !app.is_plugin_added::<FlurxPlugin>() {
             app.add_plugins(FlurxPlugin);
         }
-        
+
         app.add_plugins((
             FlurxIpcCommandPlugin,
             FlurxIpcEventPlugin
