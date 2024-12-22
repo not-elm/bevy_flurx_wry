@@ -15,13 +15,15 @@
 </div>
 
 <script>
+    const sleep = (ms) => new Promise(resolve => {
+        setTimeout(() => {
+            resolve()
+        }, ms)
+    })
     document.getElementById("count-button").onclick = async () => {
-        await window.__FLURX__.WebWindow.newWindow({
-            identifier: "sub window",
-            url: "flurx://localhost/second.html",
-            useDevtools: true,
-        });
-
+        const win = window.__FLURX__.WebWindow.current();
+        console.log(await win.innerPosition());
+        console.log(await win.outerPosition());
     };
 </script>
 </body>

@@ -6,7 +6,7 @@ use bevy::window::{Window, WindowResolution};
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Action;
 use bevy_flurx_ipc::command;
-use bevy_flurx_wry_core::prelude::{AutoPlay, BrowserAcceleratorKeys, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, UseDevtools, UseHttpsScheme, WebviewUri, WebviewVisible};
+use bevy_flurx_wry_core::prelude::{AutoPlay, BrowserAcceleratorKeys, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewUri, WebviewVisible};
 use serde::Deserialize;
 use winit::dpi::PhysicalSize;
 
@@ -111,6 +111,9 @@ fn create(In(args): In<Args>) -> Action<Args> {
         }
         if let Some(visible) = args.visible {
             entity_commands.insert(WebviewVisible(visible));
+        }
+        if let Some(user_agent) = args.user_agent {
+            entity_commands.insert(UserAgent(Some(user_agent)));
         }
         if let Some(theme) = args.theme {
             entity_commands.insert(theme);

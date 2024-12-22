@@ -36,6 +36,7 @@ fn spawn_webview(
 ) {
     commands.entity(window.single()).insert((
         WebviewUri::default(),
+        UseDevtools(true),
         ipc_handlers![
             count_up
         ],

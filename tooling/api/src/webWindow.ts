@@ -1,4 +1,4 @@
-import {invoke, PhysicalSize} from "./core";
+import {invoke, PhysicalPosition, PhysicalSize} from "./core";
 
 export type WindowMode = "fullscreen" | "borderless" | "windowed";
 
@@ -75,6 +75,49 @@ export class WebWindow {
             Reflect.deleteProperty(window.__FLURX__, prop);
         };
     };
+
+    /**
+     *  Returns the position of the window.
+     *
+     *  The position could be null value if window already not exists or the platform not supported.
+     *
+     *  @example
+     * import {WebWindow, PhysicalPosition} from "@bevy_flurx_wry/api";
+     *
+     * const position: PhysicalPosition | null = await WebWindow.current().innerPosition();
+     */
+    async innerPosition(): Promise<PhysicalPosition | null> {
+        return await invoke("FLURX|web_window::inner_position", this.identifier);
+    }
+
+    /**
+     *  Returns the position of the window.
+     *
+     *  The position could be null value if window already not exists or the platform not supported.
+     *
+     *  @example
+     * import {WebWindow, PhysicalPosition} from "@bevy_flurx_wry/api";
+     *
+     * const position: PhysicalPosition | null = await WebWindow.current().outerPosition();
+     */
+    async outerPosition(): Promise<PhysicalPosition | null> {
+        return await invoke("FLURX|web_window::outer_position", this.identifier);
+    }
+
+    /**
+     *  Sets the position of the window.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     * await WebWindow.current().setPosition({
+     *    x: 100,
+     *    y: 100,
+     * });
+     */
+    async setPosition(position: PhysicalPosition): Promise<void> {
+        await invoke("FLURX|web_window::set_position", [this.identifier, position]);
+    }
 
     async title(): Promise<string> {
         return await invoke("FLURX|web_window::title", this.identifier);

@@ -24,15 +24,15 @@ mod set_cursor_hit_test;
 mod un_maximize;
 mod un_minimize;
 mod create;
+mod set_position;
+mod inner_position;
+mod outer_position;
 
-use bevy::app::PluginGroupBuilder;
-use bevy::ecs::system::SystemParam;
-use bevy::prelude::{Entity, Mut, Name, NonSend, PluginGroup, Query, Window};
-use bevy::window::WindowWrapper;
-use bevy::winit::WinitWindows;
 pub use crate::web_window::center::WebWindowCenterPlugin;
+pub use crate::web_window::create::WebWindowCreatePlugin;
 pub use crate::web_window::focus::WebWindowFocusPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
+pub use crate::web_window::inner_position::WebWindowInnerPositionPlugin;
 pub use crate::web_window::inner_size::WebWindowInnerSizePlugin;
 pub use crate::web_window::is_decorated::WebWindowIsDecoratedPlugin;
 pub use crate::web_window::is_focused::WebWindowIsFocusedPlugin;
@@ -45,16 +45,22 @@ pub use crate::web_window::is_resizable::WebWindowIsResizablePlugin;
 pub use crate::web_window::is_visible::WebWindowIsVisiblePlugin;
 pub use crate::web_window::maximize::WebWindowMaximizePlugin;
 pub use crate::web_window::minimize::WebWindowMinimizePlugin;
+use crate::web_window::outer_position::WebWindowOuterPositionPlugin;
 pub use crate::web_window::set_cursor_hit_test::WebWindowSetCursorHitTestPlugin;
 use crate::web_window::set_decorations::WebWindowSetDecorationsPlugin;
+pub use crate::web_window::set_position::WebWindowSetPositionPlugin;
 use crate::web_window::set_window_mode::WebWindowSetWindowModePlugin;
 pub use crate::web_window::show::WebWindowShowPlugin;
 pub use crate::web_window::title::WebWindowTitlePlugin;
 pub use crate::web_window::un_focus::WebWindowUnFocusPlugin;
 pub use crate::web_window::un_maximize::WebWindowUnMaximizePlugin;
 pub use crate::web_window::un_minimize::WebWindowUnMinimizePlugin;
+use bevy::app::PluginGroupBuilder;
+use bevy::ecs::system::SystemParam;
+use bevy::prelude::{Entity, Mut, Name, NonSend, PluginGroup, Query, Window};
+use bevy::window::WindowWrapper;
+use bevy::winit::WinitWindows;
 use bevy_flurx_wry_core::prelude::ParentWindow;
-pub use crate::web_window::create::WebWindowCreatePlugin;
 
 /// Allows you to use all window plugins.
 ///
@@ -62,6 +68,9 @@ pub use crate::web_window::create::WebWindowCreatePlugin;
 ///
 /// - [WebWindowTitlePlugin]
 /// - [WebWindowCenterPlugin]
+/// - [WebWindowInnerPositionPlugin]
+/// - [WebWindowOuterPositionPlugin]
+/// - [WebWindowSetPositionPlugin]
 /// - [WebWindowHidePlugin]
 /// - [WebWindowShowPlugin]
 /// - [WebWindowInnerSizePlugin]
@@ -90,6 +99,9 @@ impl PluginGroup for AllWebWindowPlugins {
         PluginGroupBuilder::start::<Self>()
             .add(WebWindowTitlePlugin)
             .add(WebWindowCenterPlugin)
+            .add(WebWindowInnerPositionPlugin)
+            .add(WebWindowOuterPositionPlugin)
+            .add(WebWindowSetPositionPlugin)
             .add(WebWindowHidePlugin)
             .add(WebWindowShowPlugin)
             .add(WebWindowInnerSizePlugin)
