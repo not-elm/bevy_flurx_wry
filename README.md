@@ -188,7 +188,7 @@ This crate is licensed under the MIT License or the Apache License 2.0.
   - [x] path
   - [ ] shell
   - [x] monitor
-  - [ ] window
+  - [x] window
 - [ ] Security
   - [x] csp 
   - [ ] scope
