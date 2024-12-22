@@ -175,7 +175,8 @@ This crate is licensed under the MIT License or the Apache License 2.0.
 
 ## Todo
 - [ ] Bugfix
-  - [ ] the webview could be moved without dragging.
+  - [ ] The webview could be moved without dragging.
+  - [ ] `with_initialization_script` does not execute before `window.onload`
 - [ ] Api
   - [x] fs
   - [x] clipboard
