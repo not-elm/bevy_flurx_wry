@@ -1,12 +1,14 @@
 use crate::macros::api_plugin;
 use bevy::core::Name;
 use bevy::prelude::{Commands, In};
-use bevy::window::Window;
+use bevy::utils::default;
+use bevy::window::{Window, WindowResolution};
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Action;
 use bevy_flurx_ipc::command;
 use bevy_flurx_wry_core::prelude::{AutoPlay, BrowserAcceleratorKeys, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, UseDevtools, UseHttpsScheme, WebviewUri, WebviewVisible};
 use serde::Deserialize;
+use winit::dpi::PhysicalSize;
 
 api_plugin!(
     /// You'll be able to create the new webview window.
@@ -21,13 +23,35 @@ api_plugin!(
 );
 
 #[derive(Deserialize)]
+struct WindowResolutionArgs {
+    size: PhysicalSize<f32>,
+    #[serde(rename = "scaleFactorOverride")]
+    scale_factor_override: Option<f32>,
+}
+
+fn to_resolution(
+    resolution: Option<WindowResolutionArgs>,
+) -> WindowResolution {
+    resolution
+        .map(|r| {
+            let mut resolution = WindowResolution::new(r.size.width, r.size.height);
+            if let Some(scale_factor_override) = r.scale_factor_override {
+                resolution = resolution.with_scale_factor_override(scale_factor_override);
+            }
+            resolution
+        })
+        .unwrap_or_default()
+}
+
+#[derive(Deserialize)]
 struct Args {
     identifier: String,
     url: String,
+    resolution: Option<WindowResolutionArgs>,
     #[serde(rename = "autoPlay")]
     auto_play: Option<bool>,
     // TODO: works later
-    background: Option<String>,
+    _background: Option<String>,
     #[serde(rename = "browserAcceleratorKeys")]
     browser_accelerator_keys: Option<bool>,
     #[serde(rename = "useDevtools")]
@@ -49,11 +73,12 @@ struct Args {
 
 #[command(id = "FLURX|webWindow::create", internal)]
 fn create(In(args): In<Args>) -> Action<Args> {
-    once::run(|In(args): In<Args>,
-               mut commands: Commands,
-    | {
+    once::run(|In(args): In<Args>, mut commands: Commands, | {
         let mut entity_commands = commands.spawn((
-            Window::default(),
+            Window {
+                resolution: to_resolution(args.resolution),
+                ..default()
+            },
             WebviewUri::new(args.url),
             Name::new(args.identifier),
         ));

@@ -2,9 +2,15 @@ import {invoke, PhysicalSize} from "./core";
 
 export type WindowMode = "fullscreen" | "borderless" | "windowed";
 
+export interface WindowResolution {
+    size?: PhysicalSize,
+    scaleFactorOverride?: number,
+}
+
 export interface CreateWebWindowOptions {
     identifier: string,
     url: string,
+    resolution?: WindowResolution,
     autoPlay?: boolean,
     // TODO: works later
     background?: string,
