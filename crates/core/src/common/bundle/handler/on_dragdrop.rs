@@ -1,4 +1,4 @@
-use bevy_ecs::component::Component;
+use bevy::prelude::Component;
 use wry::DragDropEvent;
 
 pub(crate) type BoxedDragDropEventHandler = Box<dyn Fn(DragDropEvent) -> bool + Send + Sync>;

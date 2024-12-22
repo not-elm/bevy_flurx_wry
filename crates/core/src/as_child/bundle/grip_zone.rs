@@ -1,5 +1,5 @@
-use bevy_ecs::prelude::{Component, ReflectComponent};
-use bevy_reflect::prelude::{ReflectDefault, Reflect};
+use bevy::prelude::{Component, ReflectComponent};
+use bevy::prelude::{ReflectDefault, Reflect};
 
 /// `GripZone` specifies the height at which the webview can be gripped
 /// by a left-click.

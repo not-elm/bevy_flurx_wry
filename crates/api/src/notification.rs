@@ -1,8 +1,8 @@
 //! Provides the mechanism to access the system notification.
 
+use bevy::prelude::In;
 use crate::error::ApiResult;
 use crate::macros::api_plugin;
-use bevy_ecs::system::In;
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;

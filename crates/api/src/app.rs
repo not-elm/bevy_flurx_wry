@@ -1,7 +1,7 @@
 //! Provides mechanism to control the application such as reading metadata, exiting the application, etc.
 
 use crate::macros::api_plugin;
-use bevy_app::AppExit;
+use bevy::prelude::AppExit;
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::ActionSeed;
 use bevy_flurx_ipc::command;
@@ -68,11 +68,9 @@ fn exit() -> Action<AppExit, ()> {
 
 #[cfg(test)]
 mod tests {
-    use bevy_app::{Startup, Update};
-    use bevy_ecs::prelude::{Commands, In};
+    use bevy::prelude::*;
     use bevy_flurx::action::once;
     use bevy_flurx::prelude::{Pipe, Reactor};
-
     use crate::app::{get_name_action, AppExitApiPlugin, AppGetNameApiPlugin, AppGetVersionApiPlugin};
     use crate::tests::{assert_api_registered, test_app};
 

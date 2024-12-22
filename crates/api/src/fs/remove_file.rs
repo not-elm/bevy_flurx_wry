@@ -1,10 +1,10 @@
 use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
 use crate::macros::api_plugin;
-use bevy_ecs::system::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::path::PathBuf;
+use bevy::prelude::{In, Res};
 use crate::error::ApiResult;
 
 api_plugin!(
@@ -49,9 +49,7 @@ mod tests {
     use crate::fs::remove_file::{remove_file_system, Args};
     use crate::fs::AllowPaths;
     use crate::tests::test_app;
-    use bevy::utils::default;
-    use bevy_app::{Startup, Update};
-    use bevy_ecs::prelude::Commands;
+    use bevy::prelude::*;
     use bevy_flurx::action::once;
     use bevy_flurx::prelude::{Reactor, Then};
 

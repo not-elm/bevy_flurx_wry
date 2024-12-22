@@ -1,7 +1,6 @@
 //! Declares the [`AsChildBundle`] and associated components.
 
-use bevy_ecs::prelude::{Bundle, Component, Entity,ReflectComponent};
-use bevy_reflect::Reflect;
+use bevy::prelude::{Bundle, Component, Entity,ReflectComponent, Reflect};
 pub use bounds::Bounds;
 pub use grip_zone::GripZone;
 
@@ -18,7 +17,7 @@ mod grip_zone;
 /// ## Examples
 ///
 /// ```no_run
-/// use bevy_ecs::prelude::*;
+/// use bevy::prelude::*;
 /// use bevy::window::PrimaryWindow;
 /// use bevy_flurx_wry_core::prelude::*;
 ///
@@ -51,7 +50,6 @@ pub struct AsChildBundle {
     /// the height at which the webview can be gripped by a left-click.
     pub grip_zone: GripZone
 }
-
 
 /// The webview parent window.
 /// 

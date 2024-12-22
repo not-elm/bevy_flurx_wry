@@ -1,5 +1,4 @@
-use bevy_ecs::prelude::{Component, ReflectComponent};
-use bevy_reflect::prelude::{ReflectDefault, Reflect};
+use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
 use serde::{Deserialize, Serialize};
 
 /// Please see [`wry::WebViewBuilder::with_autoplay`] for details.

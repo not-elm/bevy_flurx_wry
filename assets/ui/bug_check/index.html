@@ -1,79 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="index.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        body, div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
 <div>
-    <button id="copy-file">copy file</button>
-    <img src="https://secure-dcdn.cdn.nimg.jp/nicoaccount/usericon/9749/97491199.jpg?1730550703"/>
-    <a href="./sample.txt" download="sample.txt">download sample.txt</a>
-    <div class="flex">
-        <button id="new-window">
-            new window
-        </button>
-        <button id="navigation">
-            navigation
-        </button>
-        <button id="navigation-remote">
-            navigation remote
-        </button>
-    </div>
-
-    <div>
-        <div class="flex">
-            <p>appName:</p>
-            <p id="appName"></p>
-        </div>
-
-        <div class="flex">
-            <p>appVersion:</p>
-            <p id="appVersion"></p>
-        </div>
-
-        <button id="exit-btn">
-            app::exit
-        </button>
-
-        <div class="flex">
-            <input id="println-message" type="text">
-            <button id="println-btn">println</button>
-        </div>
-    </div>
-
-    <script>
-        const sleep = (time) => new Promise(resolve => {
-            setTimeout(() => resolve(), time)
-        });
-        document.getElementById("copy-file").onclick = async () => {
-            await window.__FLURX__.dialog.save()
-        }
-        document.getElementById("navigation").onclick = () => {
-            window.location = "./second.html";
-        };
-        document.getElementById("navigation-remote").onclick = () => {
-            window.location = "https://developer.mozilla.org";
-        };
-        document.getElementById("new-window").onclick = () => {
-            window.open("./second.html")
-        };
-        document.getElementById("exit-btn").onclick = async () => {
-            await window.__FLURX__.app.exit();
-        };
-        const message = document.getElementById("println-message");
-        document.getElementById("println-btn").onclick = async () => {
-            window.__FLURX__.log.println(message.value);
-        };
-        (async () => {
-            document.getElementById("appName").innerText = await window.__FLURX__.app.getName();
-            document.getElementById("appVersion").innerText = await window.__FLURX__.app.getVersion();
-        })();
-        window.__FLURX__.listen("test_event", ({message}) => {
-            console.log(`event emitted ${message}`);
-        });
-    </script>
+    <button id="count-button">count up</button>
+    <h1 id="count">0</h1>
 </div>
+
+<script>
+    document.getElementById("count-button").onclick = async () => {
+        const count = await window.__FLURX__.invoke("count_up");
+        document.getElementById("count").innerText = count.toString();
+    };
+</script>
 </body>
 </html>

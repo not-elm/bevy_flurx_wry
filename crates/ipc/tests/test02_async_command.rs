@@ -1,7 +1,6 @@
 //! Testing to pass async ipc-commands to the `ipc_handlers!`.
 
-use bevy_app::prelude::Update;
-use bevy_ecs::prelude::In;
+use bevy::prelude::*;
 use bevy_flurx::action::{delay, once};
 use bevy_flurx::task::ReactorTask;
 use bevy_flurx_ipc::ipc_handlers;

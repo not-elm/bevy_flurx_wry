@@ -11,7 +11,7 @@ use crate::common::plugin::load_webview::LoadWebviewPlugin;
 use crate::common::plugin::visible::VisiblePlugin;
 use crate::common::{WebviewInitialized, WryWebViews};
 use crate::prelude::PassedUrl;
-use bevy_app::{App, Plugin};
+use bevy::prelude::{App, Plugin};
 use bevy_flurx_ipc::FlurxIpcPlugin;
 
 mod event_emitter;

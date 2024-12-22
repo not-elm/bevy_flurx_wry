@@ -1,12 +1,12 @@
 //! Provides mechanism to write and read the system clipboard.
 
-use bevy_app::{PluginGroup, PluginGroupBuilder};
 use crate::error::ApiResult;
-use bevy_ecs::prelude::In;
-use bevy_flurx::action::Action;
-use bevy_flurx::action::once;
-use bevy_flurx_ipc::command;
 use crate::macros::api_plugin;
+use bevy::app::PluginGroupBuilder;
+use bevy::prelude::{In, PluginGroup};
+use bevy_flurx::action::once;
+use bevy_flurx::action::Action;
+use bevy_flurx_ipc::command;
 
 
 /// Allows you to use all clipboard plugins.
@@ -16,7 +16,7 @@ use crate::macros::api_plugin;
 /// - [ClipboardGetTextPlugin]
 /// - [ClipboardSetTextPlugin]
 pub struct ClipboardPlugins;
-impl PluginGroup for ClipboardPlugins{
+impl PluginGroup for ClipboardPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(ClipboardSetTextPlugin)
@@ -48,13 +48,13 @@ api_plugin!(
     command: get_text
 );
 
-#[command(id="FLURX|clipboard::set_text", internal)]
-fn set_text(In(args): In<String>) -> Action<String, ApiResult>{
+#[command(id = "FLURX|clipboard::set_text", internal)]
+fn set_text(In(args): In<String>) -> Action<String, ApiResult> {
     once::run(set_text_system).with(args)
 }
 
-#[command(id="FLURX|clipboard::get_text", internal)]
-fn get_text() -> Action<(), ApiResult<String>>{
+#[command(id = "FLURX|clipboard::get_text", internal)]
+fn get_text() -> Action<(), ApiResult<String>> {
     once::run(get_text_system).with(())
 }
 
@@ -75,12 +75,11 @@ fn get_text_system() -> ApiResult<String> {
 #[cfg(test)]
 //noinspection DuplicatedCode
 mod tests {
+    use crate::clipboard::{get_text_system, set_text_system};
     use crate::tests::test_app;
-    use bevy_app::{Startup, Update};
-    use bevy_ecs::prelude::Commands;
+    use bevy::prelude::*;
     use bevy_flurx::action::once;
     use bevy_flurx::prelude::{Reactor, Then};
-    use crate::clipboard::{get_text_system, set_text_system};
 
     #[test]
     fn test_clipboard() {

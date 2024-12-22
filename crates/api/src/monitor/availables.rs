@@ -1,12 +1,10 @@
+use bevy::prelude::{Entity, In, NonSend, Query};
+use bevy::winit::WinitWindows;
 use crate::monitor::{Monitor, PhysicalPosition, PhysicalSize};
-use bevy_ecs::entity::Entity;
-use bevy_ecs::prelude::In;
-use bevy_ecs::system::{NonSend, Query};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::OmitInput;
 use bevy_flurx_ipc::command;
 use bevy_flurx_ipc::component::WebviewEntity;
-use bevy_winit::WinitWindows;
 use bevy_flurx_wry_core::prelude::ParentWindow;
 use crate::macros::api_plugin;
 

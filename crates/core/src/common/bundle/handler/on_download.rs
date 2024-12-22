@@ -1,5 +1,5 @@
 use std::path::PathBuf;
-use bevy_ecs::component::Component;
+use bevy::prelude::Component;
 use crate::common::bundle::handler::PassedUrl;
 
 pub(crate) type BoxedDownloadHandler = Box<dyn FnMut(PassedUrl, &mut PathBuf) -> bool + Send + Sync>;

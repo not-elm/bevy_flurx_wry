@@ -2,9 +2,7 @@
 
 use crate::as_child::plugin::AsChildPlugin;
 use crate::common::plugin::FlurxWryCommonPlugin;
-use bevy_app::{App, Plugin};
-use bevy_ecs::prelude::Resource;
-use bevy_reflect::Reflect;
+use bevy::prelude::{App, Plugin, Reflect, Resource};
 use std::path::PathBuf;
 
 pub mod as_child;
@@ -40,7 +38,8 @@ impl Default for FlurxWryPlugin {
 
 impl Plugin for FlurxWryPlugin {
     fn build(&self, app: &mut App) {
-        app.register_type::<WryLocalRoot>()
+        app
+            .register_type::<WryLocalRoot>()
             .insert_resource(WryLocalRoot(self.local_root.clone()))
             .add_plugins((FlurxWryCommonPlugin, AsChildPlugin));
     }

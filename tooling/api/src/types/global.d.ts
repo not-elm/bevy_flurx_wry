@@ -5,7 +5,6 @@ import {
     emit,
     fs,
     invoke,
-    listen,
     log,
     monitor,
     notification,
@@ -34,7 +33,6 @@ declare global {
             monitor: typeof monitor,
             WebWindow: typeof WebWindow,
             invoke: typeof invoke,
-            listen: typeof listen,
             emit: typeof emit,
         }
     }

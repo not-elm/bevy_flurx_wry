@@ -12,24 +12,17 @@ pub fn expand_action_command(
     let fn_ident = &f.sig.ident;
     let module_name = base_module(is_internal);
     let inputs = parse_action_command_inputs(f, &module_name);
-    _expand_action_command(is_internal, &module_name, quote! { #fn_ident(#(#inputs,)*) })
+    _expand_action_command(&module_name, quote! { #fn_ident(#(#inputs,)*) })
 }
 
 fn _expand_action_command(
-    is_internal: bool,
     module_name: &TokenStream2,
     f: TokenStream2,
 ) -> TokenStream2 {
-    let update_label = if is_internal {
-        quote! { bevy_app::prelude::Update }
-    } else {
-        quote! { bevy::prelude::Update}
-    };
-
     quote! {
         commands.spawn(bevy_flurx::prelude::Reactor::schedule(move |task| async move{
             use bevy_flurx::prelude::{Map, Pipe};
-            task.will(#update_label, #f
+            task.will(bevy::prelude::Update, #f
                 .map(move |output| #module_name IpcResolveEvent{
                     resolve_id: ipc_cmd.payload.resolve_id,
                     entity: ipc_cmd.entity,

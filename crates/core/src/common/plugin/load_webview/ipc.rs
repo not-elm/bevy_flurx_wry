@@ -1,5 +1,6 @@
-use bevy_ecs::prelude::{Entity, Res};
-use bevy_ecs::system::SystemParam;
+use bevy::ecs::system::SystemParam;
+use bevy::log::error;
+use bevy::prelude::{Entity, Res};
 use bevy_flurx_ipc::ipc_commands::{IpcCommand, IpcCommands, Payload};
 use bevy_flurx_ipc::prelude::{IpcRawEvent, IpcRawEventBody, IpcRawEvents};
 use serde::Deserialize;
@@ -42,7 +43,7 @@ impl IpcHandlerParams<'_> {
                     });
                 }
                 Err(e) => {
-                    bevy_log::error!("failed deserialize ipc message: {e}");
+                    error!("failed deserialize ipc message: {e}");
                 }
             }
         })

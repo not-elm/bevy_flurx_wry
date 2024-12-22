@@ -1,7 +1,7 @@
 use crate::error::ApiResult;
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
+use crate::fs::{error_if_not_accessible, join_path_if_need, AllowPaths, BaseDirectory};
 use crate::macros::api_plugin;
-use bevy_ecs::system::{In, Res};
+use bevy::prelude::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use serde::{Deserialize, Serialize};
@@ -72,9 +72,8 @@ fn read_dirs(path: &PathBuf) -> std::io::Result<Vec<FileEntry>> {
 mod tests {
     use crate::fs::read_dir::{read_dir_system, Args, FileEntry};
     use crate::tests::test_app;
+    use bevy::prelude::*;
     use bevy::utils::default;
-    use bevy_app::{Startup, Update};
-    use bevy_ecs::prelude::Commands;
     use bevy_flurx::action::once;
     use bevy_flurx::prelude::Reactor;
     use std::ffi::OsString;

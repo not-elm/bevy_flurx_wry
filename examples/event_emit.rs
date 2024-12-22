@@ -5,11 +5,13 @@ use bevy::window::PrimaryWindow;
 use bevy_flurx_wry::prelude::*;
 use std::path::PathBuf;
 use std::time::Duration;
+use bevy_flurx_wry_api::web_window::AllWebWindowPlugins;
 
 fn main() {
     App::new()
         .add_plugins((
             DefaultPlugins,
+            AllWebWindowPlugins,
             FlurxWryPlugin {
                 local_root: PathBuf::from("ui").join("event_emit")
             }
@@ -27,7 +29,10 @@ fn spawn_webview(
     mut commands: Commands,
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
-    commands.entity(window.single()).insert(WryWebViewBundle::default());
+    commands.entity(window.single()).insert(WryWebViewBundle{
+        use_devtools: UseDevtools(true),
+        ..default()
+    });
 }
 
 fn emit_event(

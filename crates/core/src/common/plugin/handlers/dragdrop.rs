@@ -1,11 +1,8 @@
 //! Controls dragdrop events.
 
 use crate::common::plugin::handlers::WryEvents;
-use bevy_app::{App, Plugin, PreUpdate};
-use bevy_math::IVec2;
-use bevy_ecs::prelude::{Entity, Event, EventWriter,Res};
+use bevy::prelude::{App, Entity, Event, EventWriter, IVec2, Plugin, PreUpdate, Reflect, Res};
 use std::path::PathBuf;
-use bevy_reflect::Reflect;
 use wry::DragDropEvent;
 
 /// Fired when a file or other item is dragged into the Webview.
@@ -60,7 +57,8 @@ pub(super) struct DragDropPlugin;
 
 impl Plugin for DragDropPlugin {
     fn build(&self, app: &mut App) {
-        app.register_type::<DragEntered>()
+        app
+            .register_type::<DragEntered>()
             .add_event::<DragEntered>()
             .register_type::<DragOver>()
             .add_event::<DragOver>()

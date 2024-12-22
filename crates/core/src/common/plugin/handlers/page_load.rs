@@ -2,9 +2,7 @@
 
 use crate::common::plugin::handlers::RegisterWryEvent;
 use crate::prelude::PassedUrl;
-use bevy_reflect::Reflect;
-use bevy_app::{App, Plugin};
-use bevy_ecs::prelude::{Entity, Event};
+use bevy::prelude::{App, Entity, Event, Plugin, Reflect};
 
 /// Indicates that the content of the page has started loading
 #[derive(Event, Clone, Debug, Reflect)]
@@ -30,7 +28,8 @@ pub(super) struct PageLoadPlugin;
 
 impl Plugin for PageLoadPlugin {
     fn build(&self, app: &mut App) {
-        app.register_wry_event::<PageLoadStarted>()
+        app
+            .register_wry_event::<PageLoadStarted>()
             .register_wry_event::<PageLoadFinished>();
     }
 }

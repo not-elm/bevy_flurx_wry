@@ -17,11 +17,15 @@
 <h1 id="message">count: 0</h1>
 
 <script>
-    const messageTxt = document.getElementById("message");
-    window.__FLURX__.listen("count_event", (event) => {
-        console.log(event);
-        messageTxt.innerText = `count: ${event.count}`;
-    });
+    // なぜか初期化スクリプトが遅延実行される
+    setTimeout(() => {
+        const messageTxt = document.getElementById("message");
+        const webviewWindow = window.__FLURX__.WebWindow.current()
+        webviewWindow.listen("count_event", (event) => {
+            console.log(event);
+            messageTxt.innerText = `count: ${event.count}`;
+        });
+    }, 2000)
 </script>
 
 </body>

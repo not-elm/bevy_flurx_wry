@@ -1,8 +1,7 @@
 //! Declares the [`WryWebViewBundle`] and associated components.
 
-use bevy_ecs::prelude::Bundle;
+use bevy::prelude::Bundle;
 use bevy_flurx_ipc::prelude::IpcHandlers;
-
 pub use crate::common::bundle::handler::*;
 pub use auto_play::AutoPlay;
 pub use background::Background;

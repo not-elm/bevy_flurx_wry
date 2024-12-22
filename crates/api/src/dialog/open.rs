@@ -1,11 +1,11 @@
 use crate::fs::AllowPaths;
 use crate::macros::api_plugin;
-use bevy_ecs::system::{In, ResMut};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
 use rfd::FileDialog;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
+use bevy::prelude::{In, ResMut};
 use crate::dialog::DialogFilter;
 
 api_plugin!(

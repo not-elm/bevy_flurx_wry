@@ -10,11 +10,8 @@ use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
 use crate::prelude::csp::Csp;
 use crate::WryLocalRoot;
-use bevy_app::{App, Plugin, PreUpdate};
-use bevy_core::Name;
-use bevy_ecs::prelude::{Commands, Entity, NonSend, NonSendMut, Or, Query, Res, With, Without};
-use bevy_window::Window;
-use bevy_winit::WinitWindows;
+use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
+use bevy::winit::WinitWindows;
 use rand::distributions::DistString;
 use std::ops::Deref;
 use wry::{WebView, WebViewBuilder};
@@ -122,7 +119,7 @@ fn feed_configs1<'a>(
         Background::Unspecified => builder,
         Background::Transparent => builder.with_transparent(true),
         Background::Color(color) => {
-            use bevy_color::ColorToPacked;
+            use bevy::prelude::ColorToPacked;
             let rgba = color.to_srgba().to_u8_array();
             builder.with_background_color((rgba[0], rgba[1], rgba[2], rgba[3]))
         }
@@ -148,9 +145,9 @@ fn feed_configs2<'a>(
         .with_focused(focused.0)
         .with_hotkeys_zoom(hotkeys_zoom.0)
         .with_initialization_script(&format!(
-            "{}{}{}",
+            "console.log(\"START\");{};{}",
             include_str!("../../../scripts/api.js"),
-            include_str!("../../../scripts/gripZone.js"),
+            // include_str!("../../../scripts/gripZone.js"),
             include_str!("../../../scripts/windowIdentifier.js").replace("<WINDOW_IDENTIFIER>", &identifier),
         ));
     if let Some(user_agent) = user_agent.0.as_ref() {

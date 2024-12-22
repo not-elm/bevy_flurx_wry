@@ -1,11 +1,10 @@
 //! Defines the ipc commands and the queue to execute them.
 
-use bevy_app::{App, Plugin, PreUpdate};
-use bevy_ecs::prelude::{Entity, Event, EventWriter, IntoSystemConfigs, Res, Resource};
-use bevy_utils::HashMap;
+use bevy::prelude::{error, App, Entity, Event, EventWriter, IntoSystemConfigs, Plugin, PreUpdate, Res, Resource};
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use std::sync::{Arc, Mutex};
+use bevy::utils::HashMap;
 
 /// The event sent from webview.
 ///
@@ -104,7 +103,7 @@ impl IpcEventExt for App {
                         });
                     }
                     Err(e) => {
-                        bevy_log::error!("Failed ipc event deserialize event_id={event_id}: {e}");
+                        error!("Failed ipc event deserialize event_id={event_id}: {e}");
                     }
                 },
             ),

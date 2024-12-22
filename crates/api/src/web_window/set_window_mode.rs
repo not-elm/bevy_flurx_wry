@@ -1,8 +1,8 @@
 use crate::macros::api_plugin;
 use crate::web_window::WebWinitWindowParams;
-use bevy_ecs::prelude::In;
+use bevy::prelude::{In, MonitorSelection};
+use bevy::window::WindowMode;
 use bevy_flurx::action::{once, Action};
-use bevy_window::{MonitorSelection, WindowMode};
 use serde::Deserialize;
 use bevy_flurx_ipc::command;
 

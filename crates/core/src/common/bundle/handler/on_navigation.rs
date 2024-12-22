@@ -1,4 +1,4 @@
-use bevy_ecs::component::Component;
+use bevy::prelude::Component;
 use crate::common::bundle::handler::PassedUrl;
 
 pub(crate) type BoxedNavigateHandler = Box<dyn Fn(PassedUrl) -> bool + Send + Sync + 'static>;

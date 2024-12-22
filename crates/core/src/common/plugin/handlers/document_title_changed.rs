@@ -1,9 +1,7 @@
 //! Controls document title change events.
 
 use crate::common::plugin::handlers::RegisterWryEvent;
-use bevy_reflect::Reflect;
-use bevy_app::{App, Plugin};
-use bevy_ecs::prelude::{Entity, Event};
+use bevy::prelude::{App, Entity, Event, Plugin, Reflect};
 
 /// Fired when the document title is changed.
 ///

@@ -1,10 +1,8 @@
 //! Defines a handler that executes the [`Action`](bevy_flurx::prelude::Action) of the command.
 
 use crate::ipc_commands::IpcCommand;
-use bevy_ecs::prelude::{Component, Entity};
-use bevy_ecs::system::Commands;
-use bevy_reflect::Reflect;
-use bevy_utils::HashMap;
+use bevy::prelude::{Commands, Component, Entity, Reflect};
+use bevy::utils::HashMap;
 
 /// The ipc invoke handlers.
 ///

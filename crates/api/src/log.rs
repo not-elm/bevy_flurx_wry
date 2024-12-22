@@ -1,9 +1,7 @@
 //! Provides mechanism to output the logs.
 
-use bevy_app::{App, Plugin, PostUpdate};
-use bevy_ecs::prelude::EventReader;
+use bevy::prelude::{App, EventReader, Plugin, PostUpdate};
 use serde::Deserialize;
-
 use bevy_flurx_ipc::ipc_events::IpcEventExt;
 use bevy_flurx_ipc::prelude::IpcEvent;
 
@@ -18,7 +16,8 @@ pub struct LogPrintlnApiPlugin;
 
 impl Plugin for LogPrintlnApiPlugin {
     fn build(&self, app: &mut App) {
-        app.add_ipc_event::<RequestPrintln>("FLURX|log::println")
+        app
+            .add_ipc_event::<RequestPrintln>("FLURX|log::println")
             .add_systems(PostUpdate, println_event);
     }
 }

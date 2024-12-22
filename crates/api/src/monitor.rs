@@ -4,12 +4,12 @@ mod availables;
 mod current;
 mod primary;
 
-use bevy_app::{PluginGroup, PluginGroupBuilder};
-use serde::Serialize;
-
 pub use crate::monitor::availables::MonitorAvailablesPlugin;
 pub use crate::monitor::current::MonitorCurrentPlugin;
 pub use crate::monitor::primary::MonitorPrimaryPlugin;
+use bevy::app::PluginGroupBuilder;
+use bevy::prelude::PluginGroup;
+use serde::Serialize;
 
 /// Allows  you to use all monitor plugins.
 ///

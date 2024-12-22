@@ -1,9 +1,8 @@
-use bevy_app::{App, Plugin};
-
 use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
-use crate::as_child::CurrentMoving;
-use crate::as_child::plugin::resize::ResizePlugin;
 use crate::as_child::plugin::grip_zone::GripZonePlugin;
+use crate::as_child::plugin::resize::ResizePlugin;
+use crate::as_child::CurrentMoving;
+use bevy::prelude::{App, Plugin};
 
 mod resize;
 mod grip_zone;

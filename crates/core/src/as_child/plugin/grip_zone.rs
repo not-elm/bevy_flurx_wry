@@ -4,17 +4,13 @@ use crate::common::WryWebViews;
 use crate::prelude::{DragEntered, EventEmitter, GripZone};
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::util::WryResultLog;
-use bevy_app::{App, Plugin, Update};
-use bevy_ecs::prelude::{
-    on_event, Changed, Commands, Condition, Entity, EventReader, IntoSystemConfigs, NonSend, Query,
-    With,
+use bevy::input::common_conditions::input_just_released;
+use bevy::prelude::{
+    on_event, App, Changed, Commands, Condition, Entity, EventReader, IVec2, IntoSystemConfigs,
+    MouseButton, NonSend, Plugin, Query, Update, Vec2, Window, With,
 };
+use bevy::winit::WinitWindows;
 use bevy_flurx_ipc::ipc_events::{IpcEvent, IpcEventExt};
-use bevy_input::common_conditions::input_just_released;
-use bevy_input::mouse::MouseButton;
-use bevy_math::{IVec2, Vec2};
-use bevy_window::Window;
-use bevy_winit::WinitWindows;
 use mouse_rs::Mouse;
 use serde::Deserialize;
 use wry::raw_window_handle::HasWindowHandle;
@@ -33,8 +29,7 @@ impl Plugin for GripZonePlugin {
                 Update,
                 (
                     move_webview,
-                    all_remove_current_moving
-                        .run_if(input_just_released(MouseButton::Left).or(on_event::<DragEntered>)),
+                    all_remove_current_moving.run_if(input_just_released(MouseButton::Left).or(on_event::<DragEntered>)),
                     resize_grip_zone,
                     grip_zone_grab,
                     grip_zone_release,
@@ -109,7 +104,7 @@ struct OnGripGrab {
 fn grip_zone_grab(
     mut er: EventReader<IpcEvent<OnGripGrab>>,
     mut commands: Commands,
-    webviews: NonSend<WryWebViews>,
+    web_views: NonSend<WryWebViews>,
     winit_windows: NonSend<WinitWindows>,
     views: Query<&ParentWindow>,
 ) {
@@ -118,7 +113,7 @@ fn grip_zone_grab(
         commands
             .entity(event.webview_entity)
             .insert(CurrentMoving(Vec2::new(pos.x, pos.y)));
-        let Some(_webview) = webviews.0.get(&event.webview_entity) else {
+        let Some(_webview) = web_views.0.get(&event.webview_entity) else {
             continue;
         };
         let Some(window_handle) = views
@@ -160,9 +155,7 @@ fn grip_zone_release(mut er: EventReader<IpcEvent<OnGripRelease>>, mut commands:
 
 #[cfg(test)]
 mod tests {
-    use bevy_math::Vec2;
-    use bevy_utils::default;
-
+    use bevy::prelude::*;
     use crate::as_child::plugin::grip_zone::move_bounds;
     use crate::prelude::Bounds;
 

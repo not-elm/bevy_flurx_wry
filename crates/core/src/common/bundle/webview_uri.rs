@@ -1,7 +1,6 @@
 use std::path::{Path, PathBuf};
-
-use bevy_ecs::prelude::{Component, ReflectComponent};
-use bevy_reflect::prelude::{ReflectDefault, Reflect};
+use bevy::prelude::{Component, ReflectComponent};
+use bevy::prelude::{ReflectDefault, Reflect};
 use serde::{Deserialize, Serialize};
 
 /// Represents the display destination of webview.

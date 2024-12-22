@@ -1,14 +1,5 @@
 //! Controls `wry` event handlers.
 
-use std::sync::{Arc, Mutex};
-
-use bevy_app::{App, Plugin, PreUpdate};
-use bevy_ecs::prelude::{Entity, Event, EventWriter, Mut, Res, Resource};
-use bevy_ecs::system::SystemParam;
-use bevy_reflect::GetTypeRegistration;
-use bevy_window::Window;
-use wry::{PageLoadEvent, WebViewBuilder};
-
 use crate::common::plugin::handlers::document_title_changed::{
     DocumentTitleChanged, DocumentTitlePlugin,
 };
@@ -24,6 +15,11 @@ use crate::common::plugin::handlers::page_load::{
     PageLoadFinished, PageLoadPlugin, PageLoadStarted,
 };
 use crate::prelude::{OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest, PassedUrl};
+use bevy::ecs::system::SystemParam;
+use bevy::prelude::{App, Entity, Event, EventWriter, Mut, Plugin, PreUpdate, Res, Resource, Window};
+use bevy::reflect::GetTypeRegistration;
+use std::sync::{Arc, Mutex};
+use wry::{PageLoadEvent, WebViewBuilder};
 
 pub mod document_title_changed;
 pub mod download;

@@ -1,10 +1,7 @@
 //! Controls download events.
 
 use std::path::PathBuf;
-
-use bevy_app::{App, Plugin};
-use bevy_ecs::prelude::{Entity, Event};
-use bevy_reflect::Reflect;
+use bevy::prelude::{App, Entity, Event, Plugin, Reflect};
 use crate::common::plugin::handlers::RegisterWryEvent;
 use crate::prelude::PassedUrl;
 
@@ -24,7 +21,6 @@ pub struct DownloadStarted {
     pub dest: PathBuf,
 }
 
-
 /// Fired when the download completes, whether it was successful or not.
 ///
 /// Please see [`wry::WebViewBuilder::with_download_completed_handler`] for detail.
@@ -42,7 +38,6 @@ pub struct DownloadCompleted {
     /// Whether download succeed or not.
     pub succeed: bool,
 }
-
 
 pub(super) struct DownloadPlugin;
 

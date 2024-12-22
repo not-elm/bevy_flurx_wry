@@ -1,8 +1,5 @@
-use bevy_app::{App, Plugin, Update};
-use bevy_ecs::prelude::{EventReader, NonSendMut};
-
+use bevy::prelude::{EventReader, NonSendMut, App, Plugin, Update};
 use bevy_flurx_ipc::prelude::IpcResolveEvent;
-
 use crate::common::plugin::WryWebViews;
 
 pub struct IpcResolvePlugin;

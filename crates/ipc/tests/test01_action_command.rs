@@ -1,6 +1,6 @@
 //!  Testing to define `ipc-command` via macro.
 
-use bevy_ecs::system::In;
+use bevy::prelude::*;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::{Action, ActionSeed};
 use bevy_flurx_ipc::ipc_handlers;

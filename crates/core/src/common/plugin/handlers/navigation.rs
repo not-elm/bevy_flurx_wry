@@ -2,9 +2,7 @@
 
 use crate::common::plugin::handlers::RegisterWryEvent;
 use crate::prelude::PassedUrl;
-use bevy_reflect::Reflect;
-use bevy_app::{App, Plugin};
-use bevy_ecs::prelude::{Entity, Event};
+use bevy::prelude::{Entity, Event, App, Plugin, Reflect};
 
 /// The event is fired when [`OnNavigation`](crate::prelude::OnNavigation) returns `true`.
 #[derive(Clone, Debug, Event, Reflect)]

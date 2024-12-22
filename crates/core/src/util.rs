@@ -1,3 +1,5 @@
+use bevy::log::error;
+
 pub(crate) trait WryResultLog {
     fn output_log_if_failed(self);
 }
@@ -5,7 +7,7 @@ pub(crate) trait WryResultLog {
 impl<T> WryResultLog for wry::Result<T> {
     fn output_log_if_failed(self) {
         if let Err(e) = self {
-            bevy_log::error!("{e}");
+            error!("{e}");
         }
     }
 }

@@ -11,10 +11,6 @@ mod remove_dir;
 mod read_dir;
 
 use crate::error::{ApiError, ApiResult, NotPermittedPath};
-use bevy_ecs::prelude::ReflectResource;
-use bevy_ecs::system::{Res, Resource};
-use bevy_reflect::prelude::ReflectDefault;
-use bevy_reflect::Reflect;
 pub use copy_file::FsCopyFilePlugin;
 pub use create_dir::FsCreateDirPlugin;
 pub use exists::FsExistsPlugin;
@@ -25,6 +21,7 @@ pub use remove_file::FsRemoveFilePlugin;
 pub use rename_file::FsRenameFilePlugin;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
+use bevy::prelude::{Res, Resource, ReflectResource, Reflect, ReflectDefault};
 pub use write_file::{FsWriteBinaryFilePlugin, FsWriteTextFilePlugin};
 
 /// Represents the list of the paths accessible from [crate::fs] api.

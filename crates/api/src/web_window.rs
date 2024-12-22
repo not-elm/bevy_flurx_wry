@@ -24,6 +24,11 @@ mod set_cursor_hit_test;
 mod un_maximize;
 mod un_minimize;
 
+use bevy::app::PluginGroupBuilder;
+use bevy::ecs::system::SystemParam;
+use bevy::prelude::{Entity, Mut, Name, NonSend, PluginGroup, Query, Window};
+use bevy::window::WindowWrapper;
+use bevy::winit::WinitWindows;
 pub use crate::web_window::center::WebWindowCenterPlugin;
 use crate::web_window::focus::WebWindowFocusPlugin;
 pub use crate::web_window::hide::WebWindowHidePlugin;
@@ -47,14 +52,7 @@ pub use crate::web_window::title::WebWindowTitlePlugin;
 use crate::web_window::un_focus::WebWindowUnFocusPlugin;
 use crate::web_window::un_maximize::WebWindowUnMaximizePlugin;
 use crate::web_window::un_minimize::WebWindowUnMinimizePlugin;
-use bevy_app::{PluginGroup, PluginGroupBuilder};
-use bevy_core::Name;
-use bevy_ecs::prelude::{Entity, NonSend, Query};
-use bevy_ecs::system::SystemParam;
-use bevy_ecs::world::Mut;
 use bevy_flurx_wry_core::prelude::ParentWindow;
-use bevy_window::{Window, WindowWrapper};
-use bevy_winit::WinitWindows;
 
 /// Allows you to use all window plugins.
 ///
@@ -120,12 +118,11 @@ struct WebWinitWindowParams<'w, 's> {
         Option<&'static mut Window>,
         Option<&'static ParentWindow>,
     )>,
-
     windows: NonSend<'w, WinitWindows>,
 }
 
 impl WebWinitWindowParams<'_, '_> {
-    fn bevy_window_mut(&mut self, identifier: &str) -> Option<Mut<bevy_window::Window>> {
+    fn bevy_window_mut(&mut self, identifier: &str) -> Option<Mut<Window>> {
         let entity = self.entity(identifier)?;
         self.views.get_mut(entity).ok().and_then(|query| query.2)
     }

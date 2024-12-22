@@ -1,9 +1,9 @@
 use crate::common::bundle::{IsOpenDevtools, UseDevtools};
 use crate::common::plugin::WryWebViews;
-use bevy_reflect::Reflect;
-use bevy_app::{App, Plugin, PostUpdate};
-use bevy_ecs::prelude::{
-    Commands, Component, DetectChanges, Entity, NonSend, Query, ReflectComponent,
+use bevy::prelude::{
+    App, Commands, Component, DetectChanges, Entity, NonSend, Plugin,
+    PostUpdate, Query, Reflect,
+    ReflectComponent,
 };
 
 pub struct DevtoolsPlugin;

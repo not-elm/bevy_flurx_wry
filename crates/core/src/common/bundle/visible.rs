@@ -1,6 +1,4 @@
-use bevy_ecs::prelude::{Component, ReflectComponent};
-use bevy_reflect::prelude::ReflectDefault;
-use bevy_reflect::Reflect;
+use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
 use serde::{Deserialize, Serialize};
 
 

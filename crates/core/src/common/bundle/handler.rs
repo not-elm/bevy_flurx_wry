@@ -1,4 +1,4 @@
-use bevy_reflect::Reflect;
+use bevy::prelude::Reflect;
 pub use on_download::*;
 pub use on_dragdrop::*;
 pub use on_navigation::*;

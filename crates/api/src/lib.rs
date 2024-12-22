@@ -50,12 +50,12 @@ mod macros {
         ) => {
             $(#[$meta])*
             pub struct $plugin_name;
-            impl bevy_app::prelude::Plugin for $plugin_name{
-                fn build(&self, app: &mut bevy_app::prelude::App) {
-                    use bevy_ecs::prelude::{Added, Query};
+            impl bevy::prelude::Plugin for $plugin_name{
+                fn build(&self, app: &mut bevy::prelude::App) {
+                    use bevy::prelude::{Added, Query};
                     use bevy_flurx_ipc::prelude::IpcHandlers;
                     use bevy_flurx_wry_core::prelude::WebviewInitialized;
-                    app.add_systems(bevy_app::prelude::PostUpdate, |mut views: Query<&mut IpcHandlers, Added<WebviewInitialized>>|{
+                    app.add_systems(bevy::prelude::PostUpdate, |mut views: Query<&mut IpcHandlers, Added<WebviewInitialized>>|{
                         for mut handlers in views.iter_mut(){ 
                             handlers.register($api_command());
                         } 
@@ -72,8 +72,7 @@ mod macros {
 #[cfg(test)]
 mod tests {
     use bevy::ecs::system::RunSystemOnce;
-    use bevy_app::{App, Plugin, Startup};
-    use bevy_ecs::prelude::{Commands, Query};
+    use bevy::prelude::*;
     use bevy_flurx_ipc::component::IpcHandlers;
     use bevy_flurx_ipc::FlurxIpcPlugin;
     use bevy_flurx_wry_core::common::WebviewInitialized;

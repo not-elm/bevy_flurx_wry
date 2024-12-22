@@ -1,12 +1,10 @@
 //! This library facilitates communication between the `webview` and `bevy`.
 
-use bevy_app::{App, Plugin};
-use bevy_flurx::FlurxPlugin;
-
-pub use bevy_flurx_ipc_macro::command;
-
+use bevy::prelude::{App, Plugin};
 use crate::ipc_commands::FlurxIpcCommandPlugin;
 use crate::prelude::FlurxIpcEventPlugin;
+use bevy_flurx::FlurxPlugin;
+pub use bevy_flurx_ipc_macro::command;
 
 pub mod component;
 pub mod ipc_commands;

@@ -7,11 +7,11 @@ mod system_name;
 mod host_name;
 mod locale;
 
+use bevy::app::PluginGroupBuilder;
+use bevy::prelude::PluginGroup;
 use crate::macros::api_plugin;
-use bevy_app::{PluginGroup, PluginGroupBuilder};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::command;
-
 pub use crate::os::family::OsFamilyPlugin;
 pub use crate::os::host_name::OsHostNamePlugin;
 pub use crate::os::os_version::{OsVersionPlugin, OsLongVersionPlugin};

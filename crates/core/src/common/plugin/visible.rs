@@ -1,9 +1,7 @@
 use crate::common::bundle::WebviewVisible;
 use crate::common::plugin::WryWebViews;
 use crate::util::WryResultLog;
-use bevy_app::{App, Plugin, Update};
-use bevy_ecs::entity::Entity;
-use bevy_ecs::prelude::{Changed, NonSend, Query};
+use bevy::prelude::{Changed, Entity, NonSend, Query, App, Plugin, Update};
 
 pub struct VisiblePlugin;
 

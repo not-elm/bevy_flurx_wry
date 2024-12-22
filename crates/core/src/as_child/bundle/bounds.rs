@@ -1,10 +1,10 @@
-use bevy_math::{Rect, Vec2};
-use bevy_ecs::prelude::{Component, ReflectComponent};
-use bevy_reflect::prelude::{ReflectDefault, Reflect};
 use crate::as_child::bundle::resize::ResizeMode;
+use bevy::prelude::{Component, ReflectComponent};
+use bevy::prelude::{Rect, Vec2};
+use bevy::prelude::{Reflect, ReflectDefault};
 
 /// Represents the display area of a webview within the parent [`Window`](bevy::prelude::Window).
-/// 
+///
 /// All data in the field is represented by logical pixels.
 #[derive(Component, PartialEq, Reflect, Default, Debug, Copy, Clone)]
 #[reflect(Component, Default)]
@@ -111,11 +111,9 @@ impl Bounds {
 
 #[cfg(test)]
 mod tests {
-    use bevy_math::Vec2;
-    use bevy_utils::default;
-
     use crate::as_child::bundle::Bounds;
     use crate::prelude::resize::ResizeMode;
+    use bevy::prelude::*;
 
     #[test]
     fn expand_from_left() {

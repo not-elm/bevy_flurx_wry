@@ -1,13 +1,13 @@
-use crate::fs::{error_if_not_accessible, join_path_if_need, BaseDirectory, AllowPaths};
+use crate::error::ApiResult;
+use crate::fs::{error_if_not_accessible, join_path_if_need, AllowPaths, BaseDirectory};
 use crate::macros::api_plugin;
-use bevy_ecs::system::{In, Res};
+use bevy::prelude::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::Pipe;
 use bevy_flurx_ipc::command;
 use serde::Deserialize;
 use std::io::Write;
 use std::path::PathBuf;
-use crate::error::ApiResult;
 
 api_plugin!(
     /// You'll be able to write a file from typescript(or js).
@@ -112,9 +112,8 @@ fn write_file_system(
 mod tests {
     use crate::fs::write_file::{write_file_system, BinaryFileArgs};
     use crate::tests::test_app;
+    use bevy::prelude::*;
     use bevy::utils::default;
-    use bevy_app::{Startup, Update};
-    use bevy_ecs::prelude::Commands;
     use bevy_flurx::action::once;
     use bevy_flurx::prelude::Reactor;
 

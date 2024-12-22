@@ -1,12 +1,34 @@
 import {invoke, PhysicalSize} from "./core";
 
-export type WindowMode =  "fullscreen" | "borderless" | "windowed";
+export type WindowMode = "fullscreen" | "borderless" | "windowed";
 
 export class WebWindow {
     private constructor(
         private readonly identifier: string,
     ) {
     }
+
+    /**
+     *  Listen the event where from bevy process.
+     *
+     *  @example
+     * import {WebWindow} from "@bevy_flurx_wry/api";
+     *
+     * await WebWindow.current().listen("eventId", (e) => {
+     *    console.log(e);
+     * });
+     */
+    listen<E>(eventId: string, f: (event: E) => void) {
+        const prop = `_event_${this.identifier}_${eventId}`;
+        Object.defineProperty(window.__FLURX__, prop, {
+            value: f,
+            writable: false,
+            configurable: true
+        })
+        return () => {
+            Reflect.deleteProperty(window.__FLURX__, prop);
+        };
+    };
 
     async title(): Promise<string> {
         return await invoke("FLURX|web_window::title", this.identifier);
@@ -202,7 +224,7 @@ export class WebWindow {
         await invoke("FLURX|web_window::minimize", this.identifier);
     }
 
-     /**
+    /**
      *  UnMinimizes the window.
      *
      *  @example
@@ -238,7 +260,7 @@ export class WebWindow {
         await invoke("FLURX|web_window::focus", this.identifier);
     }
 
-     /**
+    /**
      *  UnFocus the window.
      *
      *  @example
@@ -262,7 +284,7 @@ export class WebWindow {
         await invoke("FLURX|web_window::set_window_mode", [this.identifier, mode]);
     }
 
-     /**
+    /**
      *  Modifies whether the window catches cursor events.
      *
      *  @example
@@ -278,3 +300,4 @@ export class WebWindow {
         return new WebWindow(window.__FLURX__.windowIdentifier);
     }
 }
+

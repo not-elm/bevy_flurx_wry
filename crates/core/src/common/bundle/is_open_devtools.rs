@@ -1,5 +1,5 @@
-use bevy_ecs::prelude::{Component, ReflectComponent};
-use bevy_reflect::prelude::{ReflectDefault, Reflect};
+use bevy::prelude::{Component, ReflectComponent};
+use bevy::prelude::{ReflectDefault, Reflect};
 use serde::{Deserialize, Serialize};
 
 /// Controls opening and closing the webview devtools.

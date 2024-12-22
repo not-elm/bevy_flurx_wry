@@ -12,19 +12,14 @@ pub fn expand_async_command(
     let fn_ident = &f.sig.ident;
     let module_name = base_module(is_internal);
     let inputs = parse_async_command_inputs(f, &module_name);
-    expand_call(is_internal, &module_name, quote! { #fn_ident(#(#inputs,)*).await; })
+    expand_call(&module_name, quote! { #fn_ident(#(#inputs,)*).await; })
 }
 
-fn expand_call(is_internal: bool, module_name: &TokenStream2, f: TokenStream2) -> TokenStream2 {
-    let update_label = if is_internal {
-        quote! { bevy_app::prelude::Update }
-    } else {
-        quote! { bevy::prelude::Update}
-    };
+fn expand_call(module_name: &TokenStream2, f: TokenStream2) -> TokenStream2 {
     quote! {
         commands.spawn(bevy_flurx::prelude::Reactor::schedule(move |task| async move{
             let output = #f
-            task.will(#update_label, bevy_flurx::prelude::once::event::send().with(#module_name IpcResolveEvent{
+            task.will(bevy::prelude::Update, bevy_flurx::prelude::once::event::send().with(#module_name IpcResolveEvent{
                     resolve_id: ipc_cmd.payload.resolve_id,
                     entity: ipc_cmd.entity,
                     output: #module_name to_string(output),

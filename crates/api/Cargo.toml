@@ -17,17 +17,12 @@ clipboard = ["dep:arboard"]
 dialog = ["dep:rfd", "fs"]
 notification = ["dep:notify-rust"]
 os = ["dep:sysinfo", "dep:sys-locale"]
-monitor = ["dep:bevy_winit"]
-window = ["dep:winit", "dep:bevy_window", "dep:bevy_core"]
+monitor = []
+window = ["dep:winit"]
 
 [dependencies]
-bevy_app = { workspace = true }
-bevy_ecs = { workspace = true }
+bevy = { workspace = true }
 bevy_flurx = { workspace = true }
-bevy_reflect = { workspace = true }
-bevy_core = { workspace = true, optional = true }
-bevy_window = { workspace = true, optional = true }
-bevy_winit = { workspace = true, optional = true }
 bevy_flurx_ipc = { path = "../ipc", version = "0.1.0-alpha1" }
 bevy_flurx_wry_core = { path = "../core", version = "0.1.0-alpha1" }
 serde = { workspace = true }

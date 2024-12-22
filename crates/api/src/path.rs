@@ -2,12 +2,12 @@
 
 use crate::fs::{error_if_not_accessible, AllowPaths};
 use crate::macros::api_plugin;
-use bevy_app::{PluginGroup, PluginGroupBuilder};
-use bevy_ecs::system::Res;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::ActionSeed;
 use bevy_flurx_ipc::command;
 use std::path::PathBuf;
+use bevy::app::PluginGroupBuilder;
+use bevy::prelude::{PluginGroup, Res};
 
 /// Allows you to use all path api plugins.
 ///

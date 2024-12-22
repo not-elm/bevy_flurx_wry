@@ -1,6 +1,5 @@
-use bevy_reflect::Reflect;
-use bevy_ecs::prelude::Component;
-use bevy_window::SystemCursorIcon;
+use bevy::prelude::{Component, Reflect};
+use bevy::window::SystemCursorIcon;
 
 
 #[derive(Component, Reflect, Eq, PartialEq, Debug, Copy, Clone)]

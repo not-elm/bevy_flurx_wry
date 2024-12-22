@@ -3,9 +3,9 @@
 mod open;
 mod save;
 
+use bevy::app::PluginGroupBuilder;
+use bevy::prelude::{In, PluginGroup};
 use crate::macros::api_plugin;
-use bevy_app::{PluginGroup, PluginGroupBuilder};
-use bevy_ecs::system::In;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Action;
 use bevy_flurx_ipc::command;

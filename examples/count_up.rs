@@ -20,6 +20,7 @@ fn main() {
                 }),
                 ..default()
             }),
+            FlurxPlugin,
             FlurxWryPlugin {
                 local_root: PathBuf::from("ui").join("count_up")
             }

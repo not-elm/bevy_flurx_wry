@@ -79,18 +79,6 @@ export const invoke = <Out>(
     });
 }
 
-export const listen = <E>(eventId: string, f: (event: E) => void) => {
-    const prop = `_event_${eventId}`;
-    Object.defineProperty(window.__FLURX__, prop, {
-        value: f,
-        writable: false,
-        configurable: true
-    })
-    return () => {
-        Reflect.deleteProperty(window.__FLURX__, prop);
-    };
-};
-
 export const emit = (eventId: string, event: any) => {
     window.ipc.postMessage(JSON.stringify({
         type: "Event",
@@ -105,8 +93,12 @@ export const __resolveIpc = (id: string, output: any) => {
     (window.__FLURX__ as any)[`_${id}`]?.(output)
 };
 
-export const __emitEvent = (eventId: string, event: any) => {
-    (window.__FLURX__ as any)[`_event_${eventId}`]?.(event)
+export const __emitEvent = (
+    windowName: string,
+    eventId: string,
+    event: any,
+) => {
+    (window.__FLURX__ as any)[`_event_${windowName}_${eventId}`]?.(event)
 };
 
 const uid = () => {

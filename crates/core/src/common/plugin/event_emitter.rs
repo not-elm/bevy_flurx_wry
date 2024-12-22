@@ -1,7 +1,6 @@
-use crate::common::bundle::EventEmitter;
+use bevy::prelude::*;
 use crate::common::plugin::WryWebViews;
-use bevy_app::{App, Plugin, PostUpdate};
-use bevy_ecs::prelude::{Entity, NonSend, Query};
+use crate::prelude::EventEmitter;
 
 pub(crate) struct EventEmitterPlugin;
 
@@ -11,17 +10,21 @@ impl Plugin for EventEmitterPlugin {
     }
 }
 
-fn emit(mut emitters: Query<(Entity, &mut EventEmitter)>, webviews: NonSend<WryWebViews>) {
-    for (entity, mut emitter) in emitters.iter_mut() {
-        let Some(webview) = webviews.0.get(&entity) else {
+fn emit(
+    mut emitters: Query<(Entity, &mut EventEmitter, &Name)>,
+    web_views: NonSend<WryWebViews>,
+) {
+    for (entity, mut emitter, name) in emitters.iter_mut() {
+        let Some(webview) = web_views.0.get(&entity) else {
             continue;
         };
 
         for (event_id, event) in emitter.take_events() {
+            let name = name.as_str();
             if let Err(e) = webview.evaluate_script(&format!(
-                "window.__FLURX__.__emitEvent('{event_id}', {event});"
+                "window.__FLURX__.__emitEvent('{name}', '{event_id}', {event});"
             )) {
-                bevy_log::error!("{e}");
+               error!("{e}");
             }
         }
     }
