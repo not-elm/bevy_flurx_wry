@@ -1,6 +1,6 @@
 import {invoke} from "./core";
 
-export interface FileEntry{
+export interface FileEntry {
     name: string,
     path: string,
     children: FileEntry[] | null
@@ -52,149 +52,151 @@ export interface RenameFileOptions {
     newDir?: BaseDirectory,
 }
 
-/**
- * Copies a file to a destination.
- */
-export const copyFile = async (
-    from: string,
-    to: string,
-    options?: CopyFileOptions,
-): Promise<void> => {
-    await invoke("FLURX|fs::copy_file", {
-        from,
-        to,
-        ...options
-    })
-}
+export namespace fs {
+    /**
+     * Copies a file to a destination.
+     */
+    export const copyFile = async (
+        from: string,
+        to: string,
+        options?: CopyFileOptions,
+    ): Promise<void> => {
+        await invoke("FLURX|fs::copy_file", {
+            from,
+            to,
+            ...options
+        })
+    }
 
-/**
- * Creates a directory.
- *
- *  If you need to create the parent directory recursively, set `recursive` to `true`.
- */
-export const createDir = async (
-    path: string,
-    options?: FsDirOptions
-): Promise<void> => {
-    await invoke("FLURX|fs::create_dir", {path, ...options});
-}
+    /**
+     * Creates a directory.
+     *
+     *  If you need to create the parent directory recursively, set `recursive` to `true`.
+     */
+    export const createDir = async (
+        path: string,
+        options?: FsDirOptions
+    ): Promise<void> => {
+        await invoke("FLURX|fs::create_dir", {path, ...options});
+    }
 
-/**
- *  Check if a path exists.
- */
-export const exists = async (
-    path: string,
-    options?: FsBaseDirectoryOption,
-): Promise<boolean> => {
-    return await invoke("FLURX|fs::exists", {
-        path,
-        ...options
-    });
-}
+    /**
+     *  Check if a path exists.
+     */
+    export const exists = async (
+        path: string,
+        options?: FsBaseDirectoryOption,
+    ): Promise<boolean> => {
+        return await invoke("FLURX|fs::exists", {
+            path,
+            ...options
+        });
+    }
 
-/**
- * Reads a file as byte array.
- */
-export const readBinaryFile = async (
-    path: string,
-    options?: FsBaseDirectoryOption,
-): Promise<Uint8Array> => {
-    return await invoke("FLURX|fs::read_binary_file", {
-        path,
-        ...options
-    });
-}
+    /**
+     * Reads a file as byte array.
+     */
+    export const readBinaryFile = async (
+        path: string,
+        options?: FsBaseDirectoryOption,
+    ): Promise<Uint8Array> => {
+        return await invoke("FLURX|fs::read_binary_file", {
+            path,
+            ...options
+        });
+    }
 
-/**
- * Reads a file as a UTF-8 encoded string.
- */
-export const readTextFile = async (
-    path: string,
-    options?: FsBaseDirectoryOption,
-): Promise<string> => {
-    return await invoke("FLURX|fs::read_text_file", {
-        path,
-        ...options
-    });
-}
+    /**
+     * Reads a file as a UTF-8 encoded string.
+     */
+    export const readTextFile = async (
+        path: string,
+        options?: FsBaseDirectoryOption,
+    ): Promise<string> => {
+        return await invoke("FLURX|fs::read_text_file", {
+            path,
+            ...options
+        });
+    }
 
-/**
- * Removes a file.
- */
-export const removeFile = async (
-    path: string,
-    options?: FsBaseDirectoryOption,
-): Promise<void> => {
-    await invoke("FLURX|fs::remove_file", {
-        path,
-        ...options
-    });
-}
+    /**
+     * Removes a file.
+     */
+    export const removeFile = async (
+        path: string,
+        options?: FsBaseDirectoryOption,
+    ): Promise<void> => {
+        await invoke("FLURX|fs::remove_file", {
+            path,
+            ...options
+        });
+    }
 
-/**
- * Renames a file.
- */
-export const renameFile = async (
-    oldPath: string,
-    newPath: string,
-    options?: RenameFileOptions,
-): Promise<void> => {
-    await invoke("FLURX|fs::rename_file", {
-        oldPath,
-        newPath,
-        ...options
-    });
-}
+    /**
+     * Renames a file.
+     */
+    export const renameFile = async (
+        oldPath: string,
+        newPath: string,
+        options?: RenameFileOptions,
+    ): Promise<void> => {
+        await invoke("FLURX|fs::rename_file", {
+            oldPath,
+            newPath,
+            ...options
+        });
+    }
 
-/**
- * Writes a UTF-8 text file.
- */
-export const writeTextFile = async (
-    path: string,
-    contents: string,
-    options?: FsWriteFileOptions
-): Promise<void> => {
-    await invoke("FLURX|fs::write_text_file", {
-        path,
-        contents,
-        ...options
-    });
-}
+    /**
+     * Writes a UTF-8 text file.
+     */
+    export const writeTextFile = async (
+        path: string,
+        contents: string,
+        options?: FsWriteFileOptions
+    ): Promise<void> => {
+        await invoke("FLURX|fs::write_text_file", {
+            path,
+            contents,
+            ...options
+        });
+    }
 
-/**
- * Writes a file.
- */
-export const writeBinaryFile = async (
-    path: string,
-    contents: Uint8Array | Iterable<number> | ArrayLike<number> | ArrayBuffer,
-    options?: FsWriteFileOptions
-): Promise<void> => {
-    await invoke("FLURX|fs::write_binary_file", {
-        path,
-        contents,
-        ...options
-    });
-}
+    /**
+     * Writes a file.
+     */
+    export const writeBinaryFile = async (
+        path: string,
+        contents: Uint8Array | Iterable<number> | ArrayLike<number> | ArrayBuffer,
+        options?: FsWriteFileOptions
+    ): Promise<void> => {
+        await invoke("FLURX|fs::write_binary_file", {
+            path,
+            contents,
+            ...options
+        });
+    }
 
-/**
- * List directory files.
- */
-export const readDir = async (
-    path: string,
-    options?: FsBaseDirectoryOption,
-): Promise<FileEntry[]> => {
-    return await invoke("FLURX|fs::read_dir", {
-        path,
-        ...options
-    });
-}
+    /**
+     * List directory files.
+     */
+    export const readDir = async (
+        path: string,
+        options?: FsBaseDirectoryOption,
+    ): Promise<FileEntry[]> => {
+        return await invoke("FLURX|fs::read_dir", {
+            path,
+            ...options
+        });
+    }
 
-/**
- * Remove a directory.
- */
-export const removeDir = async (
-    path: string,
-    options?: FsDirOptions,
-): Promise<void> => {
-    await invoke("FLURX|fs::remove_dir", {path, ...options});
+    /**
+     * Remove a directory.
+     */
+    export const removeDir = async (
+        path: string,
+        options?: FsDirOptions,
+    ): Promise<void> => {
+        await invoke("FLURX|fs::remove_dir", {path, ...options});
+    }
 }

@@ -5,12 +5,14 @@ export interface SendOptions {
     icon?: string,
 }
 
-export const send = async (
-    message: string,
-    options?: SendOptions,
-): Promise<void> => {
-    await invoke("FLURX|notification::send", {
-        message,
-        ...options
-    });
+export namespace notification {
+    export const send = async (
+        message: string,
+        options?: SendOptions,
+    ): Promise<void> => {
+        await invoke("FLURX|notification::send", {
+            message,
+            ...options
+        });
+    }
 }

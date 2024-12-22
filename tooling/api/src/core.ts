@@ -32,6 +32,18 @@ const isErr = (args: unknown): args is Err => {
     return err.Err !== undefined;
 }
 
+/**
+ *
+ * @param id command id
+ * @param args command args
+ *
+ * @example
+ * import {invoke} from "@bevy_flurx_wry/api";
+ *
+ * const commandResult = await invoke("<commandId>", {
+ *
+ * });
+ */
 export const invoke = <Out>(
     id: string,
     args: any = null

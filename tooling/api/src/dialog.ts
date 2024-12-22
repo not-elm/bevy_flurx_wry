@@ -26,61 +26,6 @@ export interface DialogFilter {
     extensions: string[]
 }
 
-/**
- * Shows a dialog to confirm yes/no with the user.
- *
- * @example
- * import {dialog} from "@bevy_flurx_wry/api";
- *
- * const yes: boolean = await dialog.ask("question");
- */
-export const ask = async (
-    questionMessage: string,
-    option?: ConfirmDialogOptions,
-): Promise<boolean> => {
-    return await invoke("FLURX|dialog::ask", {
-        questionMessage,
-        ...option
-    });
-};
-
-/**
- * Shows a dialog to confirm ok/cancel with the user.
- *
- * @example
- * import {dialog} from "@bevy_flurx_wry/api";
- *
- * const yes: boolean = await dialog.confirm("question");
- */
-export const confirm = async (
-    questionMessage: string,
-    option?: ConfirmDialogOptions,
-): Promise<boolean> => {
-    return await invoke("FLURX|dialog::confirm", {
-        questionMessage,
-        ...option
-    });
-};
-
-/**
- * Shows a message dialog.
- *
- * @example
- * import {dialog} from "@bevy_flurx_wry/api";
- *
- *  await dialog.message("message");
- */
-export const message = async (
-    message: string,
-    option?: ConfirmDialogOptions,
-): Promise<void> => {
-    await invoke("FLURX|dialog::message", {
-        questionMessage: message,
-        ...option
-    });
-};
-
-
 interface Single {
     Single: string | null
 }
@@ -93,39 +38,95 @@ type OpenDialogResult<T extends OpenFileDialogOptions> =
     T["multiple"] extends true ? Multiple : Single
 
 
-/**
- * Shows a message dialog.
- *
- * @example
- * import {dialog} from "@bevy_flurx_wry/api";
- *
- *  const selectedPaths: string[] | null = await dialog.open({multiple: true});
- *  const selectedPath: string | null = await dialog.open({multiple: false});
- */
-export const open = async <T extends OpenFileDialogOptions>(
-    options?: T
-): Promise<T["multiple"] extends true ? string[] | null : string | null> => {
-    const result: OpenDialogResult<T> = await invoke("FLURX|dialog::open", options);
-    const isSingle = (r: Single | Multiple): r is Single => !!(r as Single)?.Single
-    // @ts-ignore
-    return isSingle(result) ? result.Single : result.Multiple;
-};
+export namespace dialog {
+    /**
+     * Shows a dialog to confirm yes/no with the user.
+     *
+     * @example
+     * import {dialog} from "@bevy_flurx_wry/api";
+     *
+     * const yes: boolean = await dialog.ask("question");
+     */
+    export const ask = async (
+        questionMessage: string,
+        option?: ConfirmDialogOptions,
+    ): Promise<boolean> => {
+        return await invoke("FLURX|dialog::ask", {
+            questionMessage,
+            ...option
+        });
+    };
 
-/**
- * Open a file save dialog.
- *
- *
- *  @return string: select file path ; null: if canceled
- *
- * @example
- * import {dialog} from "@bevy_flurx_wry/api";
- *
- *  const selectedPath: string | null = await dialog.save();
- */
-export const save = async (
-    options?: SaveFileDialogOptions
-): Promise<string | null> => {
-    return await invoke("FLURX|dialog::save", {
-        ...options,
-    });
-};
+    /**
+     * Shows a dialog to confirm ok/cancel with the user.
+     *
+     * @example
+     * import {dialog} from "@bevy_flurx_wry/api";
+     *
+     * const yes: boolean = await dialog.confirm("question");
+     */
+    export const confirm = async (
+        questionMessage: string,
+        option?: ConfirmDialogOptions,
+    ): Promise<boolean> => {
+        return await invoke("FLURX|dialog::confirm", {
+            questionMessage,
+            ...option
+        });
+    };
+
+    /**
+     * Shows a message dialog.
+     *
+     * @example
+     * import {dialog} from "@bevy_flurx_wry/api";
+     *
+     *  await dialog.message("message");
+     */
+    export const message = async (
+        message: string,
+        option?: ConfirmDialogOptions,
+    ): Promise<void> => {
+        await invoke("FLURX|dialog::message", {
+            questionMessage: message,
+            ...option
+        });
+    };
+
+    /**
+     * Shows a message dialog.
+     *
+     * @example
+     * import {dialog} from "@bevy_flurx_wry/api";
+     *
+     *  const selectedPaths: string[] | null = await dialog.open({multiple: true});
+     *  const selectedPath: string | null = await dialog.open({multiple: false});
+     */
+    export const open = async <T extends OpenFileDialogOptions>(
+        options?: T
+    ): Promise<T["multiple"] extends true ? string[] | null : string | null> => {
+        const result: OpenDialogResult<T> = await invoke("FLURX|dialog::open", options);
+        const isSingle = (r: Single | Multiple): r is Single => !!(r as Single)?.Single
+        // @ts-ignore
+        return isSingle(result) ? result.Single : result.Multiple;
+    };
+
+    /**
+     * Open a file save dialog.
+     *
+     *
+     *  @return string: select file path ; null: if canceled
+     *
+     * @example
+     * import {dialog} from "@bevy_flurx_wry/api";
+     *
+     *  const selectedPath: string | null = await dialog.save();
+     */
+    export const save = async (
+        options?: SaveFileDialogOptions
+    ): Promise<string | null> => {
+        return await invoke("FLURX|dialog::save", {
+            ...options,
+        });
+    };
+}
