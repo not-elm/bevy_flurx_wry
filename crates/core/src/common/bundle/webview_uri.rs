@@ -2,6 +2,8 @@ use std::path::{Path, PathBuf};
 use bevy::prelude::{Component, ReflectComponent};
 use bevy::prelude::{ReflectDefault, Reflect};
 use serde::{Deserialize, Serialize};
+use crate::common::bundle::*;
+use bevy_flurx_ipc::prelude::IpcHandlers;
 
 /// Represents the display destination of webview.
 ///
@@ -29,16 +31,35 @@ use serde::{Deserialize, Serialize};
 ///     .run();
 ///
 /// fn spawn_webview(mut commands: Commands, window: Query<Entity, With<PrimaryWindow>>){
-///     commands.entity(window.single()).insert(WryWebViewBundle{
+///     commands
+///         .entity(window.single())
 ///         // The actual URL is flurx://localhost/ui/example.html.
 ///         // show assets/ui/example.html
-///         uri: WebviewUri::relative_local("example.html"),
-///         ..default()
-///     });
+///         .insert(WebviewUri::relative_local("example.html"));
 /// }
 /// ```
-#[repr(transparent)]
 #[derive(Component, Clone, Debug, Eq, PartialEq, Hash, Reflect, Serialize, Deserialize)]
+#[require(
+    EnableClipboard,
+    AutoPlay,
+    BrowserAcceleratorKeys,
+    UseDevtools,
+    IsOpenDevtools,
+    WebviewVisible,
+    Background,
+    UserAgent,
+    Theme,
+    InitializeFocused,
+    Incognito,
+    HotkeysZoom,
+    UseHttpsScheme,
+    IpcHandlers,
+    OnDownload,
+    OnDragDrop,
+    OnNavigation,
+    OnNewWindowRequest,
+    EventEmitter,
+)]
 #[reflect(Component, Default)]
 pub struct WebviewUri(pub String);
 

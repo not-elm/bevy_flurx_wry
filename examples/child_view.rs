@@ -1,11 +1,8 @@
 //! Minimum example showing how to create a webview as child in the window.
 
-
 use std::path::PathBuf;
-
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
-
 use bevy_flurx_wry::prelude::*;
 
 fn main() {
@@ -25,9 +22,7 @@ fn spawn_webview(
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
     commands.spawn((
-        WryWebViewBundle {
-            ..default()
-        },
+        WebviewUri::default(),
         AsChildBundle {
             // Here, create a webview as child inside a given window.
             parent: ParentWindow(window.single()),
@@ -41,10 +36,7 @@ fn spawn_webview(
     ));
 
     commands.spawn((
-        WryWebViewBundle {
-            uri: WebviewUri::new("https://bevyengine.org/"),
-            ..default()
-        },
+        WebviewUri::new("https://bevyengine.org/"),
         AsChildBundle {
             parent: ParentWindow(window.single()),
             bounds: Bounds {

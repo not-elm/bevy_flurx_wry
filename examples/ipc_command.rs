@@ -3,11 +3,9 @@
 //! This commands allows you to receive input from the webview and return output there
 
 use std::path::PathBuf;
-
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy_flurx::prelude::*;
-
 use bevy_flurx_wry::prelude::*;
 
 fn main() {
@@ -31,13 +29,11 @@ fn spawn_webview(
 ) {
     commands.entity(window.single()).insert((
         Num(1),
-        WryWebViewBundle{
-            ipc_handlers: ipc_handlers![
-                action_command,
-                task_command
-            ],
-            ..default()
-        }
+        WebviewUri::default(),
+        ipc_handlers![
+            action_command,
+            task_command
+        ],
     ));
 }
 
@@ -62,19 +58,19 @@ async fn task_command(
     In(n): In<usize>, // The input from javascript
     WebviewEntity(entity): WebviewEntity,
     task: ReactorTask,
-) -> usize  {
-   task.will(Update, once::run(fibonacci).with((entity, n))).await
+) -> usize {
+    task.will(Update, once::run(fibonacci).with((entity, n))).await
 }
 
 fn fibonacci(
     In((webview_entity, n)): In<(Entity, usize)>,
-    mut views: Query<&mut Num>
-)  -> usize {
-    if let Ok(mut num) = views.get_mut(webview_entity){
+    mut views: Query<&mut Num>,
+) -> usize {
+    if let Ok(mut num) = views.get_mut(webview_entity) {
         let out = num.0 + n;
         num.0 = n;
         out
-    } else{
+    } else {
         0
     }
 }

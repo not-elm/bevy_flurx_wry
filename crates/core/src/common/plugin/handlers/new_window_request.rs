@@ -1,8 +1,8 @@
 //! Controls the process of creating the new window : [`wry::WebViewBuilder::with_new_window_req_handler`]
 
 use crate::common::plugin::handlers::{RegisterWryEvent, WryEvents};
-use crate::prelude::{PassedUrl, WebviewUri, WryWebViewBundle};
-use bevy::prelude::{default, App, Commands, Entity, Event, EventWriter, Plugin, PreUpdate, Reflect, Res, Window};
+use crate::prelude::{PassedUrl, WebviewUri};
+use bevy::prelude::{App, Commands, Entity, Event, EventWriter, Plugin, PreUpdate, Reflect, Res, Window};
 
 /// The event indicating that a new window has been opened.
 ///
@@ -48,10 +48,7 @@ fn open_new_window(
         let opened_window_entity = commands
             .spawn((
                 request.window,
-                WryWebViewBundle {
-                    uri: WebviewUri(request.url.0.to_string()),
-                    ..default()
-                },
+                WebviewUri(request.url.0.to_string()),
             ))
             .id();
 

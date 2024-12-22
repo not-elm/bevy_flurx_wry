@@ -1,9 +1,9 @@
 //! This is code for bug checking during development.
-use std::path::PathBuf;
 use bevy::prelude::*;
 use bevy::window::{PrimaryWindow, WindowResolution};
 use bevy_flurx::prelude::*;
 use bevy_flurx_wry::prelude::*;
+use std::path::PathBuf;
 
 
 #[derive(Resource, Debug)]
@@ -12,8 +12,8 @@ struct Count(usize);
 fn main() {
     App::new()
         .add_plugins((
-            DefaultPlugins.set(WindowPlugin{
-                primary_window: Some(Window{
+            DefaultPlugins.set(WindowPlugin {
+                primary_window: Some(Window {
                     resolution: WindowResolution::new(200., 200.),
                     ..default()
                 }),
@@ -31,19 +31,19 @@ fn main() {
 
 fn spawn_webview(
     mut commands: Commands,
-    window: Query<Entity, With<PrimaryWindow>>
-){
-    commands.entity(window.single()).insert(WryWebViewBundle{
-        ipc_handlers: ipc_handlers![
+    window: Query<Entity, With<PrimaryWindow>>,
+) {
+    commands.entity(window.single()).insert((
+        WebviewUri::default(),
+        ipc_handlers![
             count_up
         ],
-        ..default()
-    });
+    ));
 }
 
 #[command]
-async fn count_up(task: ReactorTask){
-    task.will(Update,  once::run(|mut count: ResMut<Count>|{
+async fn count_up(task: ReactorTask) {
+    task.will(Update, once::run(|mut count: ResMut<Count>| {
         count.0 += 1;
         println!("{}", count.0);
         count.0

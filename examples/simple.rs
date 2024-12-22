@@ -1,6 +1,5 @@
 //! Minimum example showing how to create a webview in the window.
 
-
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 
@@ -21,11 +20,8 @@ fn spawn_webview(
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
     // Converts the `Window` attached the entity into a webview window. 
-    commands.entity(window.single()).insert(
-        WryWebViewBundle {
-            uri: WebviewUri::new("https://bevyengine.org/"),
-            ..default()
-        }
-    );
+    commands
+        .entity(window.single())
+        .insert(WebviewUri::new("https://bevyengine.org/"));
 }
 

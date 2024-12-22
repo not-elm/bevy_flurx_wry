@@ -29,10 +29,7 @@ fn spawn_webview(
     mut commands: Commands,
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
-    commands.entity(window.single()).insert(WryWebViewBundle{
-        use_devtools: UseDevtools(true),
-        ..default()
-    });
+    commands.entity(window.single()).insert(WebviewUri::default());
 }
 
 fn emit_event(
