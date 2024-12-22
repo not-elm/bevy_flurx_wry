@@ -1,9 +1,9 @@
 //! Minimum example showing how to create a webview as child in the window.
 
-use std::path::PathBuf;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy_flurx_wry::prelude::*;
+use std::path::PathBuf;
 
 fn main() {
     App::new()
@@ -23,28 +23,21 @@ fn spawn_webview(
 ) {
     commands.spawn((
         WebviewUri::default(),
-        AsChildBundle {
-            // Here, create a webview as child inside a given window.
-            parent: ParentWindow(window.single()),
-            bounds: Bounds {
-                position: Vec2::new(100., 100.),
-                size: Vec2::new(500., 500.),
-                min_size: Vec2::new(100., 100.),
-            },
-            ..default()
+        ParentWindow(window.single()),
+        Bounds {
+            position: Vec2::new(100., 100.),
+            size: Vec2::new(500., 500.),
+            min_size: Vec2::new(100., 100.),
         },
     ));
 
     commands.spawn((
         WebviewUri::new("https://bevyengine.org/"),
-        AsChildBundle {
-            parent: ParentWindow(window.single()),
-            bounds: Bounds {
-                position: Vec2::new(700., 100.),
-                size: Vec2::new(500., 500.),
-                min_size: Vec2::new(100., 100.),
-            },
-            ..default()
+        ParentWindow(window.single()),
+        Bounds {
+            position: Vec2::new(700., 100.),
+            size: Vec2::new(500., 500.),
+            min_size: Vec2::new(100., 100.),
         },
     ));
 }
