@@ -82,7 +82,9 @@ fn load_web_views(
         let builder = feed_configs1(builder, configs1);
         let builder = feed_configs2(builder, &mut commands, webview_entity, configs2, &local_root);
         let builder = feed_platform_configs(builder, configs_platform);
-        let webview = build_webview(builder, webview_entity, parent_window, &windows).unwrap();
+        let Some(Ok(webview)) = build_webview(builder, webview_entity, parent_window, &windows) else{
+            continue;
+        };
         commands
             .entity(webview_entity)
             .insert(WebviewInitialized(()));
@@ -183,15 +185,15 @@ fn build_webview(
     window_entity: Entity,
     parent_window: Option<&ParentWindow>,
     windows: &WinitWindows,
-) -> wry::Result<WebView> {
+) -> Option<wry::Result<WebView>> {
     if let Some(parent_window) = parent_window
         .map(|parent| parent.0)
         .and_then(|parent| windows.get_window(parent))
     {
-        builder.build_as_child(parent_window.deref())
+        Some(builder.build_as_child(parent_window.deref()))
     } else if let Some(window) = windows.get_window(window_entity) {
-        builder.build(window.deref())
+        Some(builder.build(window.deref()))
     } else {
-        todo!()
+        None
     }
 }

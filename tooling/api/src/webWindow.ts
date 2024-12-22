@@ -2,6 +2,46 @@ import {invoke, PhysicalSize} from "./core";
 
 export type WindowMode = "fullscreen" | "borderless" | "windowed";
 
+export interface CreateWebWindowOptions {
+    identifier: string,
+    url: string,
+    autoPlay?: boolean,
+    // TODO: works later
+    background?: string,
+    /**
+     * Use browser-specific accelerator keys?
+     */
+    browserAcceleratorKeys?: boolean,
+    /**
+     *  Whether not use devtools.
+     */
+    useDevtools?: boolean,
+    /**
+     *   Whether not is open devtools
+     */
+    isOpenDevtools?: boolean,
+    /**
+     *   Whether not is visible webview.
+     */
+    visible?: boolean,
+    /**
+     *  The useragent.
+     */
+    userAgent?: string,
+    /**
+     * Represents the theme apply the webview.
+     */
+    theme?: "auto" | "dark" | "light",
+    initializeFocused?: boolean,
+    incognito?: boolean,
+    hotkeysZoom?: boolean,
+    useHttpsScheme?: boolean,
+    // OnDownload,
+    // OnDragDrop,
+    // OnNavigation,
+    // OnNewWindowRequest,
+}
+
 export class WebWindow {
     private constructor(
         private readonly identifier: string,
@@ -298,6 +338,11 @@ export class WebWindow {
 
     static current(): WebWindow {
         return new WebWindow(window.__FLURX__.windowIdentifier);
+    }
+
+    static async newWindow(options: CreateWebWindowOptions): Promise<WebWindow> {
+        await invoke("FLURX|webWindow::create", options);
+        return new WebWindow(options.identifier)
     }
 }
 

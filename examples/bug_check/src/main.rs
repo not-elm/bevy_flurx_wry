@@ -2,9 +2,9 @@
 use bevy::prelude::*;
 use bevy::window::{PrimaryWindow, WindowResolution};
 use bevy_flurx::prelude::*;
+use bevy_flurx_wry::api::web_window::AllWebWindowPlugins;
 use bevy_flurx_wry::prelude::*;
 use std::path::PathBuf;
-
 
 #[derive(Resource, Debug)]
 struct Count(usize);
@@ -21,8 +21,9 @@ fn main() {
             }),
             FlurxPlugin,
             FlurxWryPlugin {
-                local_root: PathBuf::from("ui").join("count_up")
-            }
+                local_root: PathBuf::from("ui").join("bug_check")
+            },
+            AllWebWindowPlugins,
         ))
         .insert_resource(Count(0))
         .add_systems(Startup, spawn_webview)

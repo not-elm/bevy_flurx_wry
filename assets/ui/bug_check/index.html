@@ -16,8 +16,12 @@
 
 <script>
     document.getElementById("count-button").onclick = async () => {
-        const count = await window.__FLURX__.invoke("count_up");
-        document.getElementById("count").innerText = count.toString();
+        await window.__FLURX__.WebWindow.newWindow({
+            identifier: "sub window",
+            url: "flurx://localhost/second.html",
+            useDevtools: true,
+        });
+
     };
 </script>
 </body>
