@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 bevy = "0.15.0"
-bevy_flurx = { path = "../../../bevy_flurx", version = "0.8.2" }
+bevy_flurx = { version = "0.8.3" }
 bevy_flurx_wry = { path = "../..", features = [
     "clipboard",
     "fs",

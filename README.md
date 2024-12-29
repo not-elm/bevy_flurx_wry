@@ -38,12 +38,7 @@ fn spawn_webview(
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
     // Converts the `Window` attached the entity into a webview window. 
-    commands.entity(window.single()).insert(
-        WryWebViewBundle {
-            uri: WebviewUri::new("https://bevyengine.org/"),
-            ..default()
-        }
-    );
+    commands.entity(window.single()).insert(WebviewUri::new("https://bevyengine.org/"));
 }
 ```
 
@@ -62,18 +57,13 @@ fn spawn_webview(
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
     commands.spawn((
-        WryWebViewBundle {
-            ..default()
-        },
-        AsChildBundle {
-            // Here, create a webview as child inside a given window.
-            parent: ParentWindow(window.single()),
-            bounds: Bounds {
-                position: Vec2::new(100., 100.),
-                size: Vec2::new(500., 500.),
-                min_size: Vec2::new(100., 100.),
-            },
-            ..default()
+        WebviewUri::new("https://bevyengine.org/"),
+        // Here, create a webview as child inside a given window.
+        ParentWindow(window.single()),
+        Bounds {
+          position: Vec2::new(100., 100.),
+          size: Vec2::new(500., 500.),
+          min_size: Vec2::new(100., 100.),
         },
     ));
 }
