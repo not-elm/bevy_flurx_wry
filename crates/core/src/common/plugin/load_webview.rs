@@ -10,7 +10,10 @@ use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
 use crate::prelude::csp::Csp;
 use crate::WryLocalRoot;
-use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
+use bevy::prelude::{
+    App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window,
+    With, Without,
+};
 use bevy::winit::WinitWindows;
 use rand::distributions::DistString;
 use std::ops::Deref;
@@ -80,9 +83,16 @@ fn load_web_views(
         let builder = ipc_params.feed_ipc(webview_entity, builder);
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
         let builder = feed_configs1(builder, configs1);
-        let builder = feed_configs2(builder, &mut commands, webview_entity, configs2, &local_root);
+        let builder = feed_configs2(
+            builder,
+            &mut commands,
+            webview_entity,
+            configs2,
+            &local_root,
+        );
         let builder = feed_platform_configs(builder, configs_platform);
-        let Some(Ok(webview)) = build_webview(builder, webview_entity, parent_window, &windows) else{
+        let Some(Ok(webview)) = build_webview(builder, webview_entity, parent_window, &windows)
+        else {
             continue;
         };
         commands
@@ -92,10 +102,7 @@ fn load_web_views(
     }
 }
 
-fn new_builder<'a>(
-    has_parent: bool,
-    bounds: &Option<&Bounds>,
-) -> Option<WebViewBuilder<'a>> {
+fn new_builder<'a>(has_parent: bool, bounds: &Option<&Bounds>) -> Option<WebViewBuilder<'a>> {
     if has_parent {
         let mut builder = WebViewBuilder::new();
         if let Some(bounds) = bounds {
@@ -140,7 +147,9 @@ fn feed_configs2<'a>(
     } else {
         let mut rng = rand::thread_rng();
         let random_code = rand::distributions::Alphanumeric.sample_string(&mut rng, 32);
-        commands.entity(entity).insert(Name::new(random_code.clone()));
+        commands
+            .entity(entity)
+            .insert(Name::new(random_code.clone()));
         random_code
     };
     let mut builder = builder
@@ -150,7 +159,8 @@ fn feed_configs2<'a>(
             "{};{};{}",
             include_str!("../../../scripts/api.js"),
             include_str!("../../../scripts/gripZone.js"),
-            include_str!("../../../scripts/windowIdentifier.js").replace("<WINDOW_IDENTIFIER>", &identifier),
+            include_str!("../../../scripts/windowIdentifier.js")
+                .replace("<WINDOW_IDENTIFIER>", &identifier),
         ));
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);
@@ -191,9 +201,9 @@ fn build_webview(
         .and_then(|parent| windows.get_window(parent))
     {
         Some(builder.build_as_child(parent_window.deref()))
-    } else if let Some(window) = windows.get_window(window_entity) {
-        Some(builder.build(window.deref()))
     } else {
-        None
+        windows
+            .get_window(window_entity)
+            .map(|window| builder.build(window.deref()))
     }
 }
