@@ -2,7 +2,7 @@
 /.idea
 /.vscode
 Cargo.lock
-
+**/.idea/
 **/node_modules/
 **/package-lock.json
 **/dist/
