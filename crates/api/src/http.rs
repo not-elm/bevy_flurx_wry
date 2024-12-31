@@ -1,3 +1,5 @@
+//! Allows you to use http apis.
+
 use crate::error::ApiResult;
 use crate::macros::api_plugin;
 use bevy::app::PluginGroupBuilder;
@@ -6,8 +8,8 @@ use bevy::utils::HashMap;
 use bevy_flurx::prelude::effect;
 use bevy_flurx::task::ReactorTask;
 use bevy_flurx_ipc::command;
-use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
-use reqwest::{Client, Method, Response};
+use reqwest::header::{HeaderMap, HeaderName};
+use reqwest::{Method, Response};
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
@@ -91,7 +93,7 @@ async fn fetch(In(args): In<Args>, task: ReactorTask) -> ApiResult<Output> {
     .await
 }
 
-fn to_header_map(headers: &HashMap<String, String>) -> ApiResult<HeaderMap>{
+fn to_header_map(headers: &HashMap<String, String>) -> ApiResult<HeaderMap> {
     let mut header_map = HeaderMap::new();
     for (name, value) in headers {
         header_map.insert(HeaderName::from_str(name)?, value.parse()?);

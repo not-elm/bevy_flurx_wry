@@ -6,14 +6,6 @@ export interface RequestOptions{
     method?: string;
 }
 
-const convertToArrayBuffer = async (bodyInit: BodyInit | undefined | null): Promise<number[] | null> => {
-    if(!bodyInit){
-        return null;
-    }
-    const response = new Response(bodyInit);
-    return Array.from(await response.bytes())
-}
-
 export namespace http{
     export const fetch = async (
         request: string | URL,
@@ -21,7 +13,7 @@ export namespace http{
     ): Promise<Response> => {
         if(options?.body){
             // @ts-ignore
-            options.body = await convertToArrayBuffer(options.body)
+            options.body = Array.from(await new Response(options.body).bytes())
         }
         const output =  await invoke<{
             body: number[];
