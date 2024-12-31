@@ -7,6 +7,7 @@ export * from "./clipboard";
 export * from "./notification";
 export * from "./os";
 export * from "./monitor";
+export * from "./http";
 export * from "./core";
 export {PhysicalPosition, PhysicalSize} from "./core";
 export {Monitor} from "./monitor";

@@ -10,6 +10,7 @@ import {
     notification,
     os,
     path,
+    http,
     WebWindow
 } from "../index";
 
@@ -29,6 +30,7 @@ declare global {
             clipboard: typeof clipboard,
             dialog: typeof dialog,
             notification: typeof notification,
+            http: typeof http,
             os: typeof os,
             monitor: typeof monitor,
             WebWindow: typeof WebWindow,

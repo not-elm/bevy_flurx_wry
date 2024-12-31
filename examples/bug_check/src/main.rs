@@ -5,6 +5,8 @@ use bevy_flurx::prelude::*;
 use bevy_flurx_wry::api::web_window::AllWebWindowPlugins;
 use bevy_flurx_wry::prelude::*;
 use std::path::PathBuf;
+use bevy::winit::WinitSettings;
+use bevy_flurx_wry::api::http::AllHttpPlugins;
 
 #[derive(Resource, Debug)]
 struct Count(usize);
@@ -23,7 +25,9 @@ fn main() {
             FlurxWryPlugin {
                 local_root: PathBuf::from("ui").join("bug_check")
             },
+            LogPrintlnApiPlugin,
             AllWebWindowPlugins,
+            AllHttpPlugins,
         ))
         .insert_resource(Count(0))
         .add_systems(Startup, spawn_webview)
@@ -37,9 +41,6 @@ fn spawn_webview(
     commands.entity(window.single()).insert((
         WebviewUri::default(),
         UseDevtools(true),
-        ipc_handlers![
-            count_up
-        ],
     ));
 }
 

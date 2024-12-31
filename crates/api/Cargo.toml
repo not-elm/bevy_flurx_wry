@@ -11,7 +11,7 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 
 [features]
-default = ["dialog", "notification", "os", "monitor", "window"]
+default = ["dialog", "notification", "os", "monitor", "window", "http"]
 fs = ["dep:dirs"]
 clipboard = ["dep:arboard"]
 dialog = ["dep:rfd", "fs"]
@@ -19,6 +19,7 @@ notification = ["dep:notify-rust"]
 os = ["dep:sysinfo", "dep:sys-locale"]
 monitor = []
 window = ["dep:winit"]
+http = ["bevy_flurx/tokio", "bevy_flurx/effect", "dep:reqwest"]
 
 [dependencies]
 bevy = { workspace = true }
@@ -33,6 +34,7 @@ notify-rust = { version = "4.11.3", optional = true }
 sysinfo = { version = "0.33.0", optional = true }
 sys-locale = { version = "0.3.2", optional = true }
 winit = { version = "0.30.5", features = ["serde"], optional = true }
+reqwest = { version = "0.12.11", features = ["json"], optional = true}
 
 [dev-dependencies]
 bevy = "0.15.0"

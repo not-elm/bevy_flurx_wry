@@ -19,6 +19,8 @@ pub mod os;
 pub mod monitor;
 #[cfg(feature = "window")]
 pub mod web_window;
+#[cfg(feature = "http")]
+pub mod http;
 mod error;
 
 #[allow(missing_docs)]
