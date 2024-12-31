@@ -61,9 +61,9 @@ fn spawn_webview(
         // Here, create a webview as child inside a given window.
         ParentWindow(window.single()),
         Bounds {
-          position: Vec2::new(100., 100.),
-          size: Vec2::new(500., 500.),
-          min_size: Vec2::new(100., 100.),
+            position: Vec2::new(100., 100.),
+            size: Vec2::new(500., 500.),
+            min_size: Vec2::new(100., 100.),
         },
     ));
 }
@@ -155,35 +155,46 @@ Please see [here](https://github.com/not-elm/bevy_flurx_wry/blob/main/CHANGELOG.
 
 ## Compatible Bevy versions
 
-| bevy_flurx_wry | bevy_flurx | bevy    |
-|----------------|------------|---------|
-| 0.1.0-alpha1   | 0.5.2      |  0.13.2 |
+| bevy_flurx_wry | bevy_flurx | bevy   |
+|----------------|------------|--------|
+| 0.1.0-alpha1   | 0.5.2      | 0.13.2 |
 
 ## License
 
 This crate is licensed under the MIT License or the Apache License 2.0.
 
 ## Todo
+
 - [ ] Bugfix
-  - [ ] The webview could be moved without dragging.
-  - [ ] `with_initialization_script` does not execute before `window.onload`
-  - [ ] It crashes when clicking outside the window.(on Mac)
+    - [ ] The webview could be moved without dragging.
+    - [ ] `with_initialization_script` does not execute before `window.onload`
+    - [ ] It crashes when clicking outside the window.(on Mac)
 - [ ] Api
-  - [x] fs
-  - [x] clipboard
-  - [x] dialog
-  - [ ] http
-    - fetch api
-    - bevy_remote api
-  - [ ] mocks
-  - [x] notification
-  - [x] os
-  - [x] path
-  - [ ] shell
-  - [x] monitor
-  - [x] window
+    - [x] fs
+    - [x] clipboard
+    - [x] dialog
+    - [ ] http
+        - [ ] fetch api
+    - [ ] remote
+        - [ ] bevy/get
+        - [ ] bevy/query
+        - [ ] bevy/spawn
+        - [ ] bevy/destroy
+        - [ ] bevy/remove
+        - [ ] bevy/insert
+        - [ ] bevy/reparent
+        - [ ] bevy/list
+        - [ ] bevy/get+watch
+        - [ ] bevy/list+watch
+    - [ ] mocks
+    - [x] notification
+    - [x] os
+    - [x] path
+    - [ ] shell
+    - [x] monitor
+    - [x] window
 - [ ] Security
-  - [x] csp 
-  - [ ] scope
+    - [x] csp
+    - [ ] scope
 - [ ] Support Linux(X11)
 - [ ] Support Linux(Wayland)
