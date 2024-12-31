@@ -1,9 +1,12 @@
-use bevy::input::common_conditions::input_pressed;
 use crate::as_child::bundle::resize::ResizeMode;
 use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
 use crate::as_child::CurrentMoving;
 use crate::common::{WebviewInitialized, WryWebViews};
-use bevy::prelude::{not, Added, App, Changed, Commands, Entity, IntoSystemConfigs, MouseButton, NonSend, Or, Plugin, Query, Update, Without};
+use bevy::input::common_conditions::input_pressed;
+use bevy::prelude::{
+    not, Added, App, Changed, Commands, Entity, IntoSystemConfigs, MouseButton, NonSend, Or,
+    Plugin, Query, Update, Without,
+};
 use bevy::window::Window;
 use bevy::winit::cursor::CursorIcon;
 
@@ -72,7 +75,9 @@ fn render_bounds(
 ) {
     for (entity, bounds) in views.iter() {
         if let Some(webview) = webview_map.0.get(&entity) {
-            let _ = webview.set_bounds(bounds.as_wry_rect());
+            if let Err(e) = webview.set_bounds(bounds.as_wry_rect()) {
+                bevy::log::error!("Failed to set resize bounds: {}", e);
+            }
         }
     }
 }

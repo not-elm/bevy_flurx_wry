@@ -1,42 +1,7 @@
-<html>
-<head>
-    <style type="text/css">
-        body, div {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
-</head>
+<html lang="en">
 <body>
 <div>
-    <button id="count-button">count up</button>
     <h1 id="count">0</h1>
 </div>
-
-<script>
-    const sleep = (ms) => new Promise(resolve => {
-        setTimeout(() => {
-            resolve()
-        }, ms)
-    })
-    document.getElementById("count-button").onclick = async () => {
-        await window.__FLURX__.log.println("hello world")
-        try{
-            const response = await window.__FLURX__.http.fetch("http://localhost:3001/", {
-                method: "POST",
-                headers: {
-                    "content-type": "application/json",
-                },
-                body: JSON.stringify({
-                    a: "dadad"
-                })
-            });
-            await window.__FLURX__.log.println(`POST ${await response.text()}`)
-        }catch (e) {
-            await window.__FLURX__.log.println(e)
-        }
-    };
-</script>
 </body>
 </html>

@@ -10,10 +10,9 @@ use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
 use crate::prelude::csp::Csp;
 use crate::WryLocalRoot;
-use bevy::prelude::{
-    App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window,
-    With, Without,
-};
+use bevy::math::Vec2;
+use bevy::prelude::{App, Changed, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
+use bevy::utils::default;
 use bevy::winit::WinitWindows;
 use rand::distributions::DistString;
 use std::ops::Deref;
@@ -27,6 +26,9 @@ pub struct LoadWebviewPlugin;
 impl Plugin for LoadWebviewPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(PreUpdate, load_web_views);
+
+        #[cfg(target_os = "macos")]
+        app.add_systems(PreUpdate, resize_webview_bounds);
     }
 }
 
@@ -79,6 +81,9 @@ fn load_web_views(
         let Some(builder) = new_builder(parent_window.is_some(), &bounds) else {
             continue;
         };
+
+        #[cfg(target_os = "macos")]
+        let builder = insert_bounds(builder, &mut commands, webview_entity, &windows);
 
         let builder = ipc_params.feed_ipc(webview_entity, builder);
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
@@ -201,9 +206,50 @@ fn build_webview(
         .and_then(|parent| windows.get_window(parent))
     {
         Some(builder.build_as_child(parent_window.deref()))
+    } else if cfg!(target_os = "macos") {
+        windows
+            .get_window(window_entity)
+            .map(|window| builder.build_as_child(window.deref()))
     } else {
         windows
             .get_window(window_entity)
             .map(|window| builder.build(window.deref()))
+    }
+}
+
+/// On Mac, there is an [issue](https://github.com/tauri-apps/wry/pull/1323) where generating the window ifself as a webview causes the app clash.
+///
+/// Currently, we are avoiding this issue by creating bounds that cover the entire window.
+///
+/// FIXME: However, since we must set [`ClearColor`](bevy::prelude::ClearColor) to [`Color::NONE`](bevy::prelude::Color) and set [`CompositeAlphaMode`](bevy::window::CompositeAlphaMode) to `CompositeAlphaMode::PostMultiplied`.,
+/// we will revise this approach if an alternative solution is found.
+#[cfg(target_os = "macos")]
+fn insert_bounds<'a>(
+    builder: WebViewBuilder<'a>,
+    commands: &mut Commands,
+    webview_entity: Entity,
+    windows: &WinitWindows,
+) -> WebViewBuilder<'a> {
+    if let Some(window) = windows.get_window(webview_entity) {
+        let size = window.inner_size().to_logical::<f32>(window.scale_factor());
+        let bounds = Bounds {
+            size: Vec2::new(size.width, size.height),
+            ..default()
+        };
+        let rect = bounds.as_wry_rect();
+        commands.entity(webview_entity).insert(bounds);
+        builder.with_bounds(rect)
+    } else {
+        builder
+    }
+}
+
+#[cfg(target_os = "macos")]
+fn resize_webview_bounds(mut web_views: Query<(&mut Bounds, &Window), Changed<Window>>) {
+    for (mut bounds, window) in web_views.iter_mut() {
+        let size = window.size();
+        if bounds.size != size {
+            bounds.size = size;
+        }
     }
 }

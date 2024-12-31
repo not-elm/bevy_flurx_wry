@@ -50,7 +50,6 @@ fn get_response(
         &path[1..]
     };
     let content = std::fs::read(std::fs::canonicalize(root.join(path))?)?;
-
     let mimetype = if path.ends_with(".html") || path == "/" {
         "text/html"
     } else if path.ends_with(".txt") {
@@ -97,6 +96,7 @@ fn get_response(
     if let Some(csp) = csp {
         response_builder = response_builder.header(CONTENT_SECURITY_POLICY, csp.0.as_str());
     }
+    println!("{:?}", std::str::from_utf8(&content));
     response_builder
         .header(CONTENT_TYPE, mimetype)
         .body(content)
