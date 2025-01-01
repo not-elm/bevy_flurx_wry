@@ -180,6 +180,9 @@ mod tests {
             Vec2::new(100., 100.),
             None,
         );
+        #[cfg(target_os = "macos")]
+        assert_eq!(bounds.position, Vec2::new(0., 90.));
+        #[cfg(not(target_os = "macos"))]
         assert_eq!(bounds.position, Vec2::new(0., 0.));
     }
 
@@ -192,6 +195,9 @@ mod tests {
             Vec2::new(100., 100.),
             Some(10.),
         );
+        #[cfg(target_os = "macos")]
+        assert_eq!(bounds.position, Vec2::new(0., 80.));
+        #[cfg(not(target_os = "macos"))]
         assert_eq!(bounds.position, Vec2::new(0., 10.));
     }
 
@@ -204,6 +210,9 @@ mod tests {
             Vec2::new(100., 100.),
             None,
         );
+        #[cfg(target_os = "macos")]
+        assert_eq!(bounds.position, Vec2::new(95., 0.));
+        #[cfg(not(target_os = "macos"))]
         assert_eq!(bounds.position, Vec2::new(95., 90.));
     }
 
