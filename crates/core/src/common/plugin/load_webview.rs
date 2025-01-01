@@ -10,9 +10,7 @@ use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
 use crate::prelude::csp::Csp;
 use crate::WryLocalRoot;
-use bevy::math::Vec2;
-use bevy::prelude::{App, Changed, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
-use bevy::utils::default;
+use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
 use rand::distributions::DistString;
 use std::ops::Deref;
@@ -230,10 +228,11 @@ fn insert_bounds<'a>(
     webview_entity: Entity,
     windows: &WinitWindows,
 ) -> WebViewBuilder<'a> {
+    use bevy::utils::default;
     if let Some(window) = windows.get_window(webview_entity) {
         let size = window.inner_size().to_logical::<f32>(window.scale_factor());
         let bounds = Bounds {
-            size: Vec2::new(size.width, size.height),
+            size: bevy::prelude::Vec2::new(size.width, size.height),
             ..default()
         };
         let rect = bounds.as_wry_rect();
@@ -245,7 +244,7 @@ fn insert_bounds<'a>(
 }
 
 #[cfg(target_os = "macos")]
-fn resize_webview_bounds(mut web_views: Query<(&mut Bounds, &Window), Changed<Window>>) {
+fn resize_webview_bounds(mut web_views: Query<(&mut Bounds, &Window), bevy::prelude::Changed<Window>>) {
     for (mut bounds, window) in web_views.iter_mut() {
         let size = window.size();
         if bounds.size != size {
