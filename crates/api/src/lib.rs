@@ -29,6 +29,8 @@ pub mod prelude {
     pub use crate::clipboard;
     #[cfg(feature = "dialog")]
     pub use crate::dialog;
+    #[cfg(feature = "http")]
+    pub use crate::http::*;
     #[cfg(feature = "monitor")]
     pub use crate::monitor;
     #[cfg(feature = "notification")]

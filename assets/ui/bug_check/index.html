@@ -1,7 +1,14 @@
 <html lang="en">
 <body>
 <div>
+    <button id="btn">btn</button>
     <h1 id="count">0</h1>
 </div>
 </body>
+<script>
+    document.getElementById("btn").onclick = async () => {
+        const response = await window.__FLURX__.http.fetch("https://live.nicovideo.jp/watch/lv346672747")
+        console.log(await response.text())
+    }
+</script>
 </html>

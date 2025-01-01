@@ -2,6 +2,7 @@
 use bevy::prelude::*;
 use bevy::window::{PrimaryWindow, WindowResolution};
 use bevy_flurx::prelude::*;
+use bevy_flurx_wry::api::web_window::AllWebWindowPlugins;
 use bevy_flurx_wry::prelude::*;
 use std::path::PathBuf;
 
@@ -21,10 +22,13 @@ fn main() {
         FlurxWryPlugin {
             local_root: PathBuf::from("ui").join("bug_check"),
         },
-        // LogPrintlnApiPlugin,
-        // AllWebWindowPlugins,
-        // AllHttpPlugins,
+        LogPrintlnApiPlugin,
+        AllWebWindowPlugins,
+        AllHttpPlugins,
     ));
+    // .insert_resource(AccessAllowOrigins::new([
+    //     "https://example.com",
+    // ]));
 
     #[cfg(target_os = "macos")]
     app.insert_resource(ClearColor(Color::NONE));
