@@ -166,9 +166,9 @@ This crate is licensed under the MIT License or the Apache License 2.0.
 ## Todo
 
 - [ ] Bugfix
-    - [ ] The webview could be moved without dragging.
-    - [ ] `with_initialization_script` does not execute before `window.onload`
-    - [ ] It crashes when clicking outside the window.(on Mac)
+    - [x] The webview could be moved without dragging.
+    - [] `with_initialization_script` does not execute before `window.onload`
+    - [x] It crashes when clicking outside the window.(on Mac)
 - [ ] Api
     - [x] fs
     - [x] clipboard

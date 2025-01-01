@@ -60,7 +60,7 @@ fn move_webview(
     let Ok(pos) = mouse.get_position() else {
         return;
     };
-    let pos = IVec2::new(pos.x, pos.y).as_vec2();
+    let cursor_pos = IVec2::new(pos.x, pos.y).as_vec2();
 
     for (mut bounds, parent, CurrentMoving(d)) in views.iter_mut() {
         let Ok(window_size) = windows
@@ -77,7 +77,7 @@ fn move_webview(
         };
         let window_position = window_position.cast::<f32>();
         let window_position = Vec2::new(window_position.x, window_position.y);
-        let cursor_pos = pos - window_position;
+        let cursor_pos = cursor_pos - window_position;
         move_bounds(&mut bounds, cursor_pos - *d, window_size, None);
     }
 }
@@ -99,7 +99,12 @@ fn move_bounds(
         .unwrap_or_default();
     let cursor_pos = top_left.max(max);
     let max_pos = (window_size - bounds.size).max(Vec2::ZERO);
-    bounds.position = cursor_pos.min(max_pos);
+    if cfg!(target_os = "macos") {
+        let tmp = cursor_pos.min(max_pos);
+        bounds.position = Vec2::new(tmp.x, max_pos.y - tmp.y);
+    } else {
+        bounds.position = cursor_pos.min(max_pos);
+    }
 }
 
 #[derive(Deserialize)]
