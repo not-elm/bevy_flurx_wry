@@ -11,6 +11,8 @@ mod remove_dir;
 mod read_dir;
 
 use crate::error::{ApiError, ApiResult, NotPermittedPath};
+use bevy::app::{PluginGroup, PluginGroupBuilder};
+use bevy::prelude::{Reflect, ReflectDefault, ReflectResource, Res, Resource};
 pub use copy_file::FsCopyFilePlugin;
 pub use create_dir::FsCreateDirPlugin;
 pub use exists::FsExistsPlugin;
@@ -21,8 +23,42 @@ pub use remove_file::FsRemoveFilePlugin;
 pub use rename_file::FsRenameFilePlugin;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
-use bevy::prelude::{Res, Resource, ReflectResource, Reflect, ReflectDefault};
 pub use write_file::{FsWriteBinaryFilePlugin, FsWriteTextFilePlugin};
+
+
+/// Allows you to use all fs apis.
+///
+/// ## Plugins
+/// - [FsCreateDirPlugin]
+/// - [FsCopyFilePlugin]
+/// - [FsExistsPlugin]
+/// - [FsReadDirPlugin]
+/// - [FsReadTextFilePlugin]
+/// - [FsReadBinaryFilePlugin]
+/// - [FsRemoveFilePlugin]
+/// - [FsRenameFilePlugin]
+/// - [FsWriteTextFilePlugin]
+/// - [FsWriteBinaryFilePlugin]
+/// - [FsRemoveDirPlugin]
+/// - [FsReadDirPlugin]
+pub struct AllFsPlugins;
+impl PluginGroup for AllFsPlugins {
+    fn build(self) -> PluginGroupBuilder {
+        PluginGroupBuilder::start::<Self>()
+            .add(FsCreateDirPlugin)
+            .add(FsCopyFilePlugin)
+            .add(FsExistsPlugin)
+            .add(FsReadDirPlugin)
+            .add(FsReadTextFilePlugin)
+            .add(FsReadBinaryFilePlugin)
+            .add(FsRemoveFilePlugin)
+            .add(FsRenameFilePlugin)
+            .add(FsWriteBinaryFilePlugin)
+            .add(FsWriteTextFilePlugin)
+            .add(FsRemoveDirPlugin)
+            .add(FsReadDirPlugin)
+    }
+}
 
 /// Represents the list of the paths accessible from [crate::fs] api.
 ///
@@ -52,7 +88,7 @@ impl AllowPaths {
         self.0.push(path);
     }
 
-     /// Adds paths that allows access to the file system. 
+    /// Adds paths that allows access to the file system.
     #[inline]
     pub fn add_all(&mut self, paths: impl IntoIterator<Item=PathBuf>) {
         self.0.extend(paths);
