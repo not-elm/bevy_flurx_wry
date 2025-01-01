@@ -1,7 +1,7 @@
 use crate::as_child::bundle::{Bounds, ParentWindow};
 use crate::as_child::CurrentMoving;
 use crate::common::WryWebViews;
-use crate::prelude::{DragEntered, EventEmitter, GripZone};
+use crate::prelude::{DragEntered, GripZone};
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::util::WryResultLog;
 use bevy::input::common_conditions::input_just_released;
@@ -38,9 +38,16 @@ impl Plugin for GripZonePlugin {
     }
 }
 
-fn resize_grip_zone(mut views: Query<(&mut EventEmitter, &GripZone), Changed<GripZone>>) {
-    for (mut emitter, grip_zone) in views.iter_mut() {
-        emitter.emit("FLURX|grip::resize", grip_zone.0);
+fn resize_grip_zone(
+    views: Query<(Entity, &GripZone), Changed<GripZone>>,
+    web_views: NonSend<WryWebViews>,
+) {
+    for (entity, grip_zone) in views.iter() {
+        if let Some(webview) = web_views.0.get(&entity) {
+            if let Err(e) = webview.evaluate_script(&format!("window.__FLURX__.gripZoneHeight={}", grip_zone.0)) {
+                bevy::log::warn!("Failed to grip zone height: {}", e);
+            }
+        }
     }
 }
 
@@ -155,9 +162,9 @@ fn grip_zone_release(mut er: EventReader<IpcEvent<OnGripRelease>>, mut commands:
 
 #[cfg(test)]
 mod tests {
-    use bevy::prelude::*;
     use crate::as_child::plugin::grip_zone::move_bounds;
     use crate::prelude::Bounds;
+    use bevy::prelude::*;
 
     #[test]
     fn stop_top_left_edge() {

@@ -1,7 +1,13 @@
 ;(() => {
-    let gripZoneHeight = 0;
+    Object.defineProperty(window.__FLURX__, "gripZoneHeight", {
+        value: 0,
+        writable: true,
+        configurable: false,
+    });
+
     window.onmousedown = (e) => {
-        if (e.clientY <= gripZoneHeight && e.button === 0) {
+        document.getElementById("count").innerText = e.button.toString()
+        if (e.clientY <= window.__FLURX__.gripZoneHeight && e.button === 0) {
             window.__FLURX__.emit("FLURX|grip::grab", {
                 x: e.clientX,
                 y: e.clientY
@@ -15,7 +21,4 @@
             });
         }
     };
-    window.__FLURX__.listen("FLURX|grip::resize", (height) => {
-        gripZoneHeight = height;
-    });
 })();

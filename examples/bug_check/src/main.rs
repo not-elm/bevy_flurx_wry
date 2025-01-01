@@ -41,7 +41,7 @@ fn spawn_webview(mut commands: Commands, window: Query<Entity, With<PrimaryWindo
             UseDevtools(true),
             ParentWindow(window.single()),
             Bounds {
-                size: Vec2::splat(100.),
+                size: Vec2::splat(250.),
                 ..default()
             },
         ));

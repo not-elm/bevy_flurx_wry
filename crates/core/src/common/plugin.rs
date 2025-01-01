@@ -64,3 +64,5 @@ impl Plugin for FlurxWryCommonPlugin {
         app.add_plugins(devtools::DevtoolsPlugin);
     }
 }
+
+
