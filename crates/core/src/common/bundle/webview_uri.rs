@@ -1,17 +1,17 @@
-use std::path::{Path, PathBuf};
-use bevy::prelude::{Component, ReflectComponent};
-use bevy::prelude::{ReflectDefault, Reflect};
-use serde::{Deserialize, Serialize};
 use crate::common::bundle::*;
+use bevy::prelude::{Component, ReflectComponent};
+use bevy::prelude::{Reflect, ReflectDefault};
 use bevy_flurx_ipc::prelude::IpcHandlers;
+use serde::{Deserialize, Serialize};
+use std::path::{Path, PathBuf};
 
 /// Represents the display destination of webview.
 ///
 /// If you want to load a local resource, use custom protocol: `flurx://localhost/<ROOT>/<uri>`.
-/// 
+///
 /// `<ROOT>` is specified by [`FlurxWryPlugin::local_root`](crate::prelude::FlurxWryPlugin).
-/// 
-/// 
+///
+///
 /// Default is `flurx://localhost/`.
 ///
 /// ```no_run
@@ -50,6 +50,7 @@ use bevy_flurx_ipc::prelude::IpcHandlers;
     UserAgent,
     Theme,
     InitializeFocused,
+    InitializationScripts,
     Incognito,
     HotkeysZoom,
     UseHttpsScheme,
@@ -65,14 +66,14 @@ pub struct WebviewUri(pub String);
 
 impl WebviewUri {
     /// Returns the new [`WebviewUri`].
-    pub fn new(uri: impl Into<String>) -> Self{
+    pub fn new(uri: impl Into<String>) -> Self {
         Self(uri.into())
     }
-    
+
     /// Returns the webview uri to load a local resource.
-    /// 
+    ///
     /// The url will be in the form of a custom protocol: `flurx://localhost/<ROOT>/<uri>`.
-    /// 
+    ///
     /// `<ROOT>` is specified in the [`FlurxWryPlugin`](crate::prelude::FlurxWryPlugin).
     pub fn relative_local(uri: impl AsRef<Path>) -> Self {
         let path = PathBuf::from("flurx://localhost/").join(uri.as_ref());

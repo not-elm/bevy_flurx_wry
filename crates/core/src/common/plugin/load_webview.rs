@@ -9,6 +9,7 @@ use crate::common::plugin::load_webview::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
 use crate::prelude::csp::Csp;
+use crate::prelude::InitializationScripts;
 use crate::WryLocalRoot;
 use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
@@ -44,6 +45,7 @@ type Configs2<'a> = (
     &'a HotkeysZoom,
     &'a UserAgent,
     &'a WebviewUri,
+    &'a InitializationScripts,
     Option<&'a Csp>,
     Option<&'a Name>,
 );
@@ -142,7 +144,7 @@ fn feed_configs2<'a>(
     builder: WebViewBuilder<'a>,
     commands: &mut Commands,
     entity: Entity,
-    (focused, hotkeys_zoom, user_agent, uri, csp, name): Configs2,
+    (focused, hotkeys_zoom, user_agent, uri, initialization_scripts, csp, name): Configs2,
     local_root: &WryLocalRoot,
 ) -> WebViewBuilder<'a> {
     let identifier = if let Some(name) = name {
@@ -159,11 +161,12 @@ fn feed_configs2<'a>(
         .with_focused(focused.0)
         .with_hotkeys_zoom(hotkeys_zoom.0)
         .with_initialization_script(&format!(
-            "{};{};{}",
+            "{};{};{};{}",
             include_str!("../../../scripts/api.js"),
             include_str!("../../../scripts/gripZone.js"),
             include_str!("../../../scripts/windowIdentifier.js")
                 .replace("<WINDOW_IDENTIFIER>", &identifier),
+            initialization_scripts.to_scripts(),
         ));
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);

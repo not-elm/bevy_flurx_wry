@@ -40,14 +40,10 @@ fn main() {
 
 fn spawn_webview(mut commands: Commands, window: Query<Entity, With<PrimaryWindow>>) {
     commands
-        .spawn((
+        .entity(window.single())
+        .insert((
             WebviewUri::default(),
             UseDevtools(true),
-            ParentWindow(window.single()),
-            Bounds {
-                size: Vec2::splat(250.),
-                ..default()
-            },
         ));
 }
 
