@@ -11,7 +11,7 @@ use crate::common::WebviewInitialized;
 use crate::prelude::csp::Csp;
 use crate::prelude::InitializationScripts;
 use crate::WryLocalRoot;
-use bevy::prelude::{App, Commands, Entity, EventReader, IntoSystemConfigs, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
+use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
 use rand::distributions::DistString;
 use std::ops::Deref;
@@ -27,7 +27,10 @@ impl Plugin for LoadWebviewPlugin {
         app.add_systems(PreUpdate, load_web_views);
 
         #[cfg(target_os = "macos")]
-        app.add_systems(PreUpdate, resize_webview_inner_window.run_if(bevy::prelude::on_event::<bevy::window::WindowResized>));
+        {
+            use bevy::prelude::IntoSystemConfigs;
+            app.add_systems(PreUpdate, resize_webview_inner_window.run_if(bevy::prelude::on_event::<bevy::window::WindowResized>));
+        }
     }
 }
 
@@ -81,7 +84,7 @@ fn load_web_views(
         let Some(builder) = new_builder(parent_window.is_some(), &bounds) else {
             continue;
         };
-        
+
         let builder = ipc_params.feed_ipc(webview_entity, builder);
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
         let builder = feed_configs1(builder, configs1);
@@ -243,7 +246,7 @@ unsafe fn attach_inner_window(
 
 #[cfg(target_os = "macos")]
 fn resize_webview_inner_window(
-    mut er: EventReader<bevy::window::WindowResized>,
+    mut er: bevy::prelude::EventReader<bevy::window::WindowResized>,
     winit_windows: NonSend<WinitWindows>,
     wry_web_views: NonSend<WryWebViews>,
 ) {
