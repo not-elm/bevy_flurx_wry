@@ -27,7 +27,7 @@ impl Plugin for LoadWebviewPlugin {
         app.add_systems(PreUpdate, load_web_views);
 
         #[cfg(target_os = "macos")]
-        app.add_systems(PreUpdate, resize_webview_bounds.run_if(bevy::prelude::on_event::<bevy::window::WindowResized>));
+        app.add_systems(PreUpdate, resize_webview_inner_window.run_if(bevy::prelude::on_event::<bevy::window::WindowResized>));
     }
 }
 
@@ -81,10 +81,7 @@ fn load_web_views(
         let Some(builder) = new_builder(parent_window.is_some(), &bounds) else {
             continue;
         };
-
-        // #[cfg(target_os = "macos")]
-        // let builder = insert_bounds(builder, &mut commands, webview_entity, &windows);
-
+        
         let builder = ipc_params.feed_ipc(webview_entity, builder);
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
         let builder = feed_configs1(builder, configs1);
@@ -101,8 +98,11 @@ fn load_web_views(
             continue;
         };
         #[cfg(target_os = "macos")]
+        // Safety: Ensure that attach the winit window to webview.
         unsafe {
-            attach_inner_window(&webview.ns_window(), &webview.webview());
+            if parent_window.is_none() {
+                attach_inner_window(&webview.ns_window(), &webview.webview());
+            }
         }
         commands
             .entity(webview_entity)
@@ -242,11 +242,12 @@ unsafe fn attach_inner_window(
 }
 
 #[cfg(target_os = "macos")]
-fn resize_webview_bounds(
+fn resize_webview_inner_window(
     mut er: EventReader<bevy::window::WindowResized>,
     winit_windows: NonSend<WinitWindows>,
     wry_web_views: NonSend<WryWebViews>,
 ) {
+    #[allow(deprecated)]
     use wry::raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
     for e in er.read() {
         let Some(winit_window) = winit_windows.get_window(e.window) else {
@@ -255,6 +256,7 @@ fn resize_webview_bounds(
         let Some(wry_webview) = wry_web_views.0.get(&e.window) else {
             continue;
         };
+        #[allow(deprecated)]
         let Ok(RawWindowHandle::AppKit(handle)) = winit_window.raw_window_handle() else {
             continue;
         };

@@ -12,7 +12,7 @@ readme = "../../README.md"
 
 [dependencies]
 bevy = { workspace = true }
-wry = { path = "../../../wry", features = ["transparent"] }
+wry = { version = "0.48.0", features = ["transparent"] }
 bevy_flurx_ipc = { path = "../ipc", version = "0.1.0-alpha1" }
 bevy_flurx = { workspace = true }
 serde = { workspace = true }
