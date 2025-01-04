@@ -15,7 +15,9 @@ use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin
 use bevy::winit::WinitWindows;
 use rand::distributions::DistString;
 use std::ops::Deref;
-use wry::{WebView, WebViewBuilder, WebViewExtMacOS};
+#[cfg(target_os = "macos")]
+use wry::WebViewExtMacOS;
+use wry::{WebView, WebViewBuilder};
 
 mod ipc;
 mod protocol;
