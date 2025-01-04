@@ -30,8 +30,8 @@ fn main() {
     //     "https://example.com",
     // ]));
 
-    #[cfg(target_os = "macos")]
-    app.insert_resource(ClearColor(Color::NONE));
+    // #[cfg(target_os = "macos")]
+    // app.insert_resource(ClearColor(Color::NONE));
 
     app
         .add_systems(Startup, spawn_webview)

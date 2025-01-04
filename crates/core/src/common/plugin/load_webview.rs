@@ -11,11 +11,11 @@ use crate::common::WebviewInitialized;
 use crate::prelude::csp::Csp;
 use crate::prelude::InitializationScripts;
 use crate::WryLocalRoot;
-use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
+use bevy::prelude::{App, Commands, Entity, EventReader, IntoSystemConfigs, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
 use rand::distributions::DistString;
 use std::ops::Deref;
-use wry::{WebView, WebViewBuilder};
+use wry::{WebView, WebViewBuilder, WebViewExtMacOS};
 
 mod ipc;
 mod protocol;
@@ -27,7 +27,7 @@ impl Plugin for LoadWebviewPlugin {
         app.add_systems(PreUpdate, load_web_views);
 
         #[cfg(target_os = "macos")]
-        app.add_systems(PreUpdate, resize_webview_bounds);
+        app.add_systems(PreUpdate, resize_webview_bounds.run_if(bevy::prelude::on_event::<bevy::window::WindowResized>));
     }
 }
 
@@ -82,8 +82,8 @@ fn load_web_views(
             continue;
         };
 
-        #[cfg(target_os = "macos")]
-        let builder = insert_bounds(builder, &mut commands, webview_entity, &windows);
+        // #[cfg(target_os = "macos")]
+        // let builder = insert_bounds(builder, &mut commands, webview_entity, &windows);
 
         let builder = ipc_params.feed_ipc(webview_entity, builder);
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
@@ -100,6 +100,10 @@ fn load_web_views(
         else {
             continue;
         };
+        #[cfg(target_os = "macos")]
+        unsafe {
+            attach_inner_window(&webview.ns_window(), &webview.webview());
+        }
         commands
             .entity(webview_entity)
             .insert(WebviewInitialized(()));
@@ -218,40 +222,51 @@ fn build_webview(
     }
 }
 
-/// On Mac, there is an [issue](https://github.com/tauri-apps/wry/pull/1323) where generating the window ifself as a webview causes the app clash.
-///
-/// Currently, we are avoiding this issue by creating bounds that cover the entire window.
-///
-/// FIXME: However, since we must set [`ClearColor`](bevy::prelude::ClearColor) to [`Color::NONE`](bevy::prelude::Color) and set [`CompositeAlphaMode`](bevy::window::CompositeAlphaMode) to `CompositeAlphaMode::PostMultiplied`.,
-/// we will revise this approach if an alternative solution is found.
 #[cfg(target_os = "macos")]
-fn insert_bounds<'a>(
-    builder: WebViewBuilder<'a>,
-    commands: &mut Commands,
-    webview_entity: Entity,
-    windows: &WinitWindows,
-) -> WebViewBuilder<'a> {
-    use bevy::utils::default;
-    if let Some(window) = windows.get_window(webview_entity) {
-        let size = window.inner_size().to_logical::<f32>(window.scale_factor());
-        let bounds = Bounds {
-            size: bevy::prelude::Vec2::new(size.width, size.height),
-            ..default()
-        };
-        let rect = bounds.as_wry_rect();
-        commands.entity(webview_entity).insert(bounds);
-        builder.with_bounds(rect)
-    } else {
-        builder
-    }
+unsafe fn attach_inner_window(
+    application_window: &objc2_app_kit::NSWindow,
+    webview: &wry::WryWebView,
+) {
+    use objc2_app_kit::NSAutoresizingMaskOptions;
+
+    webview.removeFromSuperview();
+    webview.setAutoresizingMask(
+        NSAutoresizingMaskOptions::NSViewHeightSizable
+            | NSAutoresizingMaskOptions::NSViewWidthSizable,
+    );
+    let inner_window = objc2_app_kit::NSWindow::new(objc2_foundation::MainThreadMarker::new().unwrap());
+    inner_window.setStyleMask(objc2_app_kit::NSWindowStyleMask::Borderless | objc2_app_kit::NSWindowStyleMask::FullSizeContentView);
+    inner_window.setFrame_display(application_window.contentRectForFrameRect(application_window.frame()), true);
+    inner_window.setContentView(Some(webview));
+    application_window.addChildWindow_ordered(&inner_window, objc2_app_kit::NSWindowOrderingMode::NSWindowAbove);
 }
 
 #[cfg(target_os = "macos")]
-fn resize_webview_bounds(mut web_views: Query<(&mut Bounds, &Window), bevy::prelude::Changed<Window>>) {
-    for (mut bounds, window) in web_views.iter_mut() {
-        let size = window.size();
-        if bounds.size != size {
-            bounds.size = size;
-        }
+fn resize_webview_bounds(
+    mut er: EventReader<bevy::window::WindowResized>,
+    winit_windows: NonSend<WinitWindows>,
+    wry_web_views: NonSend<WryWebViews>,
+) {
+    use wry::raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
+    for e in er.read() {
+        let Some(winit_window) = winit_windows.get_window(e.window) else {
+            continue;
+        };
+        let Some(wry_webview) = wry_web_views.0.get(&e.window) else {
+            continue;
+        };
+        let Ok(RawWindowHandle::AppKit(handle)) = winit_window.raw_window_handle() else {
+            continue;
+        };
+        let ns_view = handle.ns_view.as_ptr();
+        // SAFETY: The pointer came from `WindowHandle`, which ensures
+        // that the `AppKitWindowHandle` contains a valid pointer to an
+        // `NSView`.
+        // Unwrap is fine, since the pointer came from `NonNull`.
+        let ns_view: objc2::rc::Id<objc2_app_kit::NSView> = unsafe { objc2::rc::Id::retain(ns_view.cast()) }.unwrap();
+        let Some(ns_window) = ns_view.window() else {
+            continue;
+        };
+        wry_webview.ns_window().setFrame_display(ns_window.contentRectForFrameRect(ns_window.frame()), true);
     }
 }
