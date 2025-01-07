@@ -96,7 +96,6 @@ fn get_response(
     if let Some(csp) = csp {
         response_builder = response_builder.header(CONTENT_SECURITY_POLICY, csp.0.as_str());
     }
-    println!("{:?}", std::str::from_utf8(&content));
     response_builder
         .header(CONTENT_TYPE, mimetype)
         .body(content)
