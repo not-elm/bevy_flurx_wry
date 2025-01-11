@@ -167,25 +167,15 @@ This crate is licensed under the MIT License or the Apache License 2.0.
 
 - [ ] Bugfix
     - [x] The webview could be moved without dragging.
-    - [ ] `with_initialization_script` does not execute before `window.onload`
     - [x] It crashes when clicking outside the window.(on Mac)
+    - [ ] Mouse cursor does not change(on Mac)
+    - [ ] Input text element does not work(on Mac)
 - [ ] Api
     - [x] fs
     - [x] clipboard
     - [x] dialog
-    - [ ] http
+    - [x] http
         - [x] fetch api
-    - [ ] remote
-        - [ ] bevy/get
-        - [ ] bevy/query
-        - [ ] bevy/spawn
-        - [ ] bevy/destroy
-        - [ ] bevy/remove
-        - [ ] bevy/insert
-        - [ ] bevy/reparent
-        - [ ] bevy/list
-        - [ ] bevy/get+watch
-        - [ ] bevy/list+watch
     - [ ] mocks
     - [x] notification
     - [x] os
@@ -195,6 +185,6 @@ This crate is licensed under the MIT License or the Apache License 2.0.
     - [x] window
 - [ ] Security
     - [x] csp
-    - [ ] scope
+    - [x] File system access scope
 - [ ] Support Linux(X11)
 - [ ] Support Linux(Wayland)
