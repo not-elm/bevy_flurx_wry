@@ -6,16 +6,16 @@ description = "provides a way for ipc communication using bevy_flurx"
 authors = ["elm"]
 repository = "https://github.com/not-elm/bevy_flurx_wry"
 categories = ["game-development"]
-keywords = ["game", "gamedev", "bevy", "ipc"]
+keywords = ["game", "gamedev", "bevy", "ipc", "async"]
 license = "MIT OR Apache-2.0"
-readme = "../bevy_flurx_wry/README.md"
+readme = "README.md"
 
 [[test]]
 name = "progress"
 path = "tests/index.rs"
 
 [dependencies]
-bevy = { workspace = true }
+bevy = { workspace = true, features = ["serialize"] }
 bevy_flurx_ipc_macro = { path = "../ipc_macro", version = "0.1.0-alpha1" }
 bevy_flurx = { workspace = true }
 serde = { workspace = true }

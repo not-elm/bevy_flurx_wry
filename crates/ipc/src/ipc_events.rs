@@ -1,10 +1,10 @@
 //! Defines the ipc commands and the queue to execute them.
 
 use bevy::prelude::{error, App, Entity, Event, EventWriter, IntoSystemConfigs, Plugin, PreUpdate, Res, Resource};
+use bevy::utils::HashMap;
 use serde::de::DeserializeOwned;
 use serde::Deserialize;
 use std::sync::{Arc, Mutex};
-use bevy::utils::HashMap;
 
 /// The event sent from webview.
 ///
@@ -40,7 +40,7 @@ pub struct IpcRawEventBody {
     pub payload: String,
 }
 
-/// The ipc commands that exists only one in the [`World`](bevy_ecs::prelude::World).
+/// The ipc commands that exists only one in the [`World`](bevy::prelude::World).
 #[repr(transparent)]
 #[derive(Resource, Clone, Default)]
 pub struct IpcRawEvents(Arc<Mutex<Vec<IpcRawEvent>>>);

@@ -1,12 +1,11 @@
 //! Defines a handler that executes the [`Action`](bevy_flurx::prelude::Action) of the command.
 
 use crate::ipc_commands::IpcCommand;
-use bevy::prelude::{Commands, Component, Entity, Reflect};
+use bevy::prelude::{Commands, Component, Entity, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize};
 use bevy::utils::HashMap;
+use serde::{Deserialize, Serialize};
 
 /// The ipc invoke handlers.
-///
-/// Usually created via [`ipc_handlers!`](crate::ipc_handlers).
 #[repr(transparent)]
 #[derive(Component, Default)]
 pub struct IpcHandlers(pub(crate) HashMap<String, IpcHandler>);
@@ -68,7 +67,7 @@ pub type IpcFn = fn(commands: &mut Commands, IpcCommand);
 
 /// The ipc invoke handler.
 ///
-/// Usually created via [`ipc_handlers!`](crate::ipc_handlers).
+/// Usually created via [`command`](bevy_flurx_ipc_macro::command).
 pub struct IpcHandler {
     id: String,
     f: IpcFn,
@@ -108,5 +107,6 @@ where
 /// It represents the entity associated with the `Webview` components
 /// such as [`IpcHandler`].
 #[repr(transparent)]
-#[derive(Component, Copy, Clone, Reflect, Debug, Eq, PartialEq)]
+#[derive(Component, Copy, Clone, Reflect, Debug, Eq, PartialEq, Serialize, Deserialize)]
+#[reflect(Component, Serialize, Deserialize)]
 pub struct WebviewEntity(pub Entity);

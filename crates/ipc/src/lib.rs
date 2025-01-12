@@ -1,4 +1,4 @@
-//! This library facilitates communication between the `webview` and `bevy`.
+#![doc = include_str!("../README.md")]
 
 use crate::ipc_commands::FlurxIpcCommandPlugin;
 use crate::prelude::FlurxIpcEventPlugin;
@@ -26,7 +26,9 @@ pub mod prelude {
     }
 }
 
-/// The common plugin for IPC communication between `Webview` and `bevy`.
+/// This plugin assists in implementing inter-process communication.
+///
+/// Please see for [`module-level documentation`](crate).
 pub struct FlurxIpcPlugin;
 
 impl Plugin for FlurxIpcPlugin {

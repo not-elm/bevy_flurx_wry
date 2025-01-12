@@ -1,12 +1,12 @@
 //! Defines the ipc commands and the queue to execute them.
 
 use crate::component::{IpcHandlers, WebviewEntity};
-use bevy::prelude::{App, Commands, Entity, Event, Plugin, Query, Reflect, Res, Resource, Update};
+use bevy::prelude::{App, Commands, Entity, Event, Plugin, Query, Reflect, ReflectDeserialize, ReflectSerialize, Res, Resource, Update};
 use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 
-/// The ipc commands that exists only one in the [`World`](bevy_ecs::prelude::World).
+/// The ipc commands that exists only one in the [`World`](bevy::prelude::World).
 #[derive(Resource, Clone, Default)]
 pub struct IpcCommands(Arc<Mutex<Vec<IpcCommand>>>);
 
@@ -43,7 +43,7 @@ pub struct IpcCommand {
 /// The command info passed from `javascript`.
 #[derive(Deserialize, Debug)]
 pub struct Payload {
-    /// Ipc id
+    /// `ipc-command-id` to call.
     pub id: String,
 
     /// The serialized args passed from javascript.
@@ -78,7 +78,8 @@ impl Payload {
 }
 
 /// The event signals the end of ipc processing.
-#[derive(Event, Eq, PartialEq, Clone, Serialize, Deserialize, Reflect)]
+#[derive(Event, Eq, PartialEq, Clone, Serialize, Deserialize, Reflect, Debug)]
+#[reflect(Serialize, Deserialize)]
 pub struct IpcResolveEvent {
     /// The entity attached to [`IpcHandlers`] that execute ipc.
     pub entity: Entity,
