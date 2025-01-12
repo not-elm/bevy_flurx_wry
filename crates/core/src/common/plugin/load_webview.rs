@@ -31,7 +31,9 @@ impl Plugin for LoadWebviewPlugin {
         #[cfg(target_os = "macos")]
         {
             use bevy::prelude::IntoSystemConfigs;
-            app.add_systems(PreUpdate, resize_webview_inner_window.run_if(bevy::prelude::on_event::<bevy::window::WindowResized>));
+            app.add_systems(PreUpdate, (
+                resize_webview_inner_window.run_if(bevy::prelude::on_event::<bevy::window::WindowResized>),
+            ));
         }
     }
 }
@@ -232,18 +234,48 @@ unsafe fn attach_inner_window(
     application_window: &objc2_app_kit::NSWindow,
     webview: &wry::WryWebView,
 ) {
-    use objc2_app_kit::NSAutoresizingMaskOptions;
+    use objc2_app_kit::{NSApplication, NSAutoresizingMaskOptions};
 
     webview.removeFromSuperview();
     webview.setAutoresizingMask(
         NSAutoresizingMaskOptions::NSViewHeightSizable
             | NSAutoresizingMaskOptions::NSViewWidthSizable,
     );
-    let inner_window = objc2_app_kit::NSWindow::new(objc2_foundation::MainThreadMarker::new().unwrap());
-    inner_window.setStyleMask(objc2_app_kit::NSWindowStyleMask::Borderless | objc2_app_kit::NSWindowStyleMask::FullSizeContentView);
-    inner_window.setFrame_display(application_window.contentRectForFrameRect(application_window.frame()), true);
+    let mtw = objc2_foundation::MainThreadMarker::new().unwrap();
+    let inner_window = objc2_app_kit::NSPanel::new(mtw);
+    inner_window.setTitle(&objc2_foundation::NSString::from_str(""));
+    inner_window.setStyleMask(
+        objc2_app_kit::NSWindowStyleMask::HUDWindow |
+            objc2_app_kit::NSWindowStyleMask::Titled |
+            objc2_app_kit::NSWindowStyleMask::NonactivatingPanel |
+            objc2_app_kit::NSWindowStyleMask::FullSizeContentView
+    );
+    inner_window.setMovable(false);
+    inner_window.makeFirstResponder(Some(webview));
+
+    let content_rect = application_window.contentRectForFrameRect(application_window.frame());
+    inner_window.setFrame_display(content_rect, true);
+    inner_window.setHidesOnDeactivate(false);
+    inner_window.setTitlebarAppearsTransparent(true);
+    inner_window.setTitleVisibility(objc2_app_kit::NSWindowTitleVisibility::NSWindowTitleHidden);
+
     inner_window.setContentView(Some(webview));
+
+    inner_window.becomeKeyWindow();
+    inner_window.makeFirstResponder(Some(webview));
+
     application_window.addChildWindow_ordered(&inner_window, objc2_app_kit::NSWindowOrderingMode::NSWindowAbove);
+    application_window.makeFirstResponder(Some(&inner_window));
+
+    inner_window.makeKeyAndOrderFront(None);
+
+    let app = NSApplication::sharedApplication(mtw);
+    if objc2_foundation::NSProcessInfo::processInfo().operatingSystemVersion().majorVersion >= 14 {
+        NSApplication::activate(&app);
+    } else {
+        #[allow(deprecated)]
+        NSApplication::activateIgnoringOtherApps(&app, true);
+    }
 }
 
 #[cfg(target_os = "macos")]
@@ -277,3 +309,4 @@ fn resize_webview_inner_window(
         wry_webview.ns_window().setFrame_display(ns_window.contentRectForFrameRect(ns_window.frame()), true);
     }
 }
+
