@@ -8,7 +8,7 @@ Its provides a mechanism similar to coroutines, making it easy to implement asyn
 
 ## Usage
 
-```rust
+```no_run
 use bevy::prelude::*;
 use bevy_flurx::prelude::*;
 use bevy_flurx_ipc::prelude::*;
