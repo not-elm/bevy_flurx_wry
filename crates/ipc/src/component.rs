@@ -27,17 +27,17 @@ impl IpcHandlers {
     ///     })
     /// }
     ///
-    /// IpcHandlers::new(hello);
+    /// IpcHandlers::new([hello]);
     /// ```
-    pub fn new(handler: impl Into<IpcHandler>) -> Self {
-        let me = Self::default();
-        me.with(handler)
-    }
-
-    /// Add a [`IpcHandler`].
-    pub fn with(mut self, handler: impl Into<IpcHandler>) -> Self {
-        self.register(handler);
-        self
+    pub fn new<H>(handlers: impl IntoIterator<Item=H>) -> Self
+    where
+        H: Into<IpcHandler>,
+    {
+        let mut me = Self::default();
+        for handler in handlers.into_iter() {
+            me.register(handler);
+        }
+        me
     }
 
     /// Add a [`IpcHandler`].

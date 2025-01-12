@@ -3,8 +3,7 @@
 use bevy::prelude::*;
 use bevy_flurx::action::{delay, once};
 use bevy_flurx::task::ReactorTask;
-use bevy_flurx_ipc::ipc_handlers;
-use bevy_flurx_ipc::prelude::WebviewEntity;
+use bevy_flurx_ipc::prelude::{IpcHandlers, WebviewEntity};
 use bevy_flurx_ipc_macro::command;
 
 #[command(internal)]
@@ -76,7 +75,7 @@ async fn pattern12(
 ) {}
 
 fn main() {
-    ipc_handlers![
+    IpcHandlers::new([
         pattern1,
         pattern2,
         pattern3,
@@ -89,5 +88,5 @@ fn main() {
         pattern10,
         pattern11,
         pattern12,
-    ];
+    ]);
 }

@@ -1,16 +1,16 @@
-//! Testing to edit the id of  ipc-command. 
+//! Testing to edit the id of  ipc-command.
 
-use bevy_flurx_ipc::ipc_handlers;
+use bevy_flurx_ipc::prelude::IpcHandlers;
 use bevy_flurx_ipc_macro::command;
 
-#[command(id="FLURX|TEST", internal)]
+#[command(id = "FLURX|TEST", internal)]
 async fn hello() -> String {
     "hello".to_string()
 }
 
 fn main() {
-    ipc_handlers![
+    IpcHandlers::new([
         hello,
-    ];
+    ]);
     assert_eq!(hello().id(), "FLURX|TEST");
 }
