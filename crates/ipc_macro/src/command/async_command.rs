@@ -7,10 +7,9 @@ use syn::{FnArg, ItemFn, Type};
 
 pub fn expand_async_command(
     f: &ItemFn,
-    is_internal: bool,
 ) -> TokenStream2 {
     let fn_ident = &f.sig.ident;
-    let module_name = base_module(is_internal);
+    let module_name = base_module();
     let inputs = parse_async_command_inputs(f, &module_name);
     expand_call(&module_name, quote! { #fn_ident(#(#inputs,)*).await; })
 }

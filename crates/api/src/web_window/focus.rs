@@ -16,7 +16,7 @@ api_plugin!(
     command: focus
 );
 
-#[command(id = "FLURX|web_window::focus", internal)]
+#[command(id = "FLURX|web_window::focus")]
 fn focus(In(args): In<String>) -> Action<String> {
     once::run(system).with(args)
 }

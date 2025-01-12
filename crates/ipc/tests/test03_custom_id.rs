@@ -1,9 +1,8 @@
 //! Testing to edit the id of  ipc-command.
 
-use bevy_flurx_ipc::prelude::IpcHandlers;
-use bevy_flurx_ipc_macro::command;
+use bevy_flurx_ipc::prelude::*;
 
-#[command(id = "FLURX|TEST", internal)]
+#[command(id = "FLURX|TEST")]
 async fn hello() -> String {
     "hello".to_string()
 }

@@ -20,7 +20,7 @@ api_plugin!(
 
 type Args = (String, PhysicalPosition<i32>);
 
-#[command(id = "FLURX|web_window::set_position", internal)]
+#[command(id = "FLURX|web_window::set_position")]
 fn set_position(In(args): In<Args>) -> Action<Args> {
     once::run(system).with(args)
 }

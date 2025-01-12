@@ -23,6 +23,7 @@ pub mod prelude {
 /// This is useful, for example, when setting up a custom API; As shown below.
 ///
 /// ```no_run
+/// use bevy_flurx_ipc::prelude::*;
 /// use bevy_flurx_wry::prelude::*;
 /// use bevy_flurx::prelude::*;
 /// use bevy::prelude::*;

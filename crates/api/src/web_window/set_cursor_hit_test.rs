@@ -19,7 +19,7 @@ api_plugin!(
 
 type Args = (String, bool);
 
-#[command(id = "FLURX|web_window::set_cursor_hit_test", internal)]
+#[command(id = "FLURX|web_window::set_cursor_hit_test")]
 fn set_cursor_hit_test(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(system).with(args)
 }

@@ -304,67 +304,67 @@ api_plugin!(
     command: font
 );
 
-#[command(id = "FLURX|path::config", internal)]
+#[command(id = "FLURX|path::config")]
 fn config() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::config_dir))
 }
 
-#[command(id = "FLURX|path::config_local", internal)]
+#[command(id = "FLURX|path::config_local")]
 fn config_local() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::config_local_dir))
 }
 
-#[command(id = "FLURX|path::data", internal)]
+#[command(id = "FLURX|path::data")]
 fn data() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::data_dir))
 }
 
-#[command(id = "FLURX|path::data_local", internal)]
+#[command(id = "FLURX|path::data_local")]
 fn data_local() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::data_local_dir))
 }
 
-#[command(id = "FLURX|path::audio", internal)]
+#[command(id = "FLURX|path::audio")]
 fn audio() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::audio_dir))
 }
 
-#[command(id = "FLURX|path::cache", internal)]
+#[command(id = "FLURX|path::cache")]
 fn cache() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::cache_dir))
 }
 
-#[command(id = "FLURX|path::desktop", internal)]
+#[command(id = "FLURX|path::desktop")]
 fn desktop() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::desktop_dir))
 }
 
-#[command(id = "FLURX|path::document", internal)]
+#[command(id = "FLURX|path::document")]
 fn document() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::document_dir))
 }
 
-#[command(id = "FLURX|path::download", internal)]
+#[command(id = "FLURX|path::download")]
 fn download() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::download_dir))
 }
 
-#[command(id = "FLURX|path::executable", internal)]
+#[command(id = "FLURX|path::executable")]
 fn executable() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::executable_dir))
 }
 
-#[command(id = "FLURX|path::public", internal)]
+#[command(id = "FLURX|path::public")]
 fn public() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::public_dir))
 }
 
-#[command(id = "FLURX|path::runtime", internal)]
+#[command(id = "FLURX|path::runtime")]
 fn runtime() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::runtime_dir))
 }
 
-#[command(id = "FLURX|path::temp", internal)]
+#[command(id = "FLURX|path::temp")]
 fn temp() -> ActionSeed<(), Option<PathBuf>> {
     fn path() -> Option<PathBuf> {
         Some(std::env::temp_dir())
@@ -372,27 +372,27 @@ fn temp() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(path))
 }
 
-#[command(id = "FLURX|path::template", internal)]
+#[command(id = "FLURX|path::template")]
 fn template() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::template_dir))
 }
 
-#[command(id = "FLURX|path::video", internal)]
+#[command(id = "FLURX|path::video")]
 fn video() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::video_dir))
 }
 
-#[command(id = "FLURX|path::home", internal)]
+#[command(id = "FLURX|path::home")]
 fn home() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::home_dir))
 }
 
-#[command(id = "FLURX|path::picture", internal)]
+#[command(id = "FLURX|path::picture")]
 fn picture() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::picture_dir))
 }
 
-#[command(id = "FLURX|path::font", internal)]
+#[command(id = "FLURX|path::font")]
 fn font() -> ActionSeed<(), Option<PathBuf>> {
     once::run(obtain_path(dirs::font_dir))
 }

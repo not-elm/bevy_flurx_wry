@@ -14,7 +14,7 @@ api_plugin!(
     command: locale
 );
 
-#[command(id = "FLURX|os::locale", internal)]
+#[command(id = "FLURX|os::locale")]
 fn locale() -> Action<(), Option<String>> {
     once::run(sys_locale::get_locale).with(())
 }

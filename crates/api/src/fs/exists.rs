@@ -25,7 +25,7 @@ struct Args {
     dir: Option<BaseDirectory>,
 }
 
-#[command(id = "FLURX|fs::exists", internal)]
+#[command(id = "FLURX|fs::exists")]
 fn exists(In(args): In<Args>) -> Action<Args, ApiResult<bool>> {
     once::run(exists_system).with(args)
 }

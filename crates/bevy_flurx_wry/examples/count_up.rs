@@ -3,9 +3,10 @@
 use bevy::prelude::*;
 use bevy::window::{PrimaryWindow, WindowResolution};
 use bevy_flurx::prelude::*;
+use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::IpcHandlers;
 use bevy_flurx_wry::prelude::*;
 use std::path::PathBuf;
-
 
 #[derive(Resource, Debug)]
 struct Count(usize);

@@ -2,10 +2,10 @@
 
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
+use bevy_flurx_api::web_window::AllWebWindowPlugins;
 use bevy_flurx_wry::prelude::*;
 use std::path::PathBuf;
 use std::time::Duration;
-use bevy_flurx_wry_api::web_window::AllWebWindowPlugins;
 
 fn main() {
     App::new()

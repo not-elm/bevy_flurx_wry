@@ -14,7 +14,7 @@ api_plugin!(
     command: host_name
 );
 
-#[command(id = "FLURX|os::host_name", internal)]
+#[command(id = "FLURX|os::host_name")]
 fn host_name() -> Action<(), Option<String>> {
     once::run(sysinfo::System::host_name).with(())
 }

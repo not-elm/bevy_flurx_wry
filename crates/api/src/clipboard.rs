@@ -48,12 +48,12 @@ api_plugin!(
     command: get_text
 );
 
-#[command(id = "FLURX|clipboard::set_text", internal)]
+#[command(id = "FLURX|clipboard::set_text")]
 fn set_text(In(args): In<String>) -> Action<String, ApiResult> {
     once::run(set_text_system).with(args)
 }
 
-#[command(id = "FLURX|clipboard::get_text", internal)]
+#[command(id = "FLURX|clipboard::get_text")]
 fn get_text() -> Action<(), ApiResult<String>> {
     once::run(get_text_system).with(())
 }

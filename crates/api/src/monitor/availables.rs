@@ -1,12 +1,12 @@
+use crate::macros::api_plugin;
+use crate::monitor::{Monitor, PhysicalPosition, PhysicalSize};
 use bevy::prelude::{Entity, In, NonSend, Query};
 use bevy::winit::WinitWindows;
-use crate::monitor::{Monitor, PhysicalPosition, PhysicalSize};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::OmitInput;
 use bevy_flurx_ipc::command;
 use bevy_flurx_ipc::component::WebviewEntity;
-use bevy_flurx_wry_core::prelude::ParentWindow;
-use crate::macros::api_plugin;
+use bevy_flurx_wry::prelude::ParentWindow;
 
 api_plugin!(
     /// You'll be able to get a describing the monitor infos from a webview.
@@ -20,7 +20,7 @@ api_plugin!(
     command: available_monitors
 );
 
-#[command(id = "FLURX|monitor::availables", internal)]
+#[command(id = "FLURX|monitor::availables")]
 fn available_monitors(WebviewEntity(entity): WebviewEntity) -> Action<(), Vec<Monitor>> {
     once::run(available_monitors_system).with(entity).omit_input().with(())
 }
@@ -31,9 +31,9 @@ fn available_monitors_system(
     parent: Query<&ParentWindow>,
     web_views: NonSend<WinitWindows>,
 ) -> Vec<Monitor> {
-    let entity = if let Ok(parent) = parent.get(entity){
+    let entity = if let Ok(parent) = parent.get(entity) {
         parent.0
-    }else{
+    } else {
         entity
     };
     let Some(win) = web_views.get_window(entity) else {

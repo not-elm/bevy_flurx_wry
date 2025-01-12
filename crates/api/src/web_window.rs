@@ -60,7 +60,7 @@ use bevy::ecs::system::SystemParam;
 use bevy::prelude::{Entity, Mut, Name, NonSend, PluginGroup, Query, Window};
 use bevy::window::WindowWrapper;
 use bevy::winit::WinitWindows;
-use bevy_flurx_wry_core::prelude::ParentWindow;
+use bevy_flurx_wry::prelude::ParentWindow;
 
 /// Allows you to use all window plugins.
 ///

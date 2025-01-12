@@ -16,7 +16,7 @@ api_plugin!(
     command: un_focus
 );
 
-#[command(id = "FLURX|web_window::un_focus", internal)]
+#[command(id = "FLURX|web_window::un_focus")]
 fn un_focus(In(args): In<String>) -> Action<String> {
     once::run(system).with(args)
 }

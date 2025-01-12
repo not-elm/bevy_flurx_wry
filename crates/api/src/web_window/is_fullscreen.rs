@@ -16,7 +16,7 @@ api_plugin!(
     command: is_fullscreen
 );
 
-#[command(id = "FLURX|web_window::is_fullscreen", internal)]
+#[command(id = "FLURX|web_window::is_fullscreen")]
 fn is_fullscreen(In(args): In<String>) -> Action<String, bool> {
     once::run(system).with(args)
 }

@@ -1,12 +1,11 @@
 //! This Example show how to listen the [`IpcEvent`].
 
-use std::path::PathBuf;
-
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
-use serde::Deserialize;
-
+use bevy_flurx_ipc::prelude::*;
 use bevy_flurx_wry::prelude::*;
+use serde::Deserialize;
+use std::path::PathBuf;
 
 fn main() {
     App::new()

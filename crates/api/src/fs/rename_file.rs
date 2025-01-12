@@ -34,7 +34,7 @@ struct Args {
     new_dir: Option<BaseDirectory>,
 }
 
-#[command(id = "FLURX|fs::rename_file", internal)]
+#[command(id = "FLURX|fs::rename_file")]
 fn rename_file(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(rename_file_system).with(args)
 }

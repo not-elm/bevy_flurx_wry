@@ -16,7 +16,7 @@ api_plugin!(
     command: is_focused
 );
 
-#[command(id = "FLURX|web_window::is_focused", internal)]
+#[command(id = "FLURX|web_window::is_focused")]
 fn is_focused(In(args): In<String>) -> Action<String, bool> {
     once::run(system).with(args)
 }

@@ -12,7 +12,7 @@ export namespace monitor {
      *  Returns the monitor infos.
      *
      *  @example
-     * import {monitor, Monitor} from "@bevy_flurx_wry/api";
+     * import {monitor, Monitor} from "@aa/api";
      *
      * const monitors: Monitor[] = await monitor.availables();
      */
@@ -24,7 +24,7 @@ export namespace monitor {
      *  Returns the current monitor info.
      *
      *  @example
-     * import {monitor, Monitor} from "@bevy_flurx_wry/api";
+     * import {monitor, Monitor} from "@aa/api";
      *
      * const currentMonitor: Monitor | null = await monitor.current();
      */
@@ -36,7 +36,7 @@ export namespace monitor {
      *  Returns the primary monitor info.
      *
      *  @example
-     * import {monitor, Monitor} from "@bevy_flurx_wry/api";
+     * import {monitor, Monitor} from "@aa/api";
      *
      * const primaryMonitor: Monitor | null = await monitor.primary();
      */

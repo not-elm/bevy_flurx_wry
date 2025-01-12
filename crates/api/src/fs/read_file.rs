@@ -41,12 +41,12 @@ struct Args {
     dir: Option<BaseDirectory>,
 }
 
-#[command(id = "FLURX|fs::read_text_file", internal)]
+#[command(id = "FLURX|fs::read_text_file")]
 fn read_text_file(In(args): In<Args>) -> Action<Args, ApiResult<String>> {
     once::run(read_text_file_system).with(args)
 }
 
-#[command(id = "FLURX|fs::read_binary_file", internal)]
+#[command(id = "FLURX|fs::read_binary_file")]
 fn read_binary_file(In(args): In<Args>) -> Action<Args, ApiResult<Vec<u8>>> {
     once::run(read_binary_file_system).with(args)
 }

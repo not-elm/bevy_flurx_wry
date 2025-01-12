@@ -88,6 +88,7 @@ impl AccessAllowOrigins {
     /// ```no_run
     /// use bevy::prelude::*;
     /// use bevy_flurx_wry::prelude::*;
+    /// use bevy_flurx_api::prelude::AccessAllowOrigins;
     ///
     /// let mut app = App::new();
     /// app.insert_resource(AccessAllowOrigins::new([
@@ -109,7 +110,7 @@ impl AccessAllowOrigins {
     }
 }
 
-#[command(id = "FLURX|http::fetch", internal)]
+#[command(id = "FLURX|http::fetch")]
 async fn fetch(In(args): In<Args>, task: ReactorTask) -> ApiResult<Output> {
     task.will(
         Update,

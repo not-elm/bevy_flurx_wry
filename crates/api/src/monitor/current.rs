@@ -1,12 +1,12 @@
-use bevy::prelude::{Entity, In, NonSend, Query};
-use bevy::winit::WinitWindows;
 use crate::macros::api_plugin;
 use crate::monitor::{Monitor, PhysicalPosition, PhysicalSize};
+use bevy::prelude::{Entity, In, NonSend, Query};
+use bevy::winit::WinitWindows;
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::OmitInput;
 use bevy_flurx_ipc::command;
 use bevy_flurx_ipc::component::WebviewEntity;
-use bevy_flurx_wry_core::prelude::ParentWindow;
+use bevy_flurx_wry::prelude::ParentWindow;
 
 api_plugin!(
     /// You'll be able to get the current monitor info from a webview.
@@ -20,7 +20,7 @@ api_plugin!(
     command: current_monitor
 );
 
-#[command(id = "FLURX|monitor::current", internal)]
+#[command(id = "FLURX|monitor::current")]
 fn current_monitor(WebviewEntity(entity): WebviewEntity) -> Action<(), Option<Monitor>> {
     once::run(current_monitor_system).with(entity).omit_input().with(())
 }

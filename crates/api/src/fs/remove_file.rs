@@ -27,7 +27,7 @@ struct Args {
     dir: Option<BaseDirectory>,
 }
 
-#[command(id = "FLURX|fs::remove_file", internal)]
+#[command(id = "FLURX|fs::remove_file")]
 fn remove_file(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(remove_file_system).with(args)
 }

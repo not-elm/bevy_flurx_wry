@@ -21,14 +21,14 @@ api_plugin!(
 type Args = (String, VideoModeState);
 
 #[derive(Deserialize)]
-#[serde(rename_all="snake_case")]
+#[serde(rename_all = "snake_case")]
 enum VideoModeState {
     Fullscreen,
     Borderless,
     Windowed,
 }
 
-#[command(id = "FLURX|web_window::set_window_mode", internal)]
+#[command(id = "FLURX|web_window::set_window_mode")]
 fn set_window_mode(In(args): In<Args>) -> Action<Args> {
     once::run(system).with(args)
 }

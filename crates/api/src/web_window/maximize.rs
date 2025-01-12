@@ -16,7 +16,7 @@ api_plugin!(
     command: maximize
 );
 
-#[command(id = "FLURX|web_window::maximize", internal)]
+#[command(id = "FLURX|web_window::maximize")]
 fn maximize(In(args): In<String>) -> Action<String> {
     once::run(system).with(args)
 }
@@ -24,7 +24,7 @@ fn maximize(In(args): In<String>) -> Action<String> {
 fn system(
     In(identifier): In<String>,
     web_views: WebWinitWindowParams,
-)  {
+) {
     let Some(window) = web_views.winit_window(&identifier) else {
         return;
     };

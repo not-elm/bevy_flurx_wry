@@ -17,7 +17,7 @@ api_plugin!(
     command: inner_size
 );
 
-#[command(id = "FLURX|web_window::inner_size", internal)]
+#[command(id = "FLURX|web_window::inner_size")]
 fn inner_size(In(args): In<String>) -> Action<String, Option<PhysicalSize<u32>>> {
     once::run(system).with(args)
 }
@@ -27,6 +27,6 @@ fn system(
     mut web_views: WebWinitWindowParams,
 ) -> Option<PhysicalSize<u32>> {
     let window = web_views.bevy_window_mut(&identifier)?;
-   
+
     Some(PhysicalSize::new(window.physical_width(), window.physical_height()))
 }

@@ -8,7 +8,7 @@ categories = ["game-development"]
 keywords = ["game", "gamedev", "bevy", "ipc"]
 description = "provide ipc-command macro for bevy_flurx_ipc"
 license = "MIT OR Apache-2.0"
-readme = "../../README.md"
+readme = "../bevy_flurx_wry/README.md"
 
 [lib]
 proc-macro = true
@@ -23,8 +23,11 @@ darling = { version = "0.20.10" }
 bevy = { version = "0.15.0", default-features = false }
 bevy_flurx = { workspace = true }
 bevy_flurx_ipc = { path = "../ipc" }
-bevy_flurx_wry = { path = "../../." }
+bevy_flurx_wry = { path = "../bevy_flurx_wry" }
 serde = { workspace = true }
 
 [lints]
 workspace = true
+
+[package.metadata.doc.rs]
+worskpace = true

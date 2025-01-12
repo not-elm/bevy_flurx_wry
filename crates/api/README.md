@@ -1,4 +1,4 @@
-# bevy_flurx_wry_api
+# bevy_flurx_api
 
 Provides apis for using core process resources from webview.
 

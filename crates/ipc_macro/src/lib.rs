@@ -4,7 +4,6 @@ mod command;
 
 use crate::command::expand_call_fn;
 use darling::ast::NestedMeta;
-use darling::util::Flag;
 use darling::FromMeta;
 use proc_macro::TokenStream;
 use proc_macro2::{Ident, Span};
@@ -28,11 +27,12 @@ use syn::__private::TokenStream2;
 /// The function has the following two arguments; each argument is optional.
 /// -  [In](bevy::prelude::In)<D: [`DeserializeOwned`](serde::de::DeserializeOwned)>: The Deserialized values passed from the webview.
 /// - [`WebviewEntity`](bevy_flurx_ipc::prelude::WebviewEntity) :  The webview entity that holds ipc-handlers.
-/// 
+///
 /// ```no_run
 /// use bevy::prelude::*;
 /// use bevy_flurx::prelude::*;
 /// use bevy_flurx_wry::prelude::*;
+/// use bevy_flurx_ipc::prelude::*;
 ///
 /// #[command]
 /// fn action_command(In(args): In<String>, entity: WebviewEntity) -> Action<(String, WebviewEntity), String>{
@@ -52,8 +52,8 @@ use syn::__private::TokenStream2;
 /// ```no_run
 /// use bevy::prelude::*;
 /// use bevy_flurx::prelude::*;
-/// use bevy_flurx_wry::ipc::command;
-/// use bevy_flurx_wry::ipc::component::WebviewEntity;
+/// use bevy_flurx_ipc::command;
+/// use bevy_flurx_ipc::component::WebviewEntity;
 ///
 /// #[command]
 /// async fn async_command(
@@ -77,13 +77,8 @@ fn parse_command(input: TokenStream, attribute: Option<Attribute>) -> syn::Resul
     let f = syn::parse::<ItemFn>(input)?;
     let fn_ident = &f.sig.ident.clone();
     let ipc_id = custom_id.unwrap_or(fn_ident.to_string());
-    let is_internal = attribute.is_some_and(|attr| attr.internal.is_present());
-    let call_fn = expand_call_fn(&f, is_internal);
-    let crate_name = if is_internal {
-        "bevy_flurx_ipc"
-    } else {
-        "bevy_flurx_wry"
-    };
+    let call_fn = expand_call_fn(&f);
+    let crate_name = "bevy_flurx_ipc";
     let crate_name = Ident::new(crate_name, Span::call_site());
     let fn_ident = &f.sig.ident;
     let visibility = &f.vis;
@@ -99,12 +94,8 @@ fn parse_command(input: TokenStream, attribute: Option<Attribute>) -> syn::Resul
     })
 }
 
-fn base_module(is_internal: bool) -> TokenStream2 {
-    if is_internal {
-        quote! {  bevy_flurx_ipc::prelude:: }
-    } else {
-        quote! {  bevy_flurx_wry::prelude:: }
-    }
+fn base_module() -> TokenStream2 {
+    quote! {  bevy_flurx_ipc::prelude:: }
 }
 
 fn parse_attribute(attr: TokenStream) -> Option<Attribute> {
@@ -115,6 +106,5 @@ fn parse_attribute(attr: TokenStream) -> Option<Attribute> {
 #[derive(Default, FromMeta)]
 struct Attribute {
     id: Option<String>,
-    internal: Flag,
 }
 

@@ -16,7 +16,7 @@ api_plugin!(
     command: is_maximized
 );
 
-#[command(id = "FLURX|web_window::is_maximized", internal)]
+#[command(id = "FLURX|web_window::is_maximized")]
 fn is_maximized(In(args): In<String>) -> Action<String, bool> {
     once::run(system).with(args)
 }

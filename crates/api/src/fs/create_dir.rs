@@ -26,7 +26,7 @@ struct CreateDirArgs {
     recursive: Option<bool>,
 }
 
-#[command(id = "FLURX|fs::create_dir", internal)]
+#[command(id = "FLURX|fs::create_dir")]
 fn create_dir(In(args): In<CreateDirArgs>) -> Action<CreateDirArgs, ApiResult> {
     once::run(create_dir_system).with(args)
 }

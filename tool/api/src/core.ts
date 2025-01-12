@@ -39,7 +39,7 @@ const isErr = (args: unknown): args is Err => {
  * @param args command args
  *
  * @example
- * import {invoke} from "@bevy_flurx_wry/api";
+ * import {invoke} from "@aa/api";
  *
  * const commandResult = await invoke("<commandId>", {
  *

@@ -1,54 +1,17 @@
-[package]
-name = "bevy_flurx_wry"
-version = "0.1.0-alpha1"
-edition = "2021"
-authors = ["elm"]
-description = "Provides a mechanism to create a webview based on wry"
-repository = "https://github.com/not-elm/bevy_flurx_wry"
-categories = ["gui", "game-development"]
-keywords = ["game", "gamedev", "bevy", "wry"]
-license = "MIT OR Apache-2.0"
-readme = "README.md"
-
 [workspace]
 resolver = "2"
 members = [
     "crates/*",
-    "examples/bug_check",
 ]
 exclude = [
-    "tooling",
+    "tool",
 ]
-
-[dependencies]
-bevy_flurx_wry_core = { path = "./crates/core", version = "0.1.0-alpha1" }
-bevy_flurx_ipc = { path = "crates/ipc", version = "0.1.0-alpha1" }
-bevy_flurx_wry_api = { path = "crates/api", version = "0.1.0-alpha1" }
-serde = { workspace = true }
-
-[dev-dependencies]
-bevy = "0.15.0"
-bevy_flurx = { version = "0.8.3" }
-serde = { workspace = true }
-serde_json = { workspace = true }
-
-[lints]
-workspace = true
 
 [workspace.dependencies]
 bevy = { version = "0.15.0", default-features = false }
 bevy_flurx = { version = "0.8.3" }
 serde = { version = "1.0.202", features = ["derive"] }
 serde_json = "1.0.117"
-
-[features]
-default = []
-clipboard = ["bevy_flurx_wry_api/clipboard"]
-fs = ["bevy_flurx_wry_api/fs"]
-dialog = ["bevy_flurx_wry_api/dialog"]
-notification = ["bevy_flurx_wry_api/notification"]
-os = ["bevy_flurx_wry_api/os"]
-monitor = ["bevy_flurx_wry_api/monitor"]
 
 [workspace.lints.clippy]
 type_complexity = "allow"
@@ -62,6 +25,6 @@ semicolon_if_nothing_returned = "warn"
 [workspace.lints.rust]
 missing_docs = "warn"
 
-[package.metadata.docs.rs]
+[workspace.package.metadata.docs.rs]
 all-features = true
 rustdoc-args = ["--cfg", "doc_cfg"]

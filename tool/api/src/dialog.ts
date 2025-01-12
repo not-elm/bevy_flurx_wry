@@ -43,7 +43,7 @@ export namespace dialog {
      * Shows a dialog to confirm yes/no with the user.
      *
      * @example
-     * import {dialog} from "@bevy_flurx_wry/api";
+     * import {dialog} from "@aa/api";
      *
      * const yes: boolean = await dialog.ask("question");
      */
@@ -61,7 +61,7 @@ export namespace dialog {
      * Shows a dialog to confirm ok/cancel with the user.
      *
      * @example
-     * import {dialog} from "@bevy_flurx_wry/api";
+     * import {dialog} from "@aa/api";
      *
      * const yes: boolean = await dialog.confirm("question");
      */
@@ -79,7 +79,7 @@ export namespace dialog {
      * Shows a message dialog.
      *
      * @example
-     * import {dialog} from "@bevy_flurx_wry/api";
+     * import {dialog} from "@aa/api";
      *
      *  await dialog.message("message");
      */
@@ -97,7 +97,7 @@ export namespace dialog {
      * Shows a message dialog.
      *
      * @example
-     * import {dialog} from "@bevy_flurx_wry/api";
+     * import {dialog} from "@aa/api";
      *
      *  const selectedPaths: string[] | null = await dialog.open({multiple: true});
      *  const selectedPath: string | null = await dialog.open({multiple: false});
@@ -118,7 +118,7 @@ export namespace dialog {
      *  @return string: select file path ; null: if canceled
      *
      * @example
-     * import {dialog} from "@bevy_flurx_wry/api";
+     * import {dialog} from "@aa/api";
      *
      *  const selectedPath: string | null = await dialog.save();
      */

@@ -58,7 +58,7 @@ api_plugin!(
     command: arch
 );
 
-#[command(id = "FLURX|os::arch", internal)]
+#[command(id = "FLURX|os::arch")]
 fn arch() -> Action<(), &'static str> {
     fn f() -> &'static str {
         std::env::consts::ARCH
