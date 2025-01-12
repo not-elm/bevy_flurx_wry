@@ -1,11 +1,11 @@
 //! Provides mechanism to output the logs.
 
 use bevy::prelude::{App, EventReader, Plugin, PostUpdate};
-use serde::Deserialize;
 use bevy_flurx_ipc::ipc_events::IpcEventExt;
 use bevy_flurx_ipc::prelude::IpcEvent;
+use serde::Deserialize;
 
-/// You will be able to output a massage to the console of the core process.
+/// You will be able to output a massage to the console of the aa process.
 ///
 /// ## Typescript Code Example
 ///

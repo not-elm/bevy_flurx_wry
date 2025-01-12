@@ -60,12 +60,12 @@ struct TextFileArgs {
     recursive: Option<bool>,
 }
 
-#[command(id = "FLURX|fs::write_binary_file", internal)]
+#[command(id = "FLURX|fs::write_binary_file")]
 fn write_binary_file(In(args): In<BinaryFileArgs>) -> Action<BinaryFileArgs, ApiResult> {
     once::run(write_file_system).with(args)
 }
 
-#[command(id = "FLURX|fs::write_text_file", internal)]
+#[command(id = "FLURX|fs::write_text_file")]
 fn write_text_file(In(args): In<TextFileArgs>) -> Action<TextFileArgs, ApiResult> {
     once::run(|In(args): In<TextFileArgs>| {
         BinaryFileArgs {

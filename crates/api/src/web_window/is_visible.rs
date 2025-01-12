@@ -16,7 +16,7 @@ api_plugin!(
     command: is_visible
 );
 
-#[command(id = "FLURX|web_window::is_visible", internal)]
+#[command(id = "FLURX|web_window::is_visible")]
 fn is_visible(In(args): In<String>) -> Action<String, bool> {
     once::run(system).with(args)
 }

@@ -1,15 +1,14 @@
 //! Testing to return result type from the actions.
 
 use bevy_flurx::action::{once, Action};
-use bevy_flurx_ipc::prelude::IpcHandlers;
-use bevy_flurx_ipc_macro::command;
+use bevy_flurx_ipc::prelude::*;
 
-#[command(internal)]
+#[command]
 fn action_command() -> Action<(), Result<String, String>> {
     once::run(|| Ok("hello".to_string())).with(())
 }
 
-#[command(internal)]
+#[command]
 async fn async_command() -> Result<String, String> {
     Ok("hello".to_string())
 }

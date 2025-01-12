@@ -6,7 +6,7 @@ use bevy::window::{Window, WindowResolution};
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Action;
 use bevy_flurx_ipc::command;
-use bevy_flurx_wry_core::prelude::{AutoPlay, BrowserAcceleratorKeys, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewUri, WebviewVisible};
+use bevy_flurx_wry::prelude::{AutoPlay, BrowserAcceleratorKeys, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewUri, WebviewVisible};
 use serde::Deserialize;
 use winit::dpi::PhysicalSize;
 
@@ -71,7 +71,7 @@ struct Args {
     theme: Option<Theme>,
 }
 
-#[command(id = "FLURX|webWindow::create", internal)]
+#[command(id = "FLURX|webWindow::create")]
 fn create(In(args): In<Args>) -> Action<Args> {
     once::run(|In(args): In<Args>, mut commands: Commands, | {
         let mut entity_commands = commands.spawn((

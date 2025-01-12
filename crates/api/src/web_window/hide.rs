@@ -16,7 +16,7 @@ api_plugin!(
     command: hide
 );
 
-#[command(id = "FLURX|web_window::hide", internal)]
+#[command(id = "FLURX|web_window::hide")]
 fn hide(In(args): In<String>) -> Action<String> {
     once::run(system).with(args)
 }

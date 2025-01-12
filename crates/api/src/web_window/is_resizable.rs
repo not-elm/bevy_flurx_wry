@@ -16,7 +16,7 @@ api_plugin!(
     command: is_resizable
 );
 
-#[command(id = "FLURX|web_window::is_resizable", internal)]
+#[command(id = "FLURX|web_window::is_resizable")]
 fn is_resizable(In(args): In<String>) -> Action<String, bool> {
     once::run(system).with(args)
 }

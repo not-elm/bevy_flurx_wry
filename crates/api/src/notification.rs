@@ -26,7 +26,7 @@ struct Args {
     icon: Option<String>,
 }
 
-#[command(id = "FLURX|notification::send", internal)]
+#[command(id = "FLURX|notification::send")]
 fn send(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(send_system).with(args)
 }

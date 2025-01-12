@@ -14,7 +14,7 @@ api_plugin!(
     command: kernel_version
 );
 
-#[command(id = "FLURX|os::kernel_version", internal)]
+#[command(id = "FLURX|os::kernel_version")]
 fn kernel_version() -> Action<(), Option<String>> {
     once::run(sysinfo::System::kernel_version).with(())
 }

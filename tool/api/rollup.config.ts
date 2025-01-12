@@ -61,7 +61,7 @@ export default defineConfig([
             format: 'iife',
             name: '__FLURX_IIFE__',
             footer: 'Object.defineProperty(window, "__FLURX__", { value: __FLURX_IIFE__ })',
-            file: '../../crates/core/scripts/api.js'
+            file: '../../crates/aa/scripts/api.js'
         },
         plugins: [typescript(), terser()],
     }

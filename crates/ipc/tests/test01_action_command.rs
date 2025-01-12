@@ -6,27 +6,27 @@ use bevy_flurx::prelude::{Action, ActionSeed};
 use bevy_flurx_ipc::prelude::{IpcHandlers, WebviewEntity};
 use bevy_flurx_ipc_macro::command;
 
-#[command(internal)]
+#[command]
 fn pattern1() -> ActionSeed {
     once::run(|| {})
 }
 
-#[command(internal)]
+#[command]
 fn pattern2(_: In<String>) -> ActionSeed {
     once::run(|| {})
 }
 
-#[command(internal)]
+#[command]
 fn pattern3(_: WebviewEntity) -> ActionSeed {
     once::run(|| {})
 }
 
-#[command(internal)]
+#[command]
 fn pattern4(_: In<String>, _: WebviewEntity) -> ActionSeed {
     once::run(|| {})
 }
 
-#[command(internal)]
+#[command]
 fn pattern5(_: WebviewEntity, _: In<String>) -> ActionSeed {
     once::run(|| {})
 }

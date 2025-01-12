@@ -18,7 +18,7 @@ api_plugin!(
 
 type Args = (String, bool);
 
-#[command(id = "FLURX|web_window::set_decorations", internal)]
+#[command(id = "FLURX|web_window::set_decorations")]
 fn set_decorations(In(args): In<Args>) -> Action<Args> {
     once::run(system).with(args)
 }

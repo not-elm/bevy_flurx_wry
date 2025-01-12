@@ -73,7 +73,7 @@ impl AllowPaths {
     /// ## Examples
     ///
     /// ```
-    /// use bevy_flurx_wry::api::fs::AllowPaths;
+    /// use bevy_flurx_api::fs::AllowPaths;
     /// AllowPaths::new(vec![
     ///     "./dir",
     /// ]);

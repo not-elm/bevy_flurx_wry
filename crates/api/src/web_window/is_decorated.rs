@@ -16,7 +16,7 @@ api_plugin!(
     command: is_decorated
 );
 
-#[command(id = "FLURX|web_window::is_decorated", internal)]
+#[command(id = "FLURX|web_window::is_decorated")]
 fn is_decorated(In(args): In<String>) -> Action<String, bool> {
     once::run(system).with(args)
 }

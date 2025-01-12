@@ -36,7 +36,7 @@ struct FileEntry {
     children: Option<Vec<FileEntry>>,
 }
 
-#[command(id = "FLURX|fs::read_dir", internal)]
+#[command(id = "FLURX|fs::read_dir")]
 fn read_dir(In(args): In<Args>) -> Action<Args, ApiResult<Vec<FileEntry>>> {
     once::run(read_dir_system).with(args)
 }

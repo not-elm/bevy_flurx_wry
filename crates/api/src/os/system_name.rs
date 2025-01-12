@@ -14,7 +14,7 @@ api_plugin!(
     command: system_name
 );
 
-#[command(id = "FLURX|os::system_name", internal)]
+#[command(id = "FLURX|os::system_name")]
 fn system_name() -> Action<(), Option<String>> {
     once::run(sysinfo::System::name).with(())
 }

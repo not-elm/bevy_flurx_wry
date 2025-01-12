@@ -16,7 +16,7 @@ api_plugin!(
     command: show
 );
 
-#[command(id = "FLURX|web_window::show", internal)]
+#[command(id = "FLURX|web_window::show")]
 fn show(In(args): In<String>) -> Action<String> {
     once::run(system).with(args)
 }

@@ -3,71 +3,70 @@
 use bevy::prelude::*;
 use bevy_flurx::action::{delay, once};
 use bevy_flurx::task::ReactorTask;
-use bevy_flurx_ipc::prelude::{IpcHandlers, WebviewEntity};
-use bevy_flurx_ipc_macro::command;
+use bevy_flurx_ipc::prelude::*;
 
-#[command(internal)]
+#[command]
 async fn pattern1() -> String {
     "hello".to_string()
 }
 
-#[command(internal)]
+#[command]
 async fn pattern2(In(_): In<()>) {}
 
-#[command(internal)]
+#[command]
 async fn pattern3(_webview_entity: WebviewEntity) {}
 
-#[command(internal)]
+#[command]
 async fn pattern4(task: ReactorTask) -> String {
     task.will(Update, once::run(|| "hello".to_string())).await
 }
 
-#[command(internal)]
+#[command]
 async fn pattern5(
     In(_args): In<()>,
     WebviewEntity(_entity): WebviewEntity,
 ) {}
 
-#[command(internal)]
+#[command]
 async fn pattern6(In(frames): In<usize>, task: ReactorTask) {
     task.will(Update, delay::frames().with(frames)).await;
 }
 
-#[command(internal)]
+#[command]
 async fn pattern7(
     In(_args): In<()>,
     _task: ReactorTask,
 ) {}
 
-#[command(internal)]
+#[command]
 async fn pattern8(
     In(_args): In<()>,
     _entity: WebviewEntity,
     _task: ReactorTask,
 ) {}
 
-#[command(internal)]
+#[command]
 async fn pattern9(
     _entity: WebviewEntity,
     In(_args): In<()>,
     _task: ReactorTask,
 ) {}
 
-#[command(internal)]
+#[command]
 async fn pattern10(
     _task: ReactorTask,
     _entity: WebviewEntity,
     In(_args): In<()>,
 ) {}
 
-#[command(internal)]
+#[command]
 async fn pattern11(
     _entity: WebviewEntity,
     _task: ReactorTask,
     In(_args): In<()>,
 ) {}
 
-#[command(internal)]
+#[command]
 async fn pattern12(
     In(_args): In<()>,
     _task: ReactorTask,

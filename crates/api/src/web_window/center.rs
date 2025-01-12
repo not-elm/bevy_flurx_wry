@@ -16,7 +16,7 @@ api_plugin!(
     command: center
 );
 
-#[command(id = "FLURX|web_window::center", internal)]
+#[command(id = "FLURX|web_window::center")]
 fn center(In(args): In<String>) -> Action<String> {
     once::run(system).with(args)
 }
@@ -25,7 +25,7 @@ fn system(
     In(identifier): In<String>,
     mut web_views: WebWinitWindowParams,
 ) {
-    let Some(mut window) = web_views.bevy_window_mut(&identifier) else{
+    let Some(mut window) = web_views.bevy_window_mut(&identifier) else {
         return;
     };
     window.position.center(MonitorSelection::Current);

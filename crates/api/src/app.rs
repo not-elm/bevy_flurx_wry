@@ -42,7 +42,7 @@ api_plugin!(
     command: exit
 );
 
-#[command(id = "FLURX|app::get_name", internal)]
+#[command(id = "FLURX|app::get_name")]
 fn get_name() -> ActionSeed<(), String> {
     get_name_action()
 }
@@ -53,14 +53,14 @@ fn get_name_action() -> ActionSeed<(), String> {
     })
 }
 
-#[command(id = "FLURX|app::get_version", internal)]
+#[command(id = "FLURX|app::get_version")]
 fn get_version() -> ActionSeed<(), String> {
     once::run(|| {
         env!("CARGO_PKG_VERSION").to_string()
     })
 }
 
-#[command(id = "FLURX|app::exit", internal)]
+#[command(id = "FLURX|app::exit")]
 fn exit() -> Action<AppExit, ()> {
     once::event::app_exit_success()
 }
@@ -68,11 +68,11 @@ fn exit() -> Action<AppExit, ()> {
 
 #[cfg(test)]
 mod tests {
+    use crate::app::{get_name_action, AppExitApiPlugin, AppGetNameApiPlugin, AppGetVersionApiPlugin};
+    use crate::tests::{assert_api_registered, test_app};
     use bevy::prelude::*;
     use bevy_flurx::action::once;
     use bevy_flurx::prelude::{Pipe, Reactor};
-    use crate::app::{get_name_action, AppExitApiPlugin, AppGetNameApiPlugin, AppGetVersionApiPlugin};
-    use crate::tests::{assert_api_registered, test_app};
 
     #[test]
     fn registered_get_name() {
@@ -86,7 +86,7 @@ mod tests {
             commands.spawn(Reactor::schedule(|task| async move {
                 task.will(Update, get_name_action()
                     .pipe(once::run(|In(name): In<String>| {
-                        assert_eq!(name, "bevy_flurx_wry_api");
+                        assert_eq!(name, "bevy_flurx_api");
                     })),
                 ).await;
             }));

@@ -1,6 +1,6 @@
 //! Declares the components which creates the webview as child.
 
-use bevy::prelude::{Component, Entity,ReflectComponent, Reflect};
+use bevy::prelude::{Component, Entity, Reflect, ReflectComponent};
 pub use bounds::Bounds;
 pub use grip_zone::GripZone;
 
@@ -12,7 +12,7 @@ mod grip_zone;
 /// The webview parent window.
 ///
 /// Create the webview as a child of an existing [`Window`](bevy::prelude::Window).
-/// 
+///
 /// ## Note
 ///
 ///  Note that you must spawn a [`WebviewUri`](crate::prelude::WebviewUri) along with it.
@@ -22,7 +22,7 @@ mod grip_zone;
 /// ```no_run
 /// use bevy::prelude::*;
 /// use bevy::window::PrimaryWindow;
-/// use bevy_flurx_wry_core::prelude::*;
+/// use bevy_flurx_wry::prelude::*;
 ///
 /// fn spawn_webview_within_primary_window(
 ///     mut commands: Commands,

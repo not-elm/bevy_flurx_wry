@@ -16,7 +16,7 @@ api_plugin!(
     command: minimize
 );
 
-#[command(id = "FLURX|web_window::minimize", internal)]
+#[command(id = "FLURX|web_window::minimize")]
 fn minimize(In(args): In<String>) -> Action<String> {
     once::run(system).with(args)
 }
@@ -24,7 +24,7 @@ fn minimize(In(args): In<String>) -> Action<String> {
 fn system(
     In(identifier): In<String>,
     web_views: WebWinitWindowParams,
-)  {
+) {
     let Some(window) = web_views.winit_window(&identifier) else {
         return;
     };

@@ -19,6 +19,7 @@ impl IpcHandlers {
     /// ```no_run
     /// use bevy_flurx::prelude::*;
     /// use bevy_flurx_wry::prelude::*;
+    /// use bevy_flurx_ipc::prelude::*;
     ///
     /// #[command]
     /// fn hello() -> ActionSeed<(), String>{

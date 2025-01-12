@@ -16,7 +16,7 @@ use std::path::{Path, PathBuf};
 ///
 /// ```no_run
 /// use bevy::prelude::*;
-/// use bevy_flurx_wry_core::prelude::*;
+/// use bevy_flurx_wry::prelude::*;
 /// use std::path::PathBuf;
 /// use bevy::window::PrimaryWindow;
 ///

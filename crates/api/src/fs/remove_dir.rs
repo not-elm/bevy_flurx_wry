@@ -29,7 +29,7 @@ struct Args {
     recursive: Option<bool>,
 }
 
-#[command(id = "FLURX|fs::remove_dir", internal)]
+#[command(id = "FLURX|fs::remove_dir")]
 fn remove_dir(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(remove_dir_system).with(args)
 }

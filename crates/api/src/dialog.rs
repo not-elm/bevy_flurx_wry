@@ -73,9 +73,9 @@ api_plugin!(
 );
 
 #[derive(Deserialize)]
-struct DialogFilter{
+struct DialogFilter {
     pub name: String,
-    pub extensions: Vec<String>
+    pub extensions: Vec<String>,
 }
 
 #[derive(Default, Deserialize)]
@@ -104,21 +104,21 @@ impl DialogLevel {
     }
 }
 
-#[command(id = "FLURX|dialog::ask", internal)]
+#[command(id = "FLURX|dialog::ask")]
 fn ask(In(args): In<Args>) -> Action<Args, bool> {
     once::run(|In(args): In<Args>| {
         ask_system(args, MessageButtons::YesNo)
     }).with(args)
 }
 
-#[command(id = "FLURX|dialog::confirm", internal)]
+#[command(id = "FLURX|dialog::confirm")]
 fn confirm(In(args): In<Args>) -> Action<Args, bool> {
     once::run(|In(args): In<Args>| {
         ask_system(args, MessageButtons::OkCancel)
     }).with(args)
 }
 
-#[command(id = "FLURX|dialog::message", internal)]
+#[command(id = "FLURX|dialog::message")]
 fn message(In(args): In<Args>) -> Action<Args, bool> {
     once::run(|In(args): In<Args>| {
         ask_system(args, MessageButtons::Ok)

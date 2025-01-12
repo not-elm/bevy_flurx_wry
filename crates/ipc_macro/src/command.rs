@@ -10,12 +10,11 @@ use syn::__private::TokenStream2;
 
 pub fn expand_call_fn(
     f: &ItemFn,
-    is_internal: bool,
 ) -> TokenStream2 {
     if f.sig.asyncness.is_some() {
-        expand_async_command(f, is_internal)
+        expand_async_command(f)
     } else {
-        expand_action_command(f, is_internal)
+        expand_action_command(f)
     }
 }
 

@@ -58,7 +58,7 @@ mod macros {
                 fn build(&self, app: &mut bevy::prelude::App) {
                     use bevy::prelude::{Added, Query};
                     use bevy_flurx_ipc::prelude::IpcHandlers;
-                    use bevy_flurx_wry_core::prelude::WebviewInitialized;
+                    use bevy_flurx_wry::prelude::WebviewInitialized;
                     app.add_systems(bevy::prelude::PostUpdate, |mut views: Query<&mut IpcHandlers, Added<WebviewInitialized>>|{
                         for mut handlers in views.iter_mut(){ 
                             handlers.register($api_command());
@@ -79,11 +79,14 @@ mod tests {
     use bevy::prelude::*;
     use bevy_flurx_ipc::component::IpcHandlers;
     use bevy_flurx_ipc::FlurxIpcPlugin;
-    use bevy_flurx_wry_core::common::WebviewInitialized;
+    use bevy_flurx_wry::common::WebviewInitialized;
 
     pub fn test_app() -> App {
         let mut app = App::new();
-        app.add_plugins(FlurxIpcPlugin);
+        app.add_plugins((
+            MinimalPlugins,
+            FlurxIpcPlugin,
+        ));
         app
     }
 

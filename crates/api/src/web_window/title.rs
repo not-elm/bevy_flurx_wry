@@ -16,7 +16,7 @@ api_plugin!(
     command: title
 );
 
-#[command(id = "FLURX|web_window::title", internal)]
+#[command(id = "FLURX|web_window::title")]
 fn title(In(args): In<String>) -> Action<String, Option<String>> {
     once::run(system).with(args)
 }

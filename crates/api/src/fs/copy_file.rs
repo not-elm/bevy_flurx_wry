@@ -31,7 +31,7 @@ struct Args {
     to_base_dir: Option<BaseDirectory>,
 }
 
-#[command(id = "FLURX|fs::copy_file", internal)]
+#[command(id = "FLURX|fs::copy_file")]
 fn copy_file(In(args): In<Args>) -> Action<Args, ApiResult> {
     once::run(copy_file_system).with(args)
 }

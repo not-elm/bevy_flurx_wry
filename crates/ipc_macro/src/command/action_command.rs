@@ -7,10 +7,9 @@ use syn::{FnArg, ItemFn, Type};
 
 pub fn expand_action_command(
     f: &ItemFn,
-    is_internal: bool,
 ) -> TokenStream2 {
     let fn_ident = &f.sig.ident;
-    let module_name = base_module(is_internal);
+    let module_name = base_module();
     let inputs = parse_action_command_inputs(f, &module_name);
     _expand_action_command(&module_name, quote! { #fn_ident(#(#inputs,)*) })
 }

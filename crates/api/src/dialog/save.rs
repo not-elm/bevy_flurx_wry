@@ -31,7 +31,7 @@ struct Args {
     filters: Option<Vec<DialogFilter>>,
 }
 
-#[command(id = "FLURX|dialog::save", internal)]
+#[command(id = "FLURX|dialog::save")]
 async fn save(In(args): In<Args>, task: ReactorTask) -> Option<PathBuf> {
     let path = select_save_path(args);
     task.will(Update, once::run(save_system).with(path.clone())).await;

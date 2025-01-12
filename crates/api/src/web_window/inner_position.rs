@@ -19,7 +19,7 @@ api_plugin!(
 
 type Args = String;
 
-#[command(id = "FLURX|web_window::inner_position", internal)]
+#[command(id = "FLURX|web_window::inner_position")]
 fn inner_position(In(args): In<Args>) -> Action<Args, Option<PhysicalPosition<i32>>> {
     once::run(system).with(args)
 }

@@ -26,12 +26,12 @@ api_plugin!(
     command: os_version
 );
 
-#[command(id = "FLURX|os::long_os_version", internal)]
+#[command(id = "FLURX|os::long_os_version")]
 fn long_os_version() -> Action<(), Option<String>> {
     once::run(sysinfo::System::long_os_version).with(())
 }
 
-#[command(id = "FLURX|os::os_version", internal)]
+#[command(id = "FLURX|os::os_version")]
 fn os_version() -> Action<(), Option<String>> {
     once::run(sysinfo::System::os_version).with(())
 }

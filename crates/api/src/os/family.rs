@@ -14,12 +14,12 @@ api_plugin!(
     command: family
 );
 
-#[command(id = "FLURX|os::family", internal)]
+#[command(id = "FLURX|os::family")]
 fn family() -> Action<(), Option<&'static str>> {
     fn f() -> Option<&'static str> {
         if std::env::consts::FAMILY.is_empty() {
             None
-        }else{
+        } else {
             Some(std::env::consts::FAMILY)
         }
     }

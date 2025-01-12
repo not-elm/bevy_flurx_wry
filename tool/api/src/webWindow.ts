@@ -58,7 +58,7 @@ export class WebWindow {
      *  Listen the event where from bevy process.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * await WebWindow.current().listen("eventId", (e) => {
      *    console.log(e);
@@ -82,7 +82,7 @@ export class WebWindow {
      *  The position could be null value if window already not exists or the platform not supported.
      *
      *  @example
-     * import {WebWindow, PhysicalPosition} from "@bevy_flurx_wry/api";
+     * import {WebWindow, PhysicalPosition} from "@aa/api";
      *
      * const position: PhysicalPosition | null = await WebWindow.current().innerPosition();
      */
@@ -96,7 +96,7 @@ export class WebWindow {
      *  The position could be null value if window already not exists or the platform not supported.
      *
      *  @example
-     * import {WebWindow, PhysicalPosition} from "@bevy_flurx_wry/api";
+     * import {WebWindow, PhysicalPosition} from "@aa/api";
      *
      * const position: PhysicalPosition | null = await WebWindow.current().outerPosition();
      */
@@ -108,7 +108,7 @@ export class WebWindow {
      *  Sets the position of the window.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * await WebWindow.current().setPosition({
      *    x: 100,
@@ -127,7 +127,7 @@ export class WebWindow {
      *  Center the window.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * await WebWindow.current().center();
      */
@@ -139,7 +139,7 @@ export class WebWindow {
      *  Hide the window.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * await WebWindow.current().hide();
      */
@@ -151,7 +151,7 @@ export class WebWindow {
      *  Shows the window.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * await WebWindow.current().show();
      */
@@ -161,7 +161,7 @@ export class WebWindow {
 
     /**
      *  @example
-     * import {WebWindow, PhysicalSize} from "@bevy_flurx_wry/api";
+     * import {WebWindow, PhysicalSize} from "@aa/api";
      *
      * const size: PhysicalSize = await WebWindow.current().innerSize();
      */
@@ -173,7 +173,7 @@ export class WebWindow {
      *  Returns whether the window is decorated.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * const isDecorated: boolean = await WebWindow.current().isDecorated();
      */
@@ -185,7 +185,7 @@ export class WebWindow {
      *  Returns whether the window has focused.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * const hasFocused: boolean = await WebWindow.current().hasFocused();
      */
@@ -197,7 +197,7 @@ export class WebWindow {
      *  Get a current fullscreen state.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * const isFullscreen: boolean = await WebWindow.current().isFullscreen();
      */
@@ -209,7 +209,7 @@ export class WebWindow {
      *  Returns whether the window is maximized.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * const isMaximized: boolean = await WebWindow.current().isMaximized();
      */
@@ -221,7 +221,7 @@ export class WebWindow {
      *  Returns whether the window can be maximized.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * const isMaximizable: boolean = await WebWindow.current().isMaximizable();
      */
@@ -233,7 +233,7 @@ export class WebWindow {
      *  Returns whether the window can be minimized.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * const isMaximizable: boolean = await WebWindow.current().isMinimizable();
      */
@@ -245,7 +245,7 @@ export class WebWindow {
      *  Returns whether the window is minimized.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * const isMinimized: boolean = await WebWindow.current().isMinimized();
      */
@@ -257,7 +257,7 @@ export class WebWindow {
      *  Returns whether the window can be resized.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * const isResizable: boolean = await WebWindow.current().isResizable();
      */
@@ -269,7 +269,7 @@ export class WebWindow {
      *  Returns whether the window is visible.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      * const isVisible: boolean = await WebWindow.current().isVisible();
      */
@@ -281,7 +281,7 @@ export class WebWindow {
      *  Maximizes the window.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      *  await WebWindow.current().maximize();
      */
@@ -293,7 +293,7 @@ export class WebWindow {
      *  UnMaximizes the window.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      *  await WebWindow.current().unMaximize();
      */
@@ -305,7 +305,7 @@ export class WebWindow {
      *  Minimizes the window.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      *  await WebWindow.current().minimize();
      */
@@ -317,7 +317,7 @@ export class WebWindow {
      *  UnMinimizes the window.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      *  await WebWindow.current().unMinimize();
      */
@@ -329,7 +329,7 @@ export class WebWindow {
      *  Sets whether window have enabled decorations?
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      *  await WebWindow.current().setDecorations(true);
      */
@@ -341,7 +341,7 @@ export class WebWindow {
      *  Sets  the window focus.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      *  await WebWindow.current().focus();
      */
@@ -353,7 +353,7 @@ export class WebWindow {
      *  UnFocus the window.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      *  await WebWindow.current().unFocus();
      */
@@ -365,7 +365,7 @@ export class WebWindow {
      *  Sets the window fullscreen.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      *  await WebWindow.current().setWindowMode("fullscreen");
      */
@@ -377,7 +377,7 @@ export class WebWindow {
      *  Modifies whether the window catches cursor events.
      *
      *  @example
-     * import {WebWindow} from "@bevy_flurx_wry/api";
+     * import {WebWindow} from "@aa/api";
      *
      *  await WebWindow.current().setCursorHitTest(true);
      */

@@ -38,7 +38,7 @@ enum SelectedPaths {
     Multiple(Option<Vec<PathBuf>>),
 }
 
-#[command(id = "FLURX|dialog::open", internal)]
+#[command(id = "FLURX|dialog::open")]
 fn open(In(args): In<Args>) -> Action<Args, SelectedPaths> {
     once::run(open_system).with(args)
 }
@@ -71,8 +71,8 @@ fn select_paths(args: Args) -> SelectedPaths {
     if let Some(default_path) = args.default_path {
         dialog = dialog.set_directory(default_path);
     }
-    if let Some(filters) = args.filters{
-        for filter in filters{
+    if let Some(filters) = args.filters {
+        for filter in filters {
             dialog = dialog.add_filter(filter.name, &filter.extensions);
         }
     }

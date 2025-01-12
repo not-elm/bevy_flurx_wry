@@ -16,7 +16,7 @@ api_plugin!(
     command: is_minimized
 );
 
-#[command(id = "FLURX|web_window::is_minimized", internal)]
+#[command(id = "FLURX|web_window::is_minimized")]
 fn is_minimized(In(args): In<String>) -> Action<String, bool> {
     once::run(system).with(args)
 }
