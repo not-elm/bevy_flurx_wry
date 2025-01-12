@@ -2,11 +2,11 @@
 //!
 //! This commands allows you to receive input from the webview and return output there
 
-use std::path::PathBuf;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy_flurx::prelude::*;
 use bevy_flurx_wry::prelude::*;
+use std::path::PathBuf;
 
 fn main() {
     App::new()
@@ -30,10 +30,10 @@ fn spawn_webview(
     commands.entity(window.single()).insert((
         Num(1),
         WebviewUri::default(),
-        ipc_handlers![
+        IpcHandlers::new([
             action_command,
             task_command
-        ],
+        ]),
     ));
 }
 

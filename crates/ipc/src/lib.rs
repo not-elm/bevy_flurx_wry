@@ -1,8 +1,8 @@
 //! This library facilitates communication between the `webview` and `bevy`.
 
-use bevy::prelude::{App, Plugin};
 use crate::ipc_commands::FlurxIpcCommandPlugin;
 use crate::prelude::FlurxIpcEventPlugin;
+use bevy::prelude::{App, Plugin};
 use bevy_flurx::FlurxPlugin;
 pub use bevy_flurx_ipc_macro::command;
 
@@ -16,7 +16,6 @@ pub mod prelude {
         component::*,
         ipc_commands::*,
         ipc_events::*,
-        ipc_handlers,
         FlurxIpcPlugin,
     };
     pub use bevy_flurx_ipc_macro::command;
@@ -26,35 +25,6 @@ pub mod prelude {
         serde_json::to_string(&output).expect("Failed to deserialize output value.")
     }
 }
-
-/// Create the [`IpcHandlers`](prelude::IpcHandlers)from the commands.
-///
-/// ```no_run
-///
-/// use bevy_flurx::action::once;
-/// use bevy_flurx::prelude::ActionSeed;
-/// use bevy_flurx_wry::prelude::*;
-///
-/// #[command]
-/// fn ipc_command() -> ActionSeed{
-///     once::run(||{
-///
-///     })
-/// }
-///
-/// ipc_handlers![
-///     ipc_command
-/// ];
-/// ```
-#[macro_export]
-macro_rules! ipc_handlers {
-    () => ($crate::prelude::IpcHandlers::default());
-    ($functor: expr $(,$others: expr)* $(,)?) => ({
-        $crate::prelude::IpcHandlers::new($functor)
-            $(.with($others))*
-    });
-}
-
 
 /// The common plugin for IPC communication between `Webview` and `bevy`.
 pub struct FlurxIpcPlugin;
