@@ -1,4 +1,4 @@
-# bevy_flurx_ipc
+# `bevy_flurx_ipc`
 
 This library assists in implementing inter-process communication and is also part of [
 `bevy_flurx_wry`](../bevy_flurx_wry/README.md).
