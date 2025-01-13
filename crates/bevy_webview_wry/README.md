@@ -38,7 +38,7 @@ bevy_flurx_api = "0.1"
 
 ```shell
 # optional if you want to use ipc-command.
-pnpm i @bevy_flurx/api
+pnpm i bevy_flurx_api
 ```
 
 Or, you can also use the API directly from `Window.__FLURX__` without installation.

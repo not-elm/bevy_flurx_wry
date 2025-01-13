@@ -57,7 +57,7 @@ export namespace fs {
      * Copies a file to a destination.
      *
      * @example
-     * import {fs} from "@bevy_flurx/api";
+     * import {fs} from "bevy_flurx_api";
      * await fs.copyFile("from", "to");
      */
     export const copyFile = async (
@@ -78,7 +78,7 @@ export namespace fs {
      *  If you need to create the parent directory recursively, set `recursive` to `true`.
      *
      *  @example
-     *  import {fs} from "@bevy_flurx/api";
+     *  import {fs} from "bevy_flurx_api";
      *  await fs.createDir("path");
      */
     export const createDir = async (
@@ -92,7 +92,7 @@ export namespace fs {
      *  Check if a path exists.
      *
      *  @example
-     *  import {fs} from "@bevy_flurx/api";
+     *  import {fs} from "bevy_flurx_api";
      *  const exists: boolean = await fs.exists("path");
      */
     export const exists = async (
@@ -109,7 +109,7 @@ export namespace fs {
      * Reads a file as byte array.
      *
      * @example
-     * import {fs} from "@bevy_flurx/api";
+     * import {fs} from "bevy_flurx_api";
      * const bytes: Uint8Array = await fs.readBinaryFile("path");
      */
     export const readBinaryFile = async (
@@ -126,7 +126,7 @@ export namespace fs {
      * Reads a file as a UTF-8 encoded string.
      *
      * @example
-     * import {fs} from "@bevy_flurx/api";
+     * import {fs} from "bevy_flurx_api";
      * const text: string = await fs.readTextFile("path");
      */
     export const readTextFile = async (
@@ -143,7 +143,7 @@ export namespace fs {
      * Removes a file.
      *
      * @example
-     * import {fs} from "@bevy_flurx/api";
+     * import {fs} from "bevy_flurx_api";
      * await fs.removeFile("path");
      */
     export const removeFile = async (
@@ -160,7 +160,7 @@ export namespace fs {
      * Renames a file.
      *
      * @example
-     * import {fs} from "@bevy_flurx/api";
+     * import {fs} from "bevy_flurx_api";
      * await fs.renameFile("oldPath", "newPath");
      */
     export const renameFile = async (
@@ -179,7 +179,7 @@ export namespace fs {
      * Writes a UTF-8 text file.
      *
      * @example
-     * import {fs} from "@bevy_flurx/api";
+     * import {fs} from "bevy_flurx_api";
      * await fs.writeTextFile("path", "contents");
      */
     export const writeTextFile = async (
@@ -198,7 +198,7 @@ export namespace fs {
      * Writes a file.
      *
      * @example
-     * import {fs} from "@bevy_flurx/api";
+     * import {fs} from "bevy_flurx_api";
      * await fs.writeBinaryFile("path", new Uint8Array());
      */
     export const writeBinaryFile = async (
@@ -217,7 +217,7 @@ export namespace fs {
      * List directory files.
      *
      * @example
-     * import {fs} from "@bevy_flurx/api";
+     * import {fs} from "bevy_flurx_api";
      * const files: FileEntry[] = await fs.readDir("path");
      */
     export const readDir = async (
@@ -234,7 +234,7 @@ export namespace fs {
      * Remove a directory.
      *
      * @example
-     * import {fs} from "@bevy_flurx/api";
+     * import {fs} from "bevy_flurx_api";
      * await fs.removeDir("path");
      */
     export const removeDir = async (
