@@ -18,6 +18,31 @@ The operation has been confirmed on `Windows` and `MacOS`.
 
 `Linux` is currently not supported.
 
+## Setup
+
+### Main process(bevy)
+
+Add this to your `Cargo.toml`:
+
+```toml
+[dependencies]
+bevy_webview_wry = "0.1"
+
+# necessary if you want to use ipc-command.
+bevy_flurx = "0.9"
+bevy_flurx_ipc = "0.1"
+bevy_flurx_api = "0.1"
+```
+
+### Ui process(webview)
+
+```shell
+# optional if you want to use ipc-command.
+pnpm i @bevy_flurx/api
+```
+
+Or, you can also use the API directly from `Window.__FLURX__` without installation.
+
 ## Usage
 
 There are two ways to create a webview:
