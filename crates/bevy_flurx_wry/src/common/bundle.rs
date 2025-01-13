@@ -1,9 +1,10 @@
-//! Declares the [`WryWebViewBundle`] and associated components.
+//! Declares the webview components.
 
 pub use crate::common::bundle::handler::*;
 pub use auto_play::AutoPlay;
 pub use background::Background;
 pub use browser_accelerator_keys::BrowserAcceleratorKeys;
+pub use csp::Csp;
 pub use enable_clipboard::EnableClipboard;
 pub use event_emitter::EventEmitter;
 pub use focused::InitializeFocused;
@@ -34,5 +35,5 @@ mod use_devtools;
 mod user_agent;
 mod visible;
 mod webview_uri;
-pub mod csp;
+mod csp;
 mod initialization_script;

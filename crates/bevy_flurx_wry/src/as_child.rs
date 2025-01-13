@@ -1,4 +1,4 @@
-//! Provides the mechanism to spawn a webview as a child of an existing window using [`wry::WebViewBuilder::new_as_child`].
+//! Provides the mechanism to spawn a webview as a child of an existing window using [`wry::WebViewBuilder::build_as_child`].
 
 use bevy::prelude::{Component, ReflectComponent};
 use bevy::prelude::{Reflect, Vec2};

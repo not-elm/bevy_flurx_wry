@@ -1,5 +1,5 @@
 use crate::common::bundle::*;
-use bevy::prelude::{Component, ReflectComponent};
+use bevy::prelude::{Component, ReflectComponent, ReflectDeserialize, ReflectSerialize};
 use bevy::prelude::{Reflect, ReflectDefault};
 use bevy_flurx_ipc::prelude::IpcHandlers;
 use serde::{Deserialize, Serialize};
@@ -61,7 +61,7 @@ use std::path::{Path, PathBuf};
     OnNewWindowRequest,
     EventEmitter,
 )]
-#[reflect(Component, Default)]
+#[reflect(Component, Default, Serialize, Deserialize)]
 pub struct WebviewUri(pub String);
 
 impl WebviewUri {

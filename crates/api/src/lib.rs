@@ -1,25 +1,35 @@
 #![allow(clippy::doc_markdown)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 #![doc = include_str!("../README.md")]
 
 pub mod app;
 pub mod log;
 #[cfg(feature = "fs")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fs")))]
 pub mod fs;
 #[cfg(feature = "fs")]
+#[cfg_attr(docsrs, doc(cfg(feature = "fs")))]
 pub mod path;
 #[cfg(feature = "clipboard")]
+#[cfg_attr(docsrs, doc(cfg(feature = "clipboard")))]
 pub mod clipboard;
 #[cfg(feature = "dialog")]
+#[cfg_attr(docsrs, doc(cfg(feature = "dialog")))]
 pub mod dialog;
 #[cfg(feature = "notification")]
+#[cfg_attr(docsrs, doc(cfg(feature = "notification")))]
 pub mod notification;
 #[cfg(feature = "os")]
+#[cfg_attr(docsrs, doc(cfg(feature = "os")))]
 pub mod os;
 #[cfg(feature = "monitor")]
+#[cfg_attr(docsrs, doc(cfg(feature = "monitor")))]
 pub mod monitor;
 #[cfg(feature = "window")]
+#[cfg_attr(docsrs, doc(cfg(feature = "window")))]
 pub mod web_window;
 #[cfg(feature = "http")]
+#[cfg_attr(docsrs, doc(cfg(feature = "http")))]
 pub mod http;
 mod error;
 

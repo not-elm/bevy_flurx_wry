@@ -1,4 +1,4 @@
-use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault};
+use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDefault, ReflectDeserialize, ReflectSerialize};
 use serde::{Deserialize, Serialize};
 
 
@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 /// Default is `true`.
 #[repr(transparent)]
 #[derive(Component, Clone, Debug, Eq, PartialEq, Hash, Reflect, Serialize, Deserialize)]
-#[reflect(Component, Default)]
+#[reflect(Component, Default, Serialize, Deserialize)]
 pub struct WebviewVisible(pub bool);
 
 impl Default for WebviewVisible {
