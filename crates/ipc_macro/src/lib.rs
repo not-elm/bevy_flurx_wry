@@ -1,3 +1,5 @@
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
 //! This crate provides macros to support `bevy_flurx_ipc`.
 
 mod command;
@@ -21,17 +23,15 @@ use syn::__private::TokenStream2;
 ///
 /// ### Action Command
 ///
-/// The function that returns [`Action`](bevy_flurx::prelude::Action) or [`ActionSeed`](bevy_flurx::prelude::ActionSeed) 
-/// is tentatively called `action command`.
+/// The function that returns [`Action`] or [`ActionSeed`] is tentatively called `action command`.
 ///
 /// The function has the following two arguments; each argument is optional.
 /// -  [In](bevy::prelude::In)<D: [`DeserializeOwned`](serde::de::DeserializeOwned)>: The Deserialized values passed from the webview.
-/// - [`WebviewEntity`](bevy_flurx_ipc::prelude::WebviewEntity) :  The webview entity that holds ipc-handlers.
+/// - `WebviewEntity` :  The webview entity that holds ipc-handlers.
 ///
 /// ```no_run
 /// use bevy::prelude::*;
 /// use bevy_flurx::prelude::*;
-/// use bevy_flurx_wry::prelude::*;
 /// use bevy_flurx_ipc::prelude::*;
 ///
 /// #[command]
@@ -46,7 +46,7 @@ use syn::__private::TokenStream2;
 ///
 /// The function has the following two arguments; each argument is optional.
 /// -  [In](bevy::prelude::In)<D: [`DeserializeOwned`](serde::de::DeserializeOwned)>: The Deserialized values passed from the webview.
-/// - [`WebviewEntity`](bevy_flurx_ipc::prelude::WebviewEntity) :  The webview entity that holds ipc-handlers.
+/// - `WebviewEntity` :  The webview entity that holds ipc-handlers.
 /// - [`ReactorTask`]: Please see [here](https://docs.rs/bevy_flurx/latest/bevy_flurx/prelude/struct.Reactor.html#method.schedule) for details.
 ///  
 /// ```no_run
@@ -64,6 +64,10 @@ use syn::__private::TokenStream2;
 ///     task.will(Update, once::run(|In(message): In<String>|message).with(message)).await
 /// }
 /// ```
+///
+/// [`Action`]: https://docs.rs/bevy_flurx/latest/bevy_flurx/action/index.html
+/// [`ActionSeed`]: https://docs.rs/bevy_flurx/latest/bevy_flurx/action/seed/struct.ActionSeed.html
+/// [`ReactorTask`]: https://docs.rs/bevy_flurx/latest/bevy_flurx/task/struct.ReactorTask.html
 #[proc_macro_attribute]
 pub fn command(attr: TokenStream, input: TokenStream) -> TokenStream {
     let attribute = parse_attribute(attr);

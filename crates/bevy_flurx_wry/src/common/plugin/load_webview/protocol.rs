@@ -5,7 +5,7 @@ use wry::http::Response;
 use wry::{http, WebViewBuilder};
 
 use crate::common::bundle::WebviewUri;
-use crate::prelude::csp::Csp;
+use crate::prelude::Csp;
 use crate::WryLocalRoot;
 
 pub fn feed_uri<'a>(

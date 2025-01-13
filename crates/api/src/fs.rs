@@ -11,8 +11,8 @@ mod remove_dir;
 mod read_dir;
 
 use crate::error::{ApiError, ApiResult, NotPermittedPath};
-use bevy::app::{PluginGroup, PluginGroupBuilder};
-use bevy::prelude::{Reflect, ReflectDefault, ReflectResource, Res, Resource};
+use bevy::app::{Plugin, PluginGroup, PluginGroupBuilder};
+use bevy::prelude::{Reflect, ReflectDefault, ReflectDeserialize, ReflectResource, ReflectSerialize, Res, Resource};
 pub use copy_file::FsCopyFilePlugin;
 pub use create_dir::FsCreateDirPlugin;
 pub use exists::FsExistsPlugin;
@@ -45,6 +45,7 @@ pub struct AllFsPlugins;
 impl PluginGroup for AllFsPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
+            .add(FsRegisterTypePlugin)
             .add(FsCreateDirPlugin)
             .add(FsCopyFilePlugin)
             .add(FsExistsPlugin)
@@ -60,11 +61,19 @@ impl PluginGroup for AllFsPlugins {
     }
 }
 
+/// Registers the type Fs resources in the AppTypeRegister.
+pub struct FsRegisterTypePlugin;
+impl Plugin for FsRegisterTypePlugin {
+    fn build(&self, app: &mut bevy::prelude::App) {
+        app.register_type::<AllowPaths>();
+    }
+}
+
 /// Represents the list of the paths accessible from [crate::fs] api.
 ///
 /// If this resource is not inserted in the application, api has access to all files.
-#[derive(Debug, Resource, Reflect, Default, Clone)]
-#[reflect(Resource, Default)]
+#[derive(Debug, Resource, Reflect, Default, Clone, Serialize, Deserialize)]
+#[reflect(Resource, Default, Serialize, Deserialize)]
 pub struct AllowPaths(Vec<PathBuf>);
 
 impl AllowPaths {

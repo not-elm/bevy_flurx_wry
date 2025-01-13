@@ -35,6 +35,6 @@ jobs:
 
       - name: Test all features
         run: cargo test --all-features --all
-# TODO: Enables this step after documents are ready
-#      - name: Doc lint
-#        run: cargo +nightly doc --all-features --no-deps
+
+      - name: Doc lint
+        run: cargo +nightly doc --all-features --no-deps

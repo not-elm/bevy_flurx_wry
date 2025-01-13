@@ -1,6 +1,6 @@
 //! Provides a mechanism to control the basic behavior of Webview.
 
-use bevy::prelude::{Component, Deref, DerefMut, Entity, Reflect, ReflectComponent};
+use bevy::prelude::{Component, Deref, DerefMut, Entity, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize};
 use bevy::utils::HashMap;
 use serde::{Deserialize, Serialize};
 
@@ -10,7 +10,6 @@ pub mod bundle;
 #[allow(missing_docs)]
 pub mod prelude {
     pub use crate::common::{
-        bundle::csp::Csp,
         bundle::*,
         plugin::prelude::*,
         WebviewInitialized,
@@ -40,7 +39,7 @@ pub mod prelude {
 /// }
 /// ```
 #[derive(Component, Reflect, Eq, PartialEq, Copy, Clone, Serialize, Deserialize)]
-#[reflect(Component)]
+#[reflect(Component, Serialize, Deserialize)]
 pub struct WebviewInitialized(pub ());
 
 

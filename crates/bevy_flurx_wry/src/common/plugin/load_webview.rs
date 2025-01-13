@@ -8,7 +8,7 @@ use crate::common::plugin::load_webview::ipc::IpcHandlerParams;
 use crate::common::plugin::load_webview::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
-use crate::prelude::csp::Csp;
+use crate::prelude::Csp;
 use crate::prelude::InitializationScripts;
 use crate::WryLocalRoot;
 use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};

@@ -36,7 +36,8 @@ impl Plugin for FlurxWryCommonPlugin {
             app.add_plugins(FlurxIpcPlugin);
         }
 
-        app.register_type::<WebviewInitialized>()
+        app
+            .register_type::<WebviewInitialized>()
             .register_type::<AutoPlay>()
             .register_type::<Background>()
             .register_type::<EnableClipboard>()

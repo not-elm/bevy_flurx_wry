@@ -1,12 +1,11 @@
-use bevy::prelude::{Color, Reflect, ReflectDefault};
-use bevy::prelude::{Component, ReflectComponent};
+use bevy::prelude::{Color, Component, Reflect, ReflectComponent, ReflectDefault, ReflectDeserialize, ReflectSerialize};
 use serde::{Deserialize, Serialize};
 
 /// Represents the webview background. 
 ///
 /// Default is [`Background::Unspecified`].
 #[derive(Component, Clone, Debug, PartialEq, Default, Reflect, Serialize, Deserialize)]
-#[reflect(Component, Default)]
+#[reflect(Component, Default, Serialize, Deserialize)]
 pub enum Background {
     /// Default settings will be applied.
     #[default]
