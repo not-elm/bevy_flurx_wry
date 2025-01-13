@@ -1,6 +1,7 @@
 //! Allows you to use http apis.
 
-use crate::error::{ApiResult, DenyOrigin};
+use crate::error::http::DenyOrigin;
+use crate::error::ApiResult;
 use crate::macros::api_plugin;
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::{In, PluginGroup, Reflect, ReflectDefault, ReflectDeserialize, ReflectResource, ReflectSerialize, Res, Resource, Update};

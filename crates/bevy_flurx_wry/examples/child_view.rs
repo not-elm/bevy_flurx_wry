@@ -6,9 +6,21 @@ use bevy_flurx_wry::prelude::*;
 use std::path::PathBuf;
 
 fn main() {
-    App::new()
+    let mut app = App::new();
+
+    #[cfg(target_os = "macos")]
+    app.insert_resource(ClearColor(Color::NONE));
+
+    app
         .add_plugins((
-            DefaultPlugins,
+            DefaultPlugins.set(WindowPlugin {
+                primary_window: Some(Window {
+                    #[cfg(target_os = "macos")]
+                    composite_alpha_mode: bevy::window::CompositeAlphaMode::PostMultiplied,
+                    ..default()
+                }),
+                ..default()
+            }),
             FlurxWryPlugin {
                 local_root: PathBuf::from("ui").join("child_view")
             }

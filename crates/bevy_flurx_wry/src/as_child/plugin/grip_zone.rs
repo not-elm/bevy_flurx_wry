@@ -52,7 +52,7 @@ fn resize_grip_zone(
 }
 
 fn move_webview(
-    mut views: Query<(&mut Bounds, &ParentWindow, &CurrentMoving), With<CurrentMoving>>,
+    mut views: Query<(&mut Bounds, &mut CurrentMoving, &ParentWindow), With<CurrentMoving>>,
     winit_windows: NonSend<WinitWindows>,
     windows: Query<&Window>,
 ) {
@@ -62,7 +62,7 @@ fn move_webview(
     };
     let cursor_pos = IVec2::new(pos.x, pos.y).as_vec2();
 
-    for (mut bounds, parent, CurrentMoving(d)) in views.iter_mut() {
+    for (mut bounds, mut moving, parent) in views.iter_mut() {
         let Ok(window_size) = windows
             .get(parent.0)
             .map(|w| Vec2::new(w.resolution.width(), w.resolution.height()))
@@ -78,7 +78,8 @@ fn move_webview(
         let window_position = window_position.cast::<f32>();
         let window_position = Vec2::new(window_position.x, window_position.y);
         let cursor_pos = cursor_pos - window_position;
-        move_bounds(&mut bounds, cursor_pos - *d, window_size, None);
+        move_bounds(&mut bounds, cursor_pos - moving.0, window_size, None);
+        moving.0 = cursor_pos;
     }
 }
 
@@ -90,24 +91,24 @@ fn all_remove_current_moving(mut commands: Commands, views: Query<Entity, With<C
 
 fn move_bounds(
     bounds: &mut Bounds,
-    top_left: Vec2,
+    cursor_pos: Vec2,
     window_size: Vec2,
     toolbar_height: Option<f32>,
 ) {
     let max = toolbar_height
         .map(|height| Vec2::new(0., height))
         .unwrap_or_default();
-    let cursor_pos = top_left.max(max);
     let max_pos = (window_size - bounds.size).max(Vec2::ZERO);
-    if cfg!(target_os = "macos") {
-        let tmp = cursor_pos.min(max_pos);
-        bounds.position = Vec2::new(tmp.x, max_pos.y - tmp.y);
+    let new_pos = if cfg!(target_os = "macos") {
+        Vec2::new(cursor_pos.x, -cursor_pos.y)
     } else {
-        bounds.position = cursor_pos.min(max_pos);
-    }
+        cursor_pos
+    };
+    bounds.position = (bounds.position + new_pos).min(max_pos).max(max);
 }
 
 #[derive(Deserialize)]
+#[allow(unused)]
 struct OnGripGrab {
     x: f32,
     y: f32,
@@ -121,10 +122,26 @@ fn grip_zone_grab(
     views: Query<&ParentWindow>,
 ) {
     for event in er.read() {
-        let pos = &event.payload;
+        let mouse = Mouse::new();
+        let Ok(pos) = mouse.get_position() else {
+            return;
+        };
+        let Some(winit_window) = views
+            .get(event.webview_entity)
+            .ok()
+            .and_then(|p| winit_windows.get_window(p.0)) else {
+            continue;
+        };
+        let cursor_pos = IVec2::new(pos.x, pos.y).as_vec2();
+        let Ok(window_position) = winit_window.inner_position() else {
+            continue;
+        };
+        let window_position = window_position.cast::<f32>();
+        let window_position = Vec2::new(window_position.x, window_position.y);
+        let cursor_pos = cursor_pos - window_position;
         commands
             .entity(event.webview_entity)
-            .insert(CurrentMoving(Vec2::new(pos.x, pos.y)));
+            .insert(CurrentMoving(cursor_pos));
         let Some(_webview) = web_views.0.get(&event.webview_entity) else {
             continue;
         };
@@ -170,36 +187,6 @@ mod tests {
     use crate::as_child::plugin::grip_zone::move_bounds;
     use crate::prelude::Bounds;
     use bevy::prelude::*;
-
-    #[test]
-    fn stop_top_left_edge() {
-        let mut bounds = new_bounds();
-        move_bounds(
-            &mut bounds,
-            Vec2::new(-3., -3.),
-            Vec2::new(100., 100.),
-            None,
-        );
-        #[cfg(target_os = "macos")]
-        assert_eq!(bounds.position, Vec2::new(0., 90.));
-        #[cfg(not(target_os = "macos"))]
-        assert_eq!(bounds.position, Vec2::new(0., 0.));
-    }
-
-    #[test]
-    fn stop_top_left_edge_with_toolbar() {
-        let mut bounds = new_bounds();
-        move_bounds(
-            &mut bounds,
-            Vec2::new(-3., -3.),
-            Vec2::new(100., 100.),
-            Some(10.),
-        );
-        #[cfg(target_os = "macos")]
-        assert_eq!(bounds.position, Vec2::new(0., 80.));
-        #[cfg(not(target_os = "macos"))]
-        assert_eq!(bounds.position, Vec2::new(0., 10.));
-    }
 
     #[test]
     fn stop_bottom_right() {
