@@ -55,6 +55,10 @@ export interface RenameFileOptions {
 export namespace fs {
     /**
      * Copies a file to a destination.
+     *
+     * @example
+     * import {fs} from "@bevy_flurx/api";
+     * await fs.copyFile("from", "to");
      */
     export const copyFile = async (
         from: string,
@@ -72,6 +76,10 @@ export namespace fs {
      * Creates a directory.
      *
      *  If you need to create the parent directory recursively, set `recursive` to `true`.
+     *
+     *  @example
+     *  import {fs} from "@bevy_flurx/api";
+     *  await fs.createDir("path");
      */
     export const createDir = async (
         path: string,
@@ -82,6 +90,10 @@ export namespace fs {
 
     /**
      *  Check if a path exists.
+     *
+     *  @example
+     *  import {fs} from "@bevy_flurx/api";
+     *  const exists: boolean = await fs.exists("path");
      */
     export const exists = async (
         path: string,
@@ -95,6 +107,10 @@ export namespace fs {
 
     /**
      * Reads a file as byte array.
+     *
+     * @example
+     * import {fs} from "@bevy_flurx/api";
+     * const bytes: Uint8Array = await fs.readBinaryFile("path");
      */
     export const readBinaryFile = async (
         path: string,
@@ -108,6 +124,10 @@ export namespace fs {
 
     /**
      * Reads a file as a UTF-8 encoded string.
+     *
+     * @example
+     * import {fs} from "@bevy_flurx/api";
+     * const text: string = await fs.readTextFile("path");
      */
     export const readTextFile = async (
         path: string,
@@ -121,6 +141,10 @@ export namespace fs {
 
     /**
      * Removes a file.
+     *
+     * @example
+     * import {fs} from "@bevy_flurx/api";
+     * await fs.removeFile("path");
      */
     export const removeFile = async (
         path: string,
@@ -134,6 +158,10 @@ export namespace fs {
 
     /**
      * Renames a file.
+     *
+     * @example
+     * import {fs} from "@bevy_flurx/api";
+     * await fs.renameFile("oldPath", "newPath");
      */
     export const renameFile = async (
         oldPath: string,
@@ -149,6 +177,10 @@ export namespace fs {
 
     /**
      * Writes a UTF-8 text file.
+     *
+     * @example
+     * import {fs} from "@bevy_flurx/api";
+     * await fs.writeTextFile("path", "contents");
      */
     export const writeTextFile = async (
         path: string,
@@ -164,6 +196,10 @@ export namespace fs {
 
     /**
      * Writes a file.
+     *
+     * @example
+     * import {fs} from "@bevy_flurx/api";
+     * await fs.writeBinaryFile("path", new Uint8Array());
      */
     export const writeBinaryFile = async (
         path: string,
@@ -179,6 +215,10 @@ export namespace fs {
 
     /**
      * List directory files.
+     *
+     * @example
+     * import {fs} from "@bevy_flurx/api";
+     * const files: FileEntry[] = await fs.readDir("path");
      */
     export const readDir = async (
         path: string,
@@ -192,6 +232,10 @@ export namespace fs {
 
     /**
      * Remove a directory.
+     *
+     * @example
+     * import {fs} from "@bevy_flurx/api";
+     * await fs.removeDir("path");
      */
     export const removeDir = async (
         path: string,

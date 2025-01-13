@@ -20,7 +20,7 @@
         <p id="num">1</p>
     </div>
     <button id="action-command-btn">action command</button>
-    <button id="task-command-btn">task command</button>
+    <button id="async-command-btn">task command</button>
 </div>
 <script>
     const num = document.getElementById("num");
@@ -28,8 +28,8 @@
         const n = await window.__FLURX__.invoke("action_command", Number.parseInt(num.innerText));
         num.innerText = n.toString();
     };
-    document.getElementById("task-command-btn").onclick = async () => {
-        const n = await window.__FLURX__.invoke("task_command", Number.parseInt(num.innerText));
+    document.getElementById("async-command-btn").onclick = async () => {
+        const n = await window.__FLURX__.invoke("async_command", Number.parseInt(num.innerText));
         num.innerText = n.toString();
     };
 </script>

@@ -28,7 +28,7 @@ export namespace os {
      * Get a describing the architecture of the CPU.
      *
      * @example
-     * import {os} from "@aa/bevy_flurx_api";
+     * import {os} from "@bevy_flurx/api";
      *
      * const arch: os.Arch = await os.arch();
      */
@@ -42,7 +42,7 @@ export namespace os {
      *  This value may be null if the family is unknown.
      *
      * @example
-     * import {os} from "@aa/bevy_flurx_api";
+     * import {os} from "@bevy_flurx/api";
      *
      * const arch: os.Family | null = await os.family();
      */
@@ -54,7 +54,7 @@ export namespace os {
      * Get the system version.
      *
      * @example
-     * import {os} from "@aa/bevy_flurx_api";
+     * import {os} from "@bevy_flurx/api";
      *
      * const osVersion: string | null = await os.version();
      */
@@ -66,7 +66,7 @@ export namespace os {
      * Get the system version.
      *
      * @example
-     * import {os} from "@aa/bevy_flurx_api";
+     * import {os} from "@bevy_flurx/api";
      *
      * const osVersion: string | null = await os.longOsVersion();
      */
@@ -78,7 +78,7 @@ export namespace os {
      * Get the kernel version.
      *
      * @example
-     * import {os} from "@aa/bevy_flurx_api";
+     * import {os} from "@bevy_flurx/api";
      *
      * const kernelVersion: string | null = await os.kernelVersion();
      */
@@ -90,7 +90,7 @@ export namespace os {
      * Get the system name.
      *
      * @example
-     * import {os} from "@aa/bevy_flurx_api";
+     * import {os} from "@bevy_flurx/api";
      *
      * const name: string | null = await os.systemName();
      */
@@ -102,7 +102,7 @@ export namespace os {
      * Get the system host name.
      *
      * @example
-     * import {os} from "@aa/bevy_flurx_api";
+     * import {os} from "@bevy_flurx/api";
      *
      * const name: string | null = await os.hostName();
      */
@@ -114,7 +114,7 @@ export namespace os {
      * Get the preferred locale for the system.
      *
      * @example
-     * import {os} from "@aa/bevy_flurx_api";
+     * import {os} from "@bevy_flurx/api";
      *
      * const locale: string | null = await os.locale();
      */

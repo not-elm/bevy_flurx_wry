@@ -5,6 +5,10 @@ export namespace path {
      *  Returns user's config path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const configPath: string | null = await path.config();
      */
     export const config = async (): Promise<string | null> => {
         return await invoke("FLURX|path::config");
@@ -14,6 +18,10 @@ export namespace path {
      *  Returns user's config local path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const configLocalPath: string | null = await path.configLocal();
      */
     export const configLocal = async (): Promise<string | null> => {
         return await invoke("FLURX|path::config_local");
@@ -23,6 +31,10 @@ export namespace path {
      *  Returns user's data path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const dataPath: string | null = await path.data();
      */
     export const data = async (): Promise<string | null> => {
         return await invoke("FLURX|path::data");
@@ -32,6 +44,10 @@ export namespace path {
      *  Returns user's data local path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const dataLocalPath: string | null = await path.dataLocal();
      */
     export const dataLocal = async (): Promise<string | null> => {
         return await invoke("FLURX|path::data_local");
@@ -41,6 +57,10 @@ export namespace path {
      *  Returns user's audio path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const audioPath: string | null = await path.audio();
      */
     export const audio = async (): Promise<string | null> => {
         return await invoke("FLURX|path::audio");
@@ -50,6 +70,10 @@ export namespace path {
      *  Returns user's cache path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const cachePath: string | null = await path.cache();
      */
     export const cache = async (): Promise<string | null> => {
         return await invoke("FLURX|path::cache");
@@ -59,6 +83,10 @@ export namespace path {
      *  Returns user's desktop path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const desktopPath: string | null = await path.desktop();
      */
     export const desktop = async (): Promise<string | null> => {
         return await invoke("FLURX|path::desktop");
@@ -68,6 +96,10 @@ export namespace path {
      *  Returns user's document path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const documentPath: string | null = await path.document();
      */
     export const document = async (): Promise<string | null> => {
         return await invoke("FLURX|path::document");
@@ -77,6 +109,10 @@ export namespace path {
      *  Returns user's download path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const downloadPath: string | null = await path.download();
      */
     export const download = async (): Promise<string | null> => {
         return await invoke("FLURX|path::download");
@@ -86,6 +122,10 @@ export namespace path {
      *  Returns user's executable path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const executablePath: string | null = await path.executable();
      */
     export const executable = async (): Promise<string | null> => {
         return await invoke("FLURX|path::executable");
@@ -95,6 +135,10 @@ export namespace path {
      *  Returns user's public path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const publicPath: string | null = await path.public();
      */
     export const publicDir = async (): Promise<string | null> => {
         return await invoke("FLURX|path::public");
@@ -104,6 +148,10 @@ export namespace path {
      *  Returns user's runtime path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const runtimePath: string | null = await path.runtime();
      */
     export const runtime = async (): Promise<string | null> => {
         return await invoke("FLURX|path::runtime");
@@ -113,6 +161,10 @@ export namespace path {
      *  Returns user's temp path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const tempPath: string | null = await path.temp();
      */
     export const temp = async (): Promise<string | null> => {
         return await invoke("FLURX|path::temp");
@@ -122,6 +174,10 @@ export namespace path {
      *  Returns user's template path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const templatePath: string | null = await path.template();
      */
     export const template = async (): Promise<string | null> => {
         return await invoke("FLURX|path::template");
@@ -131,6 +187,10 @@ export namespace path {
      *  Returns user's video path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const videoPath: string | null = await path.video();
      */
     export const video = async (): Promise<string | null> => {
         return await invoke("FLURX|path::video");
@@ -140,6 +200,10 @@ export namespace path {
      *  Returns user's home path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const homePath: string | null = await path.home();
      */
     export const home = async (): Promise<string | null> => {
         return await invoke("FLURX|path::home");
@@ -149,6 +213,10 @@ export namespace path {
      *  Returns user's picture path.
      *
      *  If the path doesn't exist or is not permitted by `AllowPaths`, will be null.
+     *
+     *  @example
+     *  import {path} from "@bevy_flurx/api";
+     *  const picturePath: string | null = await path.picture();
      */
     export const picture = async (): Promise<string | null> => {
         return await invoke("FLURX|path::picture");

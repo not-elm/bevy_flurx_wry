@@ -1,7 +1,13 @@
 {
   "name": "@bevy_flurx/api",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "client api for bevy_flurx_ipc",
+  "author": "notelm",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/not-elm/bevy_webview_projects.git"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
