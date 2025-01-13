@@ -11,7 +11,7 @@ export namespace http {
      * Requests within the main process.
      *
      * @example
-     * import {http} from "@bevy_flurx/api";
+     * import {http} from "bevy_flurx_api";
      * const response = await http.fetch("https://example.com");
      */
     export const fetch = async (

@@ -1,5 +1,5 @@
 {
-  "name": "@bevy_flurx/api",
+  "name": "bevy_flurx_api",
   "version": "0.1.0",
   "description": "client api for bevy_flurx_ipc",
   "author": "notelm",

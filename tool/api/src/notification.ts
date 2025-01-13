@@ -10,7 +10,7 @@ export namespace notification {
      * Sends a notification.
      *
      * @example
-     * import {notification} from "@bevy_flurx/api";
+     * import {notification} from "bevy_flurx_api";
      * await notification.send("message");
      */
     export const send = async (
