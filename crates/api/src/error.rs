@@ -1,6 +1,6 @@
 use serde::{Serialize, Serializer};
 use std::error::Error;
-use std::fmt::{Debug, Display, Formatter};
+use std::fmt::Debug;
 
 pub(crate) type ApiResult<V = ()> = Result<V, ApiError>;
 
@@ -22,34 +22,45 @@ impl<E: Error + Send + Sync + 'static> From<E> for ApiError {
     }
 }
 
-#[derive(Debug)]
-pub(crate) struct DenyOrigin(pub String);
+#[cfg(feature = "http")]
+pub mod http {
+    use std::error::Error;
+    use std::fmt::{Display, Formatter};
 
-impl Display for DenyOrigin {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.write_fmt(format_args!("{} is not a valid deny origin", self.0))
+    #[derive(Debug)]
+    pub(crate) struct DenyOrigin(pub String);
+
+    impl Display for DenyOrigin {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.write_fmt(format_args!("{} is not a valid deny origin", self.0))
+        }
     }
+
+    impl Error for DenyOrigin {}
 }
 
-impl Error for DenyOrigin {}
+#[cfg(feature = "fs")]
+pub mod fs {
+    use std::error::Error;
+    use std::fmt::{Debug, Display, Formatter};
 
+    pub(crate) struct NotPermittedPath;
 
-pub(crate) struct NotPermittedPath;
-
-impl NotPermittedPath {
-    const MESSAGE: &'static str = "Try to access to any of specified files isn't permitted by the application. ";
-}
-
-impl Debug for NotPermittedPath {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.write_str(NotPermittedPath::MESSAGE)
+    impl NotPermittedPath {
+        const MESSAGE: &'static str = "Try to access to any of specified files isn't permitted by the application. ";
     }
-}
 
-impl Display for NotPermittedPath {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        f.write_str(NotPermittedPath::MESSAGE)
+    impl Debug for NotPermittedPath {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.write_str(NotPermittedPath::MESSAGE)
+        }
     }
-}
 
-impl Error for NotPermittedPath {}
+    impl Display for NotPermittedPath {
+        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+            f.write_str(NotPermittedPath::MESSAGE)
+        }
+    }
+
+    impl Error for NotPermittedPath {}
+}

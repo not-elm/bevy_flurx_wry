@@ -10,7 +10,8 @@ mod write_file;
 mod remove_dir;
 mod read_dir;
 
-use crate::error::{ApiError, ApiResult, NotPermittedPath};
+use crate::error::fs::NotPermittedPath;
+use crate::error::{ApiError, ApiResult};
 use bevy::app::{Plugin, PluginGroup, PluginGroupBuilder};
 use bevy::prelude::{Reflect, ReflectDefault, ReflectDeserialize, ReflectResource, ReflectSerialize, Res, Resource};
 pub use copy_file::FsCopyFilePlugin;
@@ -24,7 +25,6 @@ pub use rename_file::FsRenameFilePlugin;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
 pub use write_file::{FsWriteBinaryFilePlugin, FsWriteTextFilePlugin};
-
 
 /// Allows you to use all fs apis.
 ///

@@ -3,6 +3,7 @@ use crate::as_child::bundle::{Bounds, ParentWindow, Resizable};
 use crate::as_child::CurrentMoving;
 use crate::common::{WebviewInitialized, WryWebViews};
 use bevy::input::common_conditions::input_pressed;
+use bevy::math::Vec2;
 use bevy::prelude::{
     not, Added, App, Changed, Commands, Entity, IntoSystemConfigs, MouseButton, NonSend, Or,
     Plugin, Query, Update, Without,
@@ -40,6 +41,11 @@ fn change_mouse_cursor_icon(
         let Some(cursor_pos) = window.cursor_position() else {
             continue;
         };
+        let cursor_pos = if cfg!(target_os = "macos") {
+            Vec2::new(cursor_pos.x, window.height() - cursor_pos.y)
+        } else {
+            cursor_pos
+        };
         if let Some(resize_mode) = bounds.maybe_resizable(cursor_pos, None) {
             commands.entity(entity).insert(resize_mode);
             commands
@@ -63,7 +69,13 @@ fn resize_bounds(
         let Ok(window) = window.get(parent.0) else {
             continue;
         };
+
         if let Some(cursor_pos) = window.cursor_position() {
+            let cursor_pos = if cfg!(target_os = "macos") {
+                Vec2::new(cursor_pos.x, window.height() - cursor_pos.y)
+            } else {
+                cursor_pos
+            };
             bounds.transform(resize_mode, cursor_pos, 0.);
         }
     }

@@ -68,8 +68,7 @@ mod macros {
                 fn build(&self, app: &mut bevy::prelude::App) {
                     use bevy::prelude::{Added, Query};
                     use bevy_flurx_ipc::prelude::IpcHandlers;
-                    use bevy_flurx_wry::prelude::WebviewInitialized;
-                    app.add_systems(bevy::prelude::PostUpdate, |mut views: Query<&mut IpcHandlers, Added<WebviewInitialized>>|{
+                    app.add_systems(bevy::prelude::PostUpdate, |mut views: Query<&mut IpcHandlers, Added<IpcHandlers>>|{
                         for mut handlers in views.iter_mut(){ 
                             handlers.register($api_command());
                         } 
