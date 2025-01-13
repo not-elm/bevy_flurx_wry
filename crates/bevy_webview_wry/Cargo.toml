@@ -45,7 +45,7 @@ objc2-foundation = { version = "0.2.0" }
 
 [dev-dependencies]
 bevy = "0.15.0"
-bevy_flurx = { version = "0.8.3" }
+bevy_flurx = { workspace = true }
 bevy_flurx_ipc = { path = "../bevy_flurx_ipc" }
 serde = { workspace = true }
 serde_json = { workspace = true }
