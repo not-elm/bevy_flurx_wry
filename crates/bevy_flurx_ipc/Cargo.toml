@@ -1,0 +1,33 @@
+[package]
+name = "bevy_flurx_ipc"
+version = "0.1.0"
+edition = "2021"
+description = "provides a way for ipc communication using bevy_flurx"
+authors = ["elm"]
+repository = "https://github.com/not-elm/bevy_webview_projects"
+categories = ["game-development"]
+keywords = ["game", "gamedev", "bevy", "ipc", "async"]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+
+[[test]]
+name = "progress"
+path = "tests/index.rs"
+
+[dependencies]
+bevy = { workspace = true, features = ["serialize"] }
+bevy_flurx_ipc_macro = { path = "../bevy_flurx_ipc_macro", version = "0.1.0" }
+bevy_flurx = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+[dev-dependencies]
+trybuild = "1.0.96"
+bevy = "0.15.0"
+
+[lints]
+workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "doc_cfg"]
