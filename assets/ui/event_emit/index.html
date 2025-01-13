@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style type="text/css">
+    <style>
         html, body {
             display: flex;
             justify-content: center;
@@ -17,14 +17,14 @@
 <h1 id="message">count: 0</h1>
 
 <script>
-    // なぜか初期化スクリプトが遅延実行される
+    // A slight delay exists before the FLURX is set up.
     setTimeout(() => {
         const messageTxt = document.getElementById("message");
         const webviewWindow = window.__FLURX__.WebWindow.current()
         webviewWindow.listen("count_event", (event) => {
             messageTxt.innerText = `count: ${event.count}`;
         });
-    }, 2000)
+    }, 500)
 </script>
 
 </body>
