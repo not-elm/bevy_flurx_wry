@@ -1,7 +1,7 @@
 //! Minimum example showing how to create a webview as child in the window.
 
 use bevy::prelude::*;
-use bevy::window::{CompositeAlphaMode, PrimaryWindow};
+use bevy::window::PrimaryWindow;
 use bevy_flurx_wry::prelude::*;
 use std::path::PathBuf;
 
@@ -16,7 +16,7 @@ fn main() {
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(Window {
                     #[cfg(target_os = "macos")]
-                    composite_alpha_mode: CompositeAlphaMode::PostMultiplied,
+                    composite_alpha_mode: bevy::window::CompositeAlphaMode::PostMultiplied,
                     ..default()
                 }),
                 ..default()
