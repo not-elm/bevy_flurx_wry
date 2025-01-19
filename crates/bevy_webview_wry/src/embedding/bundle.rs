@@ -28,14 +28,14 @@ mod grip_zone;
 /// ){
 ///     commands.spawn((
 ///         WebviewUri::default(),
-///         EmbedWithIn(window.single()),
+///         EmbedWithin(window.single()),
 ///     ));
 /// }
 #[repr(transparent)]
 #[derive(Component, Copy, Clone, Eq, PartialEq, Reflect)]
 #[require(Bounds, Resizable, GripZone)]
 #[reflect(Component)]
-pub struct EmbedWithIn(pub Entity);
+pub struct EmbedWithin(pub Entity);
 
 /// Whether to allow the webview to be resized.
 ///

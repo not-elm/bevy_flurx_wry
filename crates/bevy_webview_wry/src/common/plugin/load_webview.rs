@@ -7,7 +7,7 @@ use crate::common::plugin::load_webview::ipc::IpcHandlerParams;
 use crate::common::plugin::load_webview::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
-use crate::embedding::bundle::{Bounds, EmbedWithIn};
+use crate::embedding::bundle::{Bounds, EmbedWithin};
 use crate::prelude::Csp;
 use crate::prelude::InitializationScripts;
 use crate::WryLocalRoot;
@@ -69,12 +69,12 @@ fn load_web_views(
             Configs1,
             Configs2,
             ConfigsPlatformSpecific,
-            Option<&EmbedWithIn>,
+            Option<&EmbedWithin>,
             Option<&Bounds>,
         ),
         (
             Without<WebviewInitialized>,
-            Or<(With<Window>, With<EmbedWithIn>)>,
+            Or<(With<Window>, With<EmbedWithin>)>,
         ),
     >,
     ipc_params: IpcHandlerParams,
@@ -210,7 +210,7 @@ fn feed_platform_configs<'a>(
 fn build_webview(
     builder: WebViewBuilder,
     window_entity: Entity,
-    parent_window: Option<&EmbedWithIn>,
+    parent_window: Option<&EmbedWithin>,
     windows: &WinitWindows,
 ) -> Option<wry::Result<WebView>> {
     if let Some(parent_window) = parent_window

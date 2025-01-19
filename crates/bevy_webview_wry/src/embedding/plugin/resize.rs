@@ -1,6 +1,6 @@
 use crate::common::{WebviewInitialized, WryWebViews};
 use crate::embedding::bundle::resize::ResizeMode;
-use crate::embedding::bundle::{Bounds, EmbedWithIn, Resizable};
+use crate::embedding::bundle::{Bounds, EmbedWithin, Resizable};
 use crate::embedding::CurrentMoving;
 use bevy::input::common_conditions::input_pressed;
 use bevy::math::Vec2;
@@ -29,7 +29,7 @@ impl Plugin for ResizePlugin {
 fn change_mouse_cursor_icon(
     mut commands: Commands,
     mut windows: Query<(Entity, &Window)>,
-    views: Query<(Entity, &EmbedWithIn, &Bounds, &Resizable), Without<CurrentMoving>>,
+    views: Query<(Entity, &EmbedWithin, &Bounds, &Resizable), Without<CurrentMoving>>,
 ) {
     for (entity, parent, bounds, resizable) in views.iter() {
         if !resizable.0 {
@@ -59,7 +59,7 @@ fn change_mouse_cursor_icon(
 }
 
 fn resize_bounds(
-    mut views: Query<(&mut Bounds, &ResizeMode, &EmbedWithIn, &Resizable), Without<CurrentMoving>>,
+    mut views: Query<(&mut Bounds, &ResizeMode, &EmbedWithin, &Resizable), Without<CurrentMoving>>,
     window: Query<&Window>,
 ) {
     for (mut bounds, resize_mode, parent, resizable) in views.iter_mut() {
