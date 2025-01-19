@@ -6,7 +6,7 @@ use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::OmitInput;
 use bevy_flurx_ipc::command;
 use bevy_flurx_ipc::component::WebviewEntity;
-use bevy_webview_wry::prelude::ParentWindow;
+use bevy_webview_wry::prelude::EmbedWithIn;
 
 api_plugin!(
     /// You'll be able to get the current monitor info from a webview.
@@ -28,7 +28,7 @@ fn primary(WebviewEntity(entity): WebviewEntity) -> Action<(), Option<Monitor>> 
 //noinspection DuplicatedCode
 fn primary_system(
     In(entity): In<Entity>,
-    parent: Query<&ParentWindow>,
+    parent: Query<&EmbedWithIn>,
     web_views: NonSend<WinitWindows>,
 ) -> Option<Monitor> {
     let entity = if let Ok(parent) = parent.get(entity) {

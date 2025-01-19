@@ -1,5 +1,5 @@
 use crate::common::WryWebViews;
-use crate::embedding::bundle::{Bounds, ParentWindow};
+use crate::embedding::bundle::{Bounds, EmbedWithIn};
 use crate::embedding::CurrentMoving;
 use crate::prelude::{DragEntered, GripZone};
 #[cfg(any(target_os = "windows", target_os = "macos"))]
@@ -52,7 +52,7 @@ fn resize_grip_zone(
 }
 
 fn move_webview(
-    mut views: Query<(&mut Bounds, &mut CurrentMoving, &ParentWindow), With<CurrentMoving>>,
+    mut views: Query<(&mut Bounds, &mut CurrentMoving, &EmbedWithIn), With<CurrentMoving>>,
     winit_windows: NonSend<WinitWindows>,
     windows: Query<&Window>,
 ) {
@@ -119,7 +119,7 @@ fn grip_zone_grab(
     mut commands: Commands,
     web_views: NonSend<WryWebViews>,
     winit_windows: NonSend<WinitWindows>,
-    views: Query<&ParentWindow>,
+    views: Query<&EmbedWithIn>,
 ) {
     for event in er.read() {
         let mouse = Mouse::new();
