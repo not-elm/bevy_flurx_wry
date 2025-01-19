@@ -250,7 +250,7 @@ unsafe fn attach_inner_window(
     );
     inner_window.setMovable(false);
     inner_window.makeFirstResponder(Some(webview));
-    inner_window.setIgnoresMouseEvents(true);
+
     let content_rect = application_window.contentRectForFrameRect(application_window.frame());
     inner_window.setFrame_display(content_rect, true);
     inner_window.setHidesOnDeactivate(false);
