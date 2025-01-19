@@ -1,4 +1,4 @@
-use crate::embedding::bundle::{Bounds, ParentWindow, Resizable};
+use crate::embedding::bundle::{Bounds, EmbedWithin, Resizable};
 use crate::embedding::plugin::grip_zone::GripZonePlugin;
 use crate::embedding::plugin::resize::ResizePlugin;
 use crate::embedding::CurrentMoving;
@@ -14,7 +14,7 @@ pub(crate) struct AsChildPlugin;
 impl Plugin for AsChildPlugin {
     fn build(&self, app: &mut App) {
         app
-            .register_type::<ParentWindow>()
+            .register_type::<EmbedWithin>()
             .register_type::<Bounds>()
             .register_type::<Resizable>()
             .register_type::<CurrentMoving>()

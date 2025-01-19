@@ -60,7 +60,7 @@ use bevy::ecs::system::SystemParam;
 use bevy::prelude::{Entity, Mut, Name, NonSend, PluginGroup, Query, Window};
 use bevy::window::WindowWrapper;
 use bevy::winit::WinitWindows;
-use bevy_webview_wry::prelude::ParentWindow;
+use bevy_webview_wry::prelude::EmbedWithin;
 
 /// Allows you to use all window plugins.
 ///
@@ -132,7 +132,7 @@ struct WebWinitWindowParams<'w, 's> {
         Entity,
         Option<&'static Name>,
         Option<&'static mut Window>,
-        Option<&'static ParentWindow>,
+        Option<&'static EmbedWithin>,
     )>,
     windows: NonSend<'w, WinitWindows>,
 }

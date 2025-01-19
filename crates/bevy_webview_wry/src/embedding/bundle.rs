@@ -9,9 +9,7 @@ pub(crate) mod resize;
 mod bounds;
 mod grip_zone;
 
-/// The webview parent window.
-///
-/// Create the webview as a child of an existing [`Window`](bevy::prelude::Window).
+/// Holds the window entity to embed the webview in.
 ///
 /// ## Note
 ///
@@ -30,14 +28,14 @@ mod grip_zone;
 /// ){
 ///     commands.spawn((
 ///         WebviewUri::default(),
-///         ParentWindow(window.single()),
+///         EmbedWithin(window.single()),
 ///     ));
 /// }
 #[repr(transparent)]
 #[derive(Component, Copy, Clone, Eq, PartialEq, Reflect)]
 #[require(Bounds, Resizable, GripZone)]
 #[reflect(Component)]
-pub struct ParentWindow(pub Entity);
+pub struct EmbedWithin(pub Entity);
 
 /// Whether to allow the webview to be resized.
 ///

@@ -7,7 +7,7 @@ use crate::common::plugin::load_webview::ipc::IpcHandlerParams;
 use crate::common::plugin::load_webview::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
-use crate::embedding::bundle::{Bounds, ParentWindow};
+use crate::embedding::bundle::{Bounds, EmbedWithin};
 use crate::prelude::Csp;
 use crate::prelude::InitializationScripts;
 use crate::WryLocalRoot;
@@ -69,12 +69,12 @@ fn load_web_views(
             Configs1,
             Configs2,
             ConfigsPlatformSpecific,
-            Option<&ParentWindow>,
+            Option<&EmbedWithin>,
             Option<&Bounds>,
         ),
         (
             Without<WebviewInitialized>,
-            Or<(With<Window>, With<ParentWindow>)>,
+            Or<(With<Window>, With<EmbedWithin>)>,
         ),
     >,
     ipc_params: IpcHandlerParams,
@@ -210,7 +210,7 @@ fn feed_platform_configs<'a>(
 fn build_webview(
     builder: WebViewBuilder,
     window_entity: Entity,
-    parent_window: Option<&ParentWindow>,
+    parent_window: Option<&EmbedWithin>,
     windows: &WinitWindows,
 ) -> Option<wry::Result<WebView>> {
     if let Some(parent_window) = parent_window
@@ -234,20 +234,18 @@ unsafe fn attach_inner_window(
     application_window: &objc2_app_kit::NSWindow,
     webview: &wry::WryWebView,
 ) {
-    use objc2_app_kit::{NSApplication, NSAutoresizingMaskOptions};
+    use objc2_app_kit::NSAutoresizingMaskOptions;
 
     webview.removeFromSuperview();
     webview.setAutoresizingMask(
-        NSAutoresizingMaskOptions::NSViewHeightSizable
-            | NSAutoresizingMaskOptions::NSViewWidthSizable,
+        NSAutoresizingMaskOptions::NSViewHeightSizable |
+            NSAutoresizingMaskOptions::NSViewWidthSizable,
     );
     let mtw = objc2_foundation::MainThreadMarker::new().unwrap();
     let inner_window = objc2_app_kit::NSPanel::new(mtw);
     inner_window.setTitle(&objc2_foundation::NSString::from_str(""));
     inner_window.setStyleMask(
-        objc2_app_kit::NSWindowStyleMask::HUDWindow |
-            objc2_app_kit::NSWindowStyleMask::Titled |
-            objc2_app_kit::NSWindowStyleMask::NonactivatingPanel |
+        objc2_app_kit::NSWindowStyleMask::Titled |
             objc2_app_kit::NSWindowStyleMask::FullSizeContentView
     );
     inner_window.setMovable(false);
@@ -269,6 +267,7 @@ unsafe fn attach_inner_window(
 
     inner_window.makeKeyAndOrderFront(None);
 
+    use objc2_app_kit::NSApplication;
     let app = NSApplication::sharedApplication(mtw);
     if objc2_foundation::NSProcessInfo::processInfo().operatingSystemVersion().majorVersion >= 14 {
         NSApplication::activate(&app);
