@@ -13,7 +13,6 @@ use crate::prelude::InitializationScripts;
 use crate::WryLocalRoot;
 use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
-use objc2_app_kit::NSApplication;
 use rand::distributions::DistString;
 use std::ops::Deref;
 #[cfg(target_os = "macos")]
@@ -268,6 +267,7 @@ unsafe fn attach_inner_window(
 
     inner_window.makeKeyAndOrderFront(None);
 
+    use objc2_app_kit::NSApplication;
     let app = NSApplication::sharedApplication(mtw);
     if objc2_foundation::NSProcessInfo::processInfo().operatingSystemVersion().majorVersion >= 14 {
         NSApplication::activate(&app);
