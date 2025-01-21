@@ -108,7 +108,7 @@ fn load_web_views(
         // Safety: Ensure that attach the winit window to webview.
         unsafe {
             if parent_window.is_none() {
-                attach_inner_window(&webview.ns_window(), &webview.webview());
+                attach_inner_window(configs1.4.is_transparent(), &webview.ns_window(), &webview.webview());
             }
         }
         commands
@@ -231,6 +231,7 @@ fn build_webview(
 
 #[cfg(target_os = "macos")]
 unsafe fn attach_inner_window(
+    is_transparent: bool,
     application_window: &objc2_app_kit::NSWindow,
     webview: &wry::WryWebView,
 ) {
@@ -241,6 +242,7 @@ unsafe fn attach_inner_window(
         NSAutoresizingMaskOptions::NSViewHeightSizable |
             NSAutoresizingMaskOptions::NSViewWidthSizable,
     );
+
     let mtw = objc2_foundation::MainThreadMarker::new().unwrap();
     let inner_window = objc2_app_kit::NSPanel::new(mtw);
     inner_window.setTitle(&objc2_foundation::NSString::from_str(""));
@@ -248,6 +250,10 @@ unsafe fn attach_inner_window(
         objc2_app_kit::NSWindowStyleMask::Titled |
             objc2_app_kit::NSWindowStyleMask::FullSizeContentView
     );
+    if is_transparent {
+        inner_window.setOpaque(false);
+        inner_window.setBackgroundColor(Some(&objc2_app_kit::NSColor::clearColor()));
+    }
     inner_window.setMovable(false);
     inner_window.makeFirstResponder(Some(webview));
 
@@ -267,14 +273,13 @@ unsafe fn attach_inner_window(
 
     inner_window.makeKeyAndOrderFront(None);
 
-    use objc2_app_kit::NSApplication;
-    let app = NSApplication::sharedApplication(mtw);
-    if objc2_foundation::NSProcessInfo::processInfo().operatingSystemVersion().majorVersion >= 14 {
-        NSApplication::activate(&app);
-    } else {
-        #[allow(deprecated)]
-        NSApplication::activateIgnoringOtherApps(&app, true);
-    }
+    // let app = NSApplication::sharedApplication(mtw);
+    // if objc2_foundation::NSProcessInfo::processInfo().operatingSystemVersion().majorVersion >= 14 {
+    //     NSApplication::activate(&app);
+    // } else {
+    //     #[allow(deprecated)]
+    //     NSApplication::activateIgnoringOtherApps(&app, true);
+    // }
 }
 
 #[cfg(target_os = "macos")]

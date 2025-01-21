@@ -2,6 +2,7 @@ use serde::{Serialize, Serializer};
 use std::error::Error;
 use std::fmt::Debug;
 
+#[allow(unused)]
 pub(crate) type ApiResult<V = ()> = Result<V, ApiError>;
 
 #[derive(Debug)]
