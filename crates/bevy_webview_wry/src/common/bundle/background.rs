@@ -17,3 +17,10 @@ pub enum Background {
     /// Sets the webView should be transparent.
     Transparent,
 }
+
+impl Background {
+    /// Returns `true` if the background is transparent.
+    pub const fn is_transparent(&self) -> bool {
+        matches!(self, Background::Transparent)
+    }
+}
