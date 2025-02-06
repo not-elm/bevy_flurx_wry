@@ -214,7 +214,6 @@ impl WryEventParams<'_> {
         let events = self.navigation_events.clone();
         builder.with_navigation_handler(move |uri| {
             let uri = PassedUrl(uri);
-            println!("uri: {:?}", uri);
             let allow_navigation = on_navigation(uri.clone());
             if allow_navigation {
                 events.push(Navigated {
