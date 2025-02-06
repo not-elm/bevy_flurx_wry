@@ -28,7 +28,7 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-bevy_webview_wry = "0.1"
+bevy_webview_wry = "0.2"
 
 # necessary if you want to use ipc-command.
 bevy_flurx = "0.9"
