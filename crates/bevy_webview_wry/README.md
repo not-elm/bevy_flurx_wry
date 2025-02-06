@@ -69,6 +69,8 @@ fn spawn_webview(
 
 ### Child window
 
+This feature is required `child_window` feature flag.
+
 [examples/wry/child_window.rs](../../examples/wry/child_window.rs)
 ![child_window](../../examples/wry/child_window.gif)
 
@@ -163,6 +165,12 @@ Please check  [examples/wry/ipc_command.rs](../../examples/wry/ipc_command.rs) f
 ## ChangeLog
 
 Please see [here](https://github.com/not-elm/bevy_webview_wry/blob/main/CHANGELOG.md).
+
+## Feature flags
+
+| flag           | description                                 | default |
+|----------------|---------------------------------------------|---------|
+| `child_window` | allows you to create embedding child window | true    |
 
 ## Compatible Bevy versions
 

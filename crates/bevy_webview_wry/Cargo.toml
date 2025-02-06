@@ -10,6 +10,10 @@ keywords = ["game", "gamedev", "bevy", "wry"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 
+[features]
+default = ["child_window"]
+child_window = ["dep:bevy_child_window"]
+
 [dependencies]
 bevy = { workspace = true, features = [
     "bevy_winit",
@@ -24,6 +28,7 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 mouse-rs = "0.4.2"
 rand = "0.9.0"
+bevy_child_window = { version = "0.1.0", optional = true }
 
 [target."cfg(any(target_os = \"ios\", target_os = \"macos\"))".dependencies]
 objc2 = { version = "0.5" }
