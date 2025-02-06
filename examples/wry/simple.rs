@@ -2,7 +2,6 @@
 
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
-
 use bevy_webview_wry::prelude::*;
 
 fn main() {
