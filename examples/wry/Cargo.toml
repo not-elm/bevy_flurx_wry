@@ -20,7 +20,6 @@ serde = { workspace = true }
 name = "wry_child_window"
 path = "child_window.rs"
 
-
 [[example]]
 name = "wry_simple"
 path = "simple.rs"
