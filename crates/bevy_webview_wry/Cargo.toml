@@ -3,7 +3,7 @@ name = "bevy_webview_wry"
 version = "0.1.0"
 edition = "2021"
 authors = ["notelm <elmprograminfo@gmail.com>"]
-description = "Provides a mechanism to create a webview based on wry"
+description = "Allows you to create a webview based on wry"
 repository = "https://github.com/not-elm/bevy_webview_projects"
 categories = ["gui", "game-development"]
 keywords = ["game", "gamedev", "bevy", "wry"]
@@ -23,7 +23,7 @@ bevy_flurx = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 mouse-rs = "0.4.2"
-rand = "0.8.5"
+rand = "0.9.0"
 
 [target."cfg(any(target_os = \"ios\", target_os = \"macos\"))".dependencies]
 objc2 = { version = "0.5" }
@@ -32,14 +32,8 @@ objc2-app-kit = { version = "0.2.0", features = [
     "NSEvent",
     "NSWindow",
     "NSView",
-    "NSPasteboard",
     "NSPanel",
     "NSResponder",
-    "NSOpenPanel",
-    "NSSavePanel",
-    "NSMenu",
-    "NSGraphics",
-    "NSTrackingArea",
 ] }
 objc2-foundation = { version = "0.2.0" }
 

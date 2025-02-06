@@ -13,7 +13,7 @@ use crate::prelude::{Csp, Webview};
 use crate::WryLocalRoot;
 use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
-use rand::distributions::DistString;
+use rand::distr::{Alphanumeric, SampleString};
 use std::ops::Deref;
 #[cfg(target_os = "macos")]
 use wry::WebViewExtMacOS;
@@ -161,8 +161,8 @@ fn feed_configs2<'a>(
     let identifier = if let Some(name) = name {
         name.to_string()
     } else {
-        let mut rng = rand::thread_rng();
-        let random_code = rand::distributions::Alphanumeric.sample_string(&mut rng, 32);
+        let mut rng = rand::rng();
+        let random_code = Alphanumeric.sample_string(&mut rng, 32);
         commands
             .entity(entity)
             .insert(Name::new(random_code.clone()));
