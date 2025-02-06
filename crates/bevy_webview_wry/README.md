@@ -12,11 +12,14 @@
 The purpose of this crate is integrate [bevy](https://github.com/bevyengine/bevy)
 and [wry](https://github.com/tauri-apps/wry) using [bevy_flurx](https://github.com/not-elm/bevy_flurx).
 
-## Platform Support
+## Supported platforms
 
-The operation has been confirmed on `Windows` and `MacOS`.
-
-`Linux` is currently not supported.
+| Platform | usable |
+|----------|--------|
+| Windows  | ✅      |
+| MacOS    | ✅      |
+| Linux    | ❌      |
+| Web      | ❌      |
 
 ## Setup
 
@@ -49,9 +52,8 @@ There are two ways to create a webview:
 
 ### Converts an existing window into a webview window.
 
-![simple](../../examples/wry/simple.gif)
-
 [examples/wry/simple.rs](../../examples/wry/simple.rs)
+![simple](../../examples/wry/simple.gif)
 
 ```rust
 fn spawn_webview(
@@ -65,41 +67,15 @@ fn spawn_webview(
 }
 ```
 
+### Child window
+
+[examples/wry/child_window.rs](../../examples/wry/child_window.rs)
+![child_window](../../examples/wry/child_window.gif)
+
 ### Embedding Webview in a Window (Experimental)
 
-![embedding](../../examples/wry/embedding.gif)
 [examples/wry/embedding.rs](../../examples/wry/embedding.rs)
-
-```rust
-fn spawn_webview(
-    mut commands: Commands,
-    window: Query<Entity, With<PrimaryWindow>>,
-) {
-    commands.spawn((
-        WebviewUri::default(),
-        // Specifies the window entity to embed.
-        ParentWindow(window.single()),
-        Resizable(true),
-        // Grab the top of the webview and allow it to move.
-        GripZone(10),
-        Bounds {
-            position: Vec2::new(100., 100.),
-            size: Vec2::new(500., 500.),
-            min_size: Vec2::new(100., 100.),
-        },
-    ));
-
-    commands.spawn((
-        WebviewUri::new("https://bevyengine.org/"),
-        ParentWindow(window.single()),
-        Bounds {
-            position: Vec2::new(700., 100.),
-            size: Vec2::new(500., 500.),
-            min_size: Vec2::new(100., 100.),
-        },
-    ));
-}
-```
+![embedding](../../examples/wry/embedding.gif)
 
 ## Ipc
 
@@ -192,7 +168,7 @@ Please see [here](https://github.com/not-elm/bevy_webview_wry/blob/main/CHANGELO
 
 | bevy_webview_wry | bevy_flurx | bevy |
 |------------------|------------|------|
-| 0.1.0 ~          | 0.6        | 0.15 |
+| 0.1.0 ~          | 0.9        | 0.15 |
 
 ## License
 
