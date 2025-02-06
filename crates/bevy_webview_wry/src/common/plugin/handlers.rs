@@ -14,9 +14,9 @@ use crate::common::plugin::handlers::new_window_request::{
 use crate::common::plugin::handlers::page_load::{
     PageLoadFinished, PageLoadPlugin, PageLoadStarted,
 };
-use crate::prelude::{OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest, PassedUrl};
+use crate::prelude::{NewWindowResponse, OnDownload, OnDragDrop, OnNavigation, OnNewWindowRequest, PassedUrl};
 use bevy::ecs::system::SystemParam;
-use bevy::prelude::{App, Entity, Event, EventWriter, Mut, Plugin, PreUpdate, Res, Resource, Window};
+use bevy::prelude::{App, Entity, Event, EventWriter, Mut, Plugin, PreUpdate, Res, Resource};
 use bevy::reflect::GetTypeRegistration;
 use std::sync::{Arc, Mutex};
 use wry::{PageLoadEvent, WebViewBuilder};
@@ -35,7 +35,7 @@ pub mod prelude {
         download::{DownloadCompleted, DownloadStarted},
         dragdrop::*,
         navigation::Navigated,
-        new_window_request::NewWindowOpened,
+        new_window_request::*,
         page_load::{PageLoadFinished, PageLoadStarted},
     };
 }
@@ -214,6 +214,7 @@ impl WryEventParams<'_> {
         let events = self.navigation_events.clone();
         builder.with_navigation_handler(move |uri| {
             let uri = PassedUrl(uri);
+            println!("uri: {:?}", uri);
             let allow_navigation = on_navigation(uri.clone());
             if allow_navigation {
                 events.push(Navigated {
@@ -268,18 +269,22 @@ impl WryEventParams<'_> {
         let events = self.new_win_req_events.clone();
         let on_new_window_request = on_new_window_request
             .take()
-            .unwrap_or(Box::new(|_| Some(Window::default())));
+            .unwrap_or(Box::new(|_| NewWindowResponse::Allow));
 
         builder.with_new_window_req_handler(move |url| {
             let url = PassedUrl(url);
-            if let Some(window) = on_new_window_request(url.clone()) {
-                events.push(NewWindowRequested {
-                    webview_entity,
-                    url,
-                    window,
-                });
+            match on_new_window_request(url.clone()) {
+                NewWindowResponse::CreateWindow(window) => {
+                    events.push(NewWindowRequested {
+                        webview_entity,
+                        url,
+                        window,
+                    });
+                    false
+                }
+                NewWindowResponse::Allow => true,
+                NewWindowResponse::Deny => false,
             }
-            false
         })
     }
 }
