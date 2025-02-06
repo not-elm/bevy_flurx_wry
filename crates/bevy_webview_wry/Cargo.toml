@@ -2,7 +2,7 @@
 name = "bevy_webview_wry"
 version = "0.1.0"
 edition = "2021"
-authors = ["elm"]
+authors = ["notelm <elmprograminfo@gmail.com>"]
 description = "Provides a mechanism to create a webview based on wry"
 repository = "https://github.com/not-elm/bevy_webview_projects"
 categories = ["gui", "game-development"]

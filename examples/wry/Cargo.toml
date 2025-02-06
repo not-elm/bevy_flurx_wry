@@ -15,6 +15,12 @@ bevy_flurx_api = { path = "../../crates/bevy_flurx_api", features = [
 bevy_webview_wry = { path = "../../crates/bevy_webview_wry" }
 serde_json = { workspace = true }
 serde = { workspace = true }
+bevy_child_window = { version = "0.1.0" }
+
+
+[[example]]
+name = "wry_child_window"
+path = "child_window.rs"
 
 [[example]]
 name = "wry_simple"
