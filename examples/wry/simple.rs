@@ -22,6 +22,6 @@ fn spawn_webview(
     // Converts the `Window` attached the entity into a webview window. 
     commands
         .entity(window.single())
-        .insert(WebviewUri::new("https://bevyengine.org/"));
+        .insert(Webview::Uri(WebviewUri::new("https://bevyengine.org/")));
 }
 

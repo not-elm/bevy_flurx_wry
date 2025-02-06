@@ -27,7 +27,7 @@ fn spawn_webview(
     mut commands: Commands,
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
-    commands.entity(window.single()).insert(WebviewUri::default());
+    commands.entity(window.single()).insert(Webview::default());
 }
 
 #[derive(Deserialize, Debug)]

@@ -7,13 +7,6 @@ use std::path::{Path, PathBuf};
 
 /// Represents the display destination of webview.
 ///
-/// If you want to load a local resource, use custom protocol: `flurx://localhost/<ROOT>/<uri>`.
-///
-/// `<ROOT>` is specified by [`FlurxWryPlugin::local_root`](crate::prelude::WebviewWryPlugin).
-///
-///
-/// Default is `flurx://localhost/`.
-///
 /// ```no_run
 /// use bevy::prelude::*;
 /// use bevy_webview_wry::prelude::*;
@@ -35,7 +28,7 @@ use std::path::{Path, PathBuf};
 ///         .entity(window.single())
 ///         // The actual URL is flurx://localhost/ui/example.html.
 ///         // show assets/ui/example.html
-///         .insert(WebviewUri::relative_local("example.html"));
+///         .insert(Webview::Uri(WebviewUri::relative_local("example.html")));
 /// }
 /// ```
 #[derive(Component, Clone, Debug, Eq, PartialEq, Hash, Reflect, Serialize, Deserialize)]
@@ -62,6 +55,50 @@ use std::path::{Path, PathBuf};
     EventEmitter,
 )]
 #[reflect(Component, Default, Serialize, Deserialize)]
+pub enum Webview {
+    /// Load the webview with the specified remote/local uri.
+    ///
+    /// ## Examples
+    ///
+    /// ```no_run
+    /// use bevy_webview_wry::prelude::{Webview, WebviewUri};
+    /// Webview::Uri(WebviewUri::new("https://bevyengine.org/"));
+    /// Webview::Uri(WebviewUri::relative_local("example.html"));
+    /// ```
+    Uri(WebviewUri),
+
+    /// Load the webview with the specified html content.
+    ///
+    /// ## Examples
+    ///
+    /// ```no_run
+    /// use bevy_webview_wry::prelude::Webview;
+    /// Webview::Html("<html><body><h1>Hello world!</h1></body></html>".to_string());
+    /// ```
+    Html(String),
+}
+
+impl Default for Webview {
+    fn default() -> Self {
+        Webview::Uri(WebviewUri::default())
+    }
+}
+
+impl From<WebviewUri> for Webview {
+    fn from(uri: WebviewUri) -> Self {
+        Webview::Uri(uri)
+    }
+}
+
+/// The Uri that load in the webview.
+///
+/// If you want to load a local resource, use custom protocol: `flurx://localhost/<ROOT>/<uri>`.
+///
+/// `<ROOT>` is specified by [`FlurxWryPlugin::local_root`](crate::prelude::WebviewWryPlugin).
+///
+/// Default is `flurx://localhost/`.
+#[derive(Clone, Debug, Eq, PartialEq, Hash, Reflect, Serialize, Deserialize)]
+#[reflect(Default, Serialize, Deserialize)]
 pub struct WebviewUri(pub String);
 
 impl WebviewUri {

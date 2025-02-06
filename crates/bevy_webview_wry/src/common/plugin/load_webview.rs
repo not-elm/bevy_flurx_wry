@@ -1,6 +1,6 @@
 use crate::common::bundle::{
     AutoPlay, Background, BrowserAcceleratorKeys, EnableClipboard, HotkeysZoom, Incognito,
-    InitializeFocused, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewUri, WebviewVisible,
+    InitializeFocused, Theme, UseDevtools, UseHttpsScheme, UserAgent, WebviewVisible,
 };
 use crate::common::plugin::handlers::{HandlerQueries, WryEventParams};
 use crate::common::plugin::load_webview::ipc::IpcHandlerParams;
@@ -8,8 +8,8 @@ use crate::common::plugin::load_webview::protocol::feed_uri;
 use crate::common::plugin::WryWebViews;
 use crate::common::WebviewInitialized;
 use crate::embedding::bundle::{Bounds, EmbedWithin};
-use crate::prelude::Csp;
 use crate::prelude::InitializationScripts;
+use crate::prelude::{Csp, Webview};
 use crate::WryLocalRoot;
 use bevy::prelude::{App, Commands, Entity, Name, NonSend, NonSendMut, Or, Plugin, PreUpdate, Query, Res, Window, With, Without};
 use bevy::winit::WinitWindows;
@@ -51,7 +51,7 @@ type Configs2<'a> = (
     &'a InitializeFocused,
     &'a HotkeysZoom,
     &'a UserAgent,
-    &'a WebviewUri,
+    &'a Webview,
     &'a InitializationScripts,
     Option<&'a Csp>,
     Option<&'a Name>,

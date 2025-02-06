@@ -41,3 +41,7 @@ path = "event_listen.rs"
 [[example]]
 name = "wry_embedding"
 path = "embedding.rs"
+
+[[example]]
+name = "wry_embedding_html"
+path = "embedding_html.rs"

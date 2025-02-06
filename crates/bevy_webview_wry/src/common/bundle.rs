@@ -17,7 +17,7 @@ pub use theme::Theme;
 pub use use_devtools::UseDevtools;
 pub use user_agent::UserAgent;
 pub use visible::WebviewVisible;
-pub use webview_uri::WebviewUri;
+pub use webview_uri::{Webview, WebviewUri};
 
 mod auto_play;
 mod background;
