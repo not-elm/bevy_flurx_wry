@@ -2,7 +2,6 @@
 
 [![Crates.io](https://img.shields.io/crates/v/bevy_webview_wry.svg)](https://crates.io/crates/bevy_webview_wry)
 [![MIT/Apache 2.0](https://img.shields.io/badge/license-MIT%2FApache-blue.svg)](https://github.com/not-elm/bevy_webview_wry#license)
-[![Crates.io](https://img.shields.io/crates/d/bevy_webview_wry.svg)](https://crates.io/crates/bevy_webview_wry)
 
 > [!CAUTION]
 > This crate is in the early stages of development and is subject to breaking changes.
