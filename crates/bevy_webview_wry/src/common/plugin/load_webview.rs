@@ -273,13 +273,14 @@ unsafe fn attach_inner_window(
 
     inner_window.makeKeyAndOrderFront(None);
 
-    // let app = NSApplication::sharedApplication(mtw);
-    // if objc2_foundation::NSProcessInfo::processInfo().operatingSystemVersion().majorVersion >= 14 {
-    //     NSApplication::activate(&app);
-    // } else {
-    //     #[allow(deprecated)]
-    //     NSApplication::activateIgnoringOtherApps(&app, true);
-    // }
+    use objc2_app_kit::NSApplication;
+    let app = NSApplication::sharedApplication(mtw);
+    if objc2_foundation::NSProcessInfo::processInfo().operatingSystemVersion().majorVersion >= 14 {
+        NSApplication::activate(&app);
+    } else {
+        #[allow(deprecated)]
+        NSApplication::activateIgnoringOtherApps(&app, true);
+    }
 }
 
 #[cfg(target_os = "macos")]
