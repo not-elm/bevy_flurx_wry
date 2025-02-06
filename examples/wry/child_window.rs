@@ -27,7 +27,7 @@ fn spawn_child_window(
             resolution: WindowResolution::new(500., 500.),
             ..default()
         },
-        WebviewUri::new("https://bevyengine.org/"),
+        Webview::Uri(WebviewUri::new("https://bevyengine.org/")),
         ParentWindow(window.single()),
     ));
 }

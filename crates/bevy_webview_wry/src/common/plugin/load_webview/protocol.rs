@@ -4,17 +4,19 @@ use wry::http::header::{CONTENT_SECURITY_POLICY, CONTENT_TYPE};
 use wry::http::Response;
 use wry::{http, WebViewBuilder};
 
-use crate::common::bundle::WebviewUri;
-use crate::prelude::Csp;
+use crate::prelude::{Csp, Webview};
 use crate::WryLocalRoot;
 
 pub fn feed_uri<'a>(
     builder: WebViewBuilder<'a>,
-    uri: &WebviewUri,
+    webview: &Webview,
     local_root: &WryLocalRoot,
     csp: Option<Csp>,
 ) -> WebViewBuilder<'a> {
-    let builder = builder.with_url(uri.0.to_string());
+    let builder = match webview {
+        Webview::Uri(uri) => builder.with_url(&uri.0),
+        Webview::Html(html) => builder.with_html(html),
+    };
     feed_custom_protocol(builder, local_root.clone(), csp)
 }
 

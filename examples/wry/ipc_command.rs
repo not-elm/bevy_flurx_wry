@@ -31,7 +31,7 @@ fn spawn_webview(
     commands.entity(window.single()).insert((
         Num(1),
         // Display `assets/ui/ipc_command/index.html` within the webview
-        WebviewUri::default(),
+        Webview::default(),
         IpcHandlers::new([
             action_command,
             async_command

@@ -36,7 +36,7 @@ fn spawn_webview(
     window: Query<Entity, With<PrimaryWindow>>,
 ) {
     commands.spawn((
-        WebviewUri::default(),
+        Webview::Uri(WebviewUri::default()),
         // Specifies the window entity to embed.
         EmbedWithin(window.single()),
         Resizable(true),
@@ -50,7 +50,7 @@ fn spawn_webview(
     ));
 
     commands.spawn((
-        WebviewUri::new("https://bevyengine.org/"),
+        Webview::Uri(WebviewUri::new("https://bevyengine.org/")),
         EmbedWithin(window.single()),
         Bounds {
             position: Vec2::new(700., 100.),
