@@ -25,7 +25,7 @@ http = ["bevy_flurx/tokio", "bevy_flurx/effect", "dep:reqwest"]
 bevy = { workspace = true }
 bevy_flurx = { workspace = true }
 bevy_flurx_ipc = { path = "../bevy_flurx_ipc", version = "0.1.0" }
-bevy_webview_wry = { path = "../bevy_webview_wry", version = "0.1.0", optional = true }
+bevy_webview_wry = { path = "../bevy_webview_wry", version = "0.2.0", optional = true }
 serde = { workspace = true }
 dirs = { version = "6.0.0", optional = true }
 arboard = { version = "3.4.1", optional = true }
