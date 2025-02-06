@@ -12,6 +12,8 @@ mod util;
 #[allow(missing_docs)]
 pub mod prelude {
     pub use crate::{common::prelude::*, embedding::prelude::*, WebviewWryPlugin};
+    #[cfg(feature = "child_window")]
+    pub use bevy_child_window::prelude::*;
 }
 
 #[repr(transparent)]
@@ -42,5 +44,12 @@ impl Plugin for WebviewWryPlugin {
             .register_type::<WryLocalRoot>()
             .insert_resource(WryLocalRoot(self.local_root.clone()))
             .add_plugins((FlurxWryCommonPlugin, AsChildPlugin));
+        #[cfg(feature = "child_window")]
+        {
+            use bevy_child_window::ChildWindowPlugin;
+            if !app.is_plugin_added::<ChildWindowPlugin>() {
+                app.add_plugins(ChildWindowPlugin);
+            }
+        }
     }
 }

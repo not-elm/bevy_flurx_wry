@@ -1,8 +1,7 @@
-//! This example demonstrates how to create a child window with a webview using [`bevy_child_window`].
+//! This example demonstrates how to create a child window with a webview.
 
 use bevy::prelude::*;
 use bevy::window::{PrimaryWindow, WindowResolution};
-use bevy_child_window::{ChildWindowPlugin, ParentWindow};
 use bevy_webview_wry::prelude::*;
 
 fn main() {
@@ -10,7 +9,6 @@ fn main() {
     app
         .add_plugins((
             DefaultPlugins,
-            ChildWindowPlugin,
             WebviewWryPlugin::default(),
         ))
         .add_systems(Startup, spawn_child_window)
