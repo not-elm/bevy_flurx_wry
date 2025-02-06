@@ -27,7 +27,7 @@ mod grip_zone;
 ///     window: Query<Entity, With<PrimaryWindow>>
 /// ){
 ///     commands.spawn((
-///         WebviewUri::default(),
+///         Webview::default(),
 ///         EmbedWithin(window.single()),
 ///     ));
 /// }
