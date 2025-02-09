@@ -173,7 +173,7 @@ fn feed_configs2<'a>(
         .with_hotkeys_zoom(hotkeys_zoom.0)
         .with_initialization_script(&format!(
             "{};{};{};{}",
-            include_str!("../../../scripts/api.js"),
+            include_str!("../../../scripts/bevy_flurx_api.js"),
             include_str!("../../../scripts/gripZone.js"),
             include_str!("../../../scripts/windowIdentifier.js")
                 .replace("<WINDOW_IDENTIFIER>", &identifier),
