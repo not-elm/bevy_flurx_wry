@@ -192,7 +192,7 @@ fn feed_platform_configs<'a>(
     {
         #[cfg(target_os = "windows")]
         fn as_wry_theme(theme: &Theme) -> wry::Theme {
-            match self {
+            match theme {
                 Theme::Auto => wry::Theme::Auto,
                 Theme::Light => wry::Theme::Light,
                 Theme::Dark => wry::Theme::Dark
