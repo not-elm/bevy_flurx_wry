@@ -1,5 +1,10 @@
 ## Unreleased
 
+### Breaking Changes
+
+- reexport `ipc` and `api` from `bevy_webview_wry`.
+- added `bevy_webview_core` crate and moved Webview components there.
+
 ### Bugfix
 
 - fixed api build path

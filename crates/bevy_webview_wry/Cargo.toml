@@ -11,8 +11,9 @@ license = "MIT OR Apache-2.0"
 readme = "README.md"
 
 [features]
-default = ["child_window"]
+default = ["child_window", "api"]
 child_window = ["dep:bevy_child_window"]
+api = ["dep:bevy_flurx_api"]
 
 [dependencies]
 bevy = { workspace = true, features = [
@@ -22,8 +23,10 @@ bevy = { workspace = true, features = [
     "serialize",
 ] }
 wry = { version = "0.48.0", features = ["transparent"] }
-bevy_flurx_ipc = { workspace = true }
 bevy_flurx = { workspace = true }
+bevy_webview_core = { workspace = true }
+bevy_flurx_ipc = { workspace = true }
+bevy_flurx_api = { workspace = true, optional = true, features = ["full"] }
 serde = { workspace = true }
 serde_json = { workspace = true }
 mouse-rs = "0.4.2"

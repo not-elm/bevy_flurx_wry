@@ -1,12 +1,12 @@
+use crate::dialog::DialogFilter;
 use crate::fs::AllowPaths;
 use crate::macros::api_plugin;
+use bevy::prelude::{In, ResMut};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx_ipc::prelude::*;
 use rfd::FileDialog;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
-use bevy::prelude::{In, ResMut};
-use crate::dialog::DialogFilter;
 
 api_plugin!(
     /// You'll be able to open a file/directory selection dialog.
@@ -32,7 +32,7 @@ struct Args {
     filters: Option<Vec<DialogFilter>>,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 enum SelectedPaths {
     Single(Option<PathBuf>),
     Multiple(Option<Vec<PathBuf>>),

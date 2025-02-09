@@ -60,7 +60,7 @@ use bevy::ecs::system::SystemParam;
 use bevy::prelude::{Entity, Mut, Name, NonSend, PluginGroup, Query, Window};
 use bevy::window::WindowWrapper;
 use bevy::winit::WinitWindows;
-use bevy_webview_wry::prelude::EmbedWithin;
+use bevy_webview_core::prelude::EmbedWithin;
 
 /// Allows you to use all window plugins.
 ///

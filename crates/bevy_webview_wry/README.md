@@ -28,19 +28,23 @@ Add this to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-bevy_webview_wry = "0.2"
+bevy_webview_wry = { version = "0.2", features = ["api"] }
 
 # necessary if you want to use ipc-command.
 bevy_flurx = "0.9"
-bevy_flurx_ipc = "0.1"
-bevy_flurx_api = "0.1"
 ```
 
 ### Ui process(webview)
 
+Execute the following command in the directory where the `package.json` is located.
+
 ```shell
-# optional if you want to use ipc-command.
-pnpm i bevy_flurx_api
+# if you use npm
+npm install bevy_flurx_api
+# if you use yarn
+yarn add bevy_flurx_api
+# if you use pnpm
+pnpm install bevy_flurx_api
 ```
 
 Or, you can also use the API directly from `Window.__FLURX__` without installation.
@@ -170,6 +174,7 @@ Please see [here](https://github.com/not-elm/bevy_webview_wry/blob/main/CHANGELO
 | flag           | description                                 | default |
 |----------------|---------------------------------------------|---------|
 | `child_window` | allows you to create embedding child window | true    |
+| `api`          | provides api plugins for the webview        | false   |
 
 ## Compatible Bevy versions
 
