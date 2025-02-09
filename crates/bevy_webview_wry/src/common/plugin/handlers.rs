@@ -213,6 +213,11 @@ impl WryEventParams<'_> {
 
         let events = self.navigation_events.clone();
         builder.with_navigation_handler(move |uri| {
+            // FIXME: Not sure why, but sending ipc-command sometimes sends this uri.
+            if uri == "flurx://localhost/?" {
+                return false;
+            }
+            
             let uri = PassedUrl(uri);
             let allow_navigation = on_navigation(uri.clone());
             if allow_navigation {
