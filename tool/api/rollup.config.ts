@@ -61,7 +61,7 @@ export default defineConfig([
             format: 'iife',
             name: '__FLURX_IIFE__',
             footer: 'Object.defineProperty(window, "__FLURX__", { value: __FLURX_IIFE__ })',
-            file: '../../crates/aa/scripts/bevy_flurx_api.js'
+            file: '../../crates/bevy_webview_wry/scripts/bevy_flurx_api.js'
         },
         plugins: [typescript(), terser()],
     }
