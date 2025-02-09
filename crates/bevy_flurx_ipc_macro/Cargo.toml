@@ -14,10 +14,10 @@ readme = "../bevy_webview_wry/README.md"
 proc-macro = true
 
 [dependencies]
-proc-macro2 = "1.0.82"
-syn = { version = "2.0.63", features = ["full", "extra-traits"] }
-quote = "1.0.36"
-darling = { version = "0.20.10" }
+proc-macro2 = "1"
+syn = { version = "2", features = ["full", "extra-traits"] }
+quote = "1"
+darling = { version = "0.20" }
 bevy = { version = "0.15", default-features = false, optional = true }
 serde = { workspace = true, optional = true }
 

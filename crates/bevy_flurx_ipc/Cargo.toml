@@ -22,7 +22,7 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 
 [dev-dependencies]
-trybuild = "1.0.96"
+trybuild = "1"
 bevy = "0.15"
 
 [lints]
