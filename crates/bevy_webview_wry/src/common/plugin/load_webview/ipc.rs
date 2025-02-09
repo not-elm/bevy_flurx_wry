@@ -29,6 +29,7 @@ impl IpcHandlerParams<'_> {
         let ipc_raw_events = self.ipc_raw_events.clone();
 
         builder.with_ipc_handler(move |request| {
+            println!("IPC message: {:?}", request.body());
             match serde_json::from_str::<IpcMessage>(request.body()) {
                 Ok(IpcMessage::Command(payload)) => {
                     ipc_commands.push(IpcCommand {

@@ -9,7 +9,7 @@ use bevy::utils::HashMap;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::{effect, Pipe};
 use bevy_flurx::task::ReactorTask;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 use reqwest::header::{HeaderMap, HeaderName};
 use reqwest::{Method, Response};
 use serde::{Deserialize, Serialize};

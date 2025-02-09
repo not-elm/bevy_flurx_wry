@@ -3,7 +3,7 @@ use crate::web_window::WebWinitWindowParams;
 use bevy::prelude::In;
 use bevy_flurx::action::{once, Action};
 use winit::window::WindowButtons;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 
 api_plugin!(
     /// You'll be able to get the window is minimizable from a webview.

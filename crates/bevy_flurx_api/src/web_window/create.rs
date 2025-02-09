@@ -5,7 +5,7 @@ use bevy::utils::default;
 use bevy::window::{Window, WindowResolution};
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Action;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 use bevy_webview_wry::prelude::{AutoPlay, BrowserAcceleratorKeys, HotkeysZoom, Incognito, InitializeFocused, IsOpenDevtools, Theme, UseDevtools, UseHttpsScheme, UserAgent, Webview, WebviewUri, WebviewVisible};
 use serde::Deserialize;
 use winit::dpi::PhysicalSize;

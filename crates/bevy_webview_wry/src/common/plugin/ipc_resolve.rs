@@ -1,6 +1,6 @@
-use bevy::prelude::{EventReader, NonSendMut, App, Plugin, Update};
-use bevy_flurx_ipc::prelude::IpcResolveEvent;
 use crate::common::plugin::WryWebViews;
+use bevy::prelude::{App, EventReader, NonSendMut, Plugin, Update};
+use bevy_flurx_ipc::prelude::IpcResolveEvent;
 
 pub struct IpcResolvePlugin;
 
@@ -20,6 +20,7 @@ fn resolve_event(
         output
     } in er.read() {
         if let Some(view) = views.get_mut(entity) {
+            println!("resolve_event: {resolve_id:?} {output:?}");
             view.evaluate_script(&format!("window.__FLURX__.__resolveIpc({resolve_id}, {output})")).unwrap();
         }
     }

@@ -4,7 +4,7 @@ use bevy::prelude::In;
 use crate::error::ApiResult;
 use crate::macros::api_plugin;
 use bevy_flurx::action::{once, Action};
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 use serde::Deserialize;
 
 api_plugin!(

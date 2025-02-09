@@ -1,6 +1,6 @@
 use crate::macros::api_plugin;
 use bevy_flurx::action::{once, Action};
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 
 api_plugin!(
     /// You'll be able to get the system version from a webview.

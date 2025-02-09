@@ -47,6 +47,7 @@ impl IpcHandlers {
 
     /// Returns the function that creates the future if exists related to `id`.
     pub fn get(&self, id: &str) -> Option<IpcFn> {
+        println!("IpcHandlers::get : id = {} handlers = {:?}", id, self.0.keys());
         self.0.get(id).map(|handler| handler.f)
     }
 }

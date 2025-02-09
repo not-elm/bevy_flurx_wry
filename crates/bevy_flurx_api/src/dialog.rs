@@ -8,7 +8,7 @@ use bevy::prelude::{In, PluginGroup};
 use crate::macros::api_plugin;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::Action;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 use rfd::{MessageButtons, MessageDialogResult, MessageLevel};
 use serde::Deserialize;
 

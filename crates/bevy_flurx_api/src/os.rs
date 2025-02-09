@@ -11,7 +11,7 @@ use bevy::app::PluginGroupBuilder;
 use bevy::prelude::PluginGroup;
 use crate::macros::api_plugin;
 use bevy_flurx::action::{once, Action};
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 pub use crate::os::family::OsFamilyPlugin;
 pub use crate::os::host_name::OsHostNamePlugin;
 pub use crate::os::os_version::{OsVersionPlugin, OsLongVersionPlugin};

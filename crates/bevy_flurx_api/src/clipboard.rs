@@ -6,7 +6,7 @@ use bevy::app::PluginGroupBuilder;
 use bevy::prelude::{In, PluginGroup};
 use bevy_flurx::action::once;
 use bevy_flurx::action::Action;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 
 
 /// Allows you to use all clipboard plugins.

@@ -4,7 +4,7 @@ use bevy::prelude::{Entity, In, NonSend, Query};
 use bevy::winit::WinitWindows;
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::OmitInput;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 use bevy_flurx_ipc::component::WebviewEntity;
 use bevy_webview_wry::prelude::EmbedWithin;
 

@@ -110,6 +110,7 @@ fn receive_ipc_commands(
     handlers: Query<&IpcHandlers>,
 ) {
     for cmd in ipc_commands.take_commands() {
+        println!("receive_ipc_commands: {cmd:?}");
         let Ok(handlers) = handlers.get(cmd.entity) else {
             continue;
         };

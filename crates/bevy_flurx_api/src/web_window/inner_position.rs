@@ -2,7 +2,7 @@ use crate::macros::api_plugin;
 use crate::web_window::WebWinitWindowParams;
 use bevy::prelude::In;
 use bevy_flurx::action::{once, Action};
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 use winit::dpi::PhysicalPosition;
 
 api_plugin!(

@@ -4,7 +4,7 @@ use crate::macros::api_plugin;
 use bevy::prelude::AppExit;
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::ActionSeed;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 
 api_plugin!(
     /// You will be able to get the application name from typescript(or js).

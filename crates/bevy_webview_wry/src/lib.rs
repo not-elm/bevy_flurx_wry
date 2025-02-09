@@ -5,6 +5,11 @@ use crate::embedding::plugin::AsChildPlugin;
 use bevy::prelude::{App, Plugin, Reflect, Resource};
 use std::path::PathBuf;
 
+#[allow(missing_docs)]
+pub mod ipc {
+    pub use bevy_flurx_ipc::prelude::*;
+}
+
 pub mod embedding;
 pub mod common;
 mod util;
@@ -14,6 +19,7 @@ pub mod prelude {
     pub use crate::{common::prelude::*, embedding::prelude::*, WebviewWryPlugin};
     #[cfg(feature = "child_window")]
     pub use bevy_child_window::prelude::*;
+    pub use bevy_flurx_ipc::prelude::command;
 }
 
 #[repr(transparent)]

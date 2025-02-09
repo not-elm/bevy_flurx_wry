@@ -4,7 +4,7 @@ use crate::macros::api_plugin;
 use bevy::prelude::{In, Res};
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::Pipe;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 use serde::Deserialize;
 use std::io::Write;
 use std::path::PathBuf;
