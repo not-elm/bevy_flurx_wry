@@ -4,7 +4,7 @@ use bevy::math::IVec2;
 use bevy::prelude::{In, WindowPosition};
 use bevy_flurx::action::{once, Action};
 use winit::dpi::PhysicalPosition;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 
 api_plugin!(
     /// You'll be able to set the window position.

@@ -36,23 +36,23 @@ mod error;
 #[allow(missing_docs)]
 pub mod prelude {
     #[cfg(feature = "clipboard")]
-    pub use crate::clipboard;
+    pub use crate::clipboard::*;
     #[cfg(feature = "dialog")]
-    pub use crate::dialog;
+    pub use crate::dialog::*;
     #[cfg(feature = "http")]
     pub use crate::http::*;
     #[cfg(feature = "monitor")]
-    pub use crate::monitor;
+    pub use crate::monitor::*;
     #[cfg(feature = "notification")]
-    pub use crate::notification;
+    pub use crate::notification::*;
     #[cfg(feature = "web_window")]
-    pub use crate::web_window;
+    pub use crate::web_window::*;
     pub use crate::{
         app::*,
         log::*,
     };
     #[cfg(feature = "fs")]
-    pub use crate::{fs, path};
+    pub use crate::{fs::*, path::*};
 }
 
 mod macros {
@@ -88,7 +88,7 @@ mod tests {
     use bevy::prelude::*;
     use bevy_flurx_ipc::component::IpcHandlers;
     use bevy_flurx_ipc::FlurxIpcPlugin;
-    use bevy_webview_wry::common::WebviewInitialized;
+    use bevy_webview_wry::prelude::WebviewInitialized;
 
     pub fn test_app() -> App {
         let mut app = App::new();

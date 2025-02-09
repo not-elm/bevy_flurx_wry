@@ -1,4 +1,3 @@
-use crate::base_module;
 use crate::command::Input;
 use proc_macro2::TokenStream;
 use quote::quote;
@@ -9,25 +8,24 @@ pub fn expand_async_command(
     f: &ItemFn,
 ) -> TokenStream2 {
     let fn_ident = &f.sig.ident;
-    let module_name = base_module();
-    let inputs = parse_async_command_inputs(f, &module_name);
-    expand_call(&module_name, quote! { #fn_ident(#(#inputs,)*).await; })
+    let inputs = parse_async_command_inputs(f);
+    expand_call(quote! { #fn_ident(#(#inputs,)*).await; })
 }
 
-fn expand_call(module_name: &TokenStream2, f: TokenStream2) -> TokenStream2 {
+fn expand_call(f: TokenStream2) -> TokenStream2 {
     quote! {
         commands.spawn(bevy_flurx::prelude::Reactor::schedule(move |task| async move{
             let output = #f
-            task.will(bevy::prelude::Update, bevy_flurx::prelude::once::event::send().with(#module_name IpcResolveEvent{
+            task.will(bevy::prelude::Update, bevy_flurx::prelude::once::event::send().with(IpcResolveEvent{
                     resolve_id: ipc_cmd.payload.resolve_id,
                     entity: ipc_cmd.entity,
-                    output: #module_name to_string(output),
+                    output: to_string(output),
                 })).await;
         }));
     }
 }
 
-fn parse_async_command_inputs(f: &ItemFn, module_name: &TokenStream) -> Vec<TokenStream> {
+fn parse_async_command_inputs(f: &ItemFn) -> Vec<TokenStream> {
     let mut args = Vec::with_capacity(3);
     for arg in f
         .sig
@@ -43,9 +41,9 @@ fn parse_async_command_inputs(f: &ItemFn, module_name: &TokenStream) -> Vec<Toke
             continue;
         };
         match last_segment.ident.to_string().as_str() {
-            "In" => args.push(Input::In.to_token(module_name)),
-            "WebviewEntity" => args.push(Input::WebviewEntity.to_token(module_name)),
-            "ReactorTask" => args.push(Input::Task.to_token(module_name)),
+            "In" => args.push(Input::In.to_token()),
+            "WebviewEntity" => args.push(Input::WebviewEntity.to_token()),
+            "ReactorTask" => args.push(Input::Task.to_token()),
             _ => continue,
         }
     }

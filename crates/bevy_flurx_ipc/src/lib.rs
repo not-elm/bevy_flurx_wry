@@ -30,7 +30,7 @@ pub mod prelude {
     }
 }
 
-/// This plugin assists in implementing inter-process communication.
+/// This webview assists in implementing inter-process communication.
 ///
 /// Please see for [`module-level documentation`](crate).
 pub struct FlurxIpcPlugin;

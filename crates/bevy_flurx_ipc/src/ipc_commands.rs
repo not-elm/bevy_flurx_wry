@@ -91,7 +91,7 @@ pub struct IpcResolveEvent {
     pub output: String,
 }
 
-/// The common plugin for IPC communication between `Webview` and `bevy`.
+/// The common webview for IPC communication between `Webview` and `bevy`.
 pub(crate) struct FlurxIpcCommandPlugin;
 
 impl Plugin for FlurxIpcCommandPlugin {

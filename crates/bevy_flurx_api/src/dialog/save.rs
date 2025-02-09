@@ -3,7 +3,7 @@ use crate::fs::AllowPaths;
 use crate::macros::api_plugin;
 use bevy_flurx::action::once;
 use bevy_flurx::task::ReactorTask;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 use rfd::FileDialog;
 use serde::Deserialize;
 use std::path::PathBuf;

@@ -4,7 +4,7 @@ use bevy::prelude::{In, MonitorSelection};
 use bevy::window::WindowMode;
 use bevy_flurx::action::{once, Action};
 use serde::Deserialize;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 
 api_plugin!(
     /// You'll be able to set fullscreen state of the window decorations from a webview.

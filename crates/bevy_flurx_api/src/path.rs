@@ -6,7 +6,7 @@ use bevy::app::PluginGroupBuilder;
 use bevy::prelude::{PluginGroup, Res};
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::ActionSeed;
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 use std::path::PathBuf;
 
 /// Allows you to use all path bevy_flurx_api plugins.

@@ -3,7 +3,7 @@
 use bevy::prelude::*;
 use bevy_flurx::action::once;
 use bevy_flurx::prelude::{Action, ActionSeed};
-use bevy_flurx_ipc::prelude::{IpcHandlers, WebviewEntity};
+use bevy_flurx_ipc::prelude::*;
 use bevy_flurx_ipc_macro::command;
 
 #[command]

@@ -16,14 +16,14 @@ path = "tests/index.rs"
 
 [dependencies]
 bevy = { workspace = true, features = ["serialize"] }
-bevy_flurx_ipc_macro = { path = "../bevy_flurx_ipc_macro", version = "0.1.0" }
+bevy_flurx_ipc_macro = { workspace = true }
 bevy_flurx = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 
 [dev-dependencies]
 trybuild = "1.0.96"
-bevy = "0.15.0"
+bevy = "0.15"
 
 [lints]
 workspace = true

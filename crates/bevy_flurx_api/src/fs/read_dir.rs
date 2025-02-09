@@ -3,7 +3,7 @@ use crate::fs::{error_if_not_accessible, join_path_if_need, AllowPaths, BaseDire
 use crate::macros::api_plugin;
 use bevy::prelude::{In, Res};
 use bevy_flurx::action::{once, Action};
-use bevy_flurx_ipc::command;
+use bevy_flurx_ipc::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::ffi::OsString;
 use std::path::PathBuf;

@@ -8,7 +8,6 @@ use crate::command::expand_call_fn;
 use darling::ast::NestedMeta;
 use darling::FromMeta;
 use proc_macro::TokenStream;
-use proc_macro2::{Ident, Span};
 use quote::quote;
 use syn::ItemFn;
 use syn::__private::TokenStream2;
@@ -52,8 +51,7 @@ use syn::__private::TokenStream2;
 /// ```no_run
 /// use bevy::prelude::*;
 /// use bevy_flurx::prelude::*;
-/// use bevy_flurx_ipc::command;
-/// use bevy_flurx_ipc::component::WebviewEntity;
+/// use bevy_flurx_ipc::prelude::*;
 ///
 /// #[command]
 /// async fn async_command(
@@ -82,24 +80,18 @@ fn parse_command(input: TokenStream, attribute: Option<Attribute>) -> syn::Resul
     let fn_ident = &f.sig.ident.clone();
     let ipc_id = custom_id.unwrap_or(fn_ident.to_string());
     let call_fn = expand_call_fn(&f);
-    let crate_name = "bevy_flurx_ipc";
-    let crate_name = Ident::new(crate_name, Span::call_site());
     let fn_ident = &f.sig.ident;
     let visibility = &f.vis;
 
     Ok(quote! {
         #[allow(missing_docs)]
-        #visibility fn #fn_ident() -> #crate_name::prelude::IpcHandler{
-            #crate_name::prelude::IpcHandler::new(#ipc_id, |commands, ipc_cmd|{
+        #visibility fn #fn_ident() -> IpcHandler{
+            IpcHandler::new(#ipc_id, |commands, ipc_cmd|{
                 #f
                 #call_fn
             })
         }
     })
-}
-
-fn base_module() -> TokenStream2 {
-    quote! {  bevy_flurx_ipc::prelude:: }
 }
 
 fn parse_attribute(attr: TokenStream) -> Option<Attribute> {

@@ -18,14 +18,24 @@ dialog = ["dep:rfd", "fs"]
 notification = ["dep:notify-rust"]
 os = ["dep:sysinfo", "dep:sys-locale"]
 monitor = []
-web_window = ["dep:winit", "dep:bevy_webview_wry"]
+web_window = ["dep:winit"]
 http = ["bevy_flurx/tokio", "bevy_flurx/effect", "dep:reqwest"]
+full = [
+    "fs",
+    "clipboard",
+    "dialog",
+    "notification",
+    "os",
+    "monitor",
+    "web_window",
+    "http",
+]
 
 [dependencies]
 bevy = { workspace = true }
 bevy_flurx = { workspace = true }
-bevy_flurx_ipc = { path = "../bevy_flurx_ipc", version = "0.1.0" }
-bevy_webview_wry = { path = "../bevy_webview_wry", version = "0.2.0", optional = true }
+bevy_flurx_ipc = { workspace = true }
+bevy_webview_core = { workspace = true }
 serde = { workspace = true }
 dirs = { version = "6.0.0", optional = true }
 arboard = { version = "3.4.1", optional = true }
@@ -37,7 +47,7 @@ winit = { version = "0.30.5", features = ["serde"], optional = true }
 reqwest = { version = "0.12.11", features = ["json"], optional = true }
 
 [dev-dependencies]
-bevy = "0.15.0"
+bevy = "0.15"
 bevy_webview_wry = { path = "../bevy_webview_wry" }
 
 [lints]

@@ -18,13 +18,13 @@ proc-macro2 = "1.0.82"
 syn = { version = "2.0.63", features = ["full", "extra-traits"] }
 quote = "1.0.36"
 darling = { version = "0.20.10" }
-bevy = { version = "0.15.0", default-features = false, optional = true }
+bevy = { version = "0.15", default-features = false, optional = true }
 serde = { workspace = true, optional = true }
 
 [dev-dependencies]
-bevy = { version = "0.15.0", default-features = false }
+bevy = { version = "0.15", default-features = false }
 bevy_flurx = { workspace = true }
-bevy_flurx_ipc = { path = "../bevy_flurx_ipc" }
+bevy_flurx_ipc = { workspace = true }
 serde = { workspace = true }
 
 [features]
