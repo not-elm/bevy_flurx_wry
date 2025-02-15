@@ -1,6 +1,8 @@
 //! Provides mechanism to output the logs.
 
-use bevy::prelude::{App, EventReader, Plugin, PostUpdate};
+use bevy::app::Update;
+use bevy::log;
+use bevy::prelude::{App, EventReader, Plugin};
 use bevy_flurx_ipc::ipc_events::IpcEventExt;
 use bevy_flurx_ipc::prelude::IpcEvent;
 use serde::Deserialize;
@@ -12,13 +14,17 @@ use serde::Deserialize;
 /// ```ts
 /// window.__FLURX__.log.println("message")
 /// ```
-pub struct LogPrintlnApiPlugin;
+pub struct AllLogPlugins;
 
-impl Plugin for LogPrintlnApiPlugin {
+impl Plugin for AllLogPlugins {
     fn build(&self, app: &mut App) {
         app
             .add_ipc_event::<RequestPrintln>("FLURX|log::println")
-            .add_systems(PostUpdate, println_event);
+            .add_ipc_event::<RequestLog>("FLURX|log::log")
+            .add_systems(Update, (
+                println_event,
+                log_event,
+            ));
     }
 }
 
@@ -27,8 +33,37 @@ struct RequestPrintln {
     message: String,
 }
 
+#[derive(Deserialize)]
+struct RequestLog {
+    message: String,
+    level: RequestLogLevel,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "camelCase")]
+enum RequestLogLevel {
+    Trace,
+    Debug,
+    Info,
+    Warn,
+    Error,
+}
+
 fn println_event(mut er: EventReader<IpcEvent<RequestPrintln>>) {
-    for e in er.read() {
-        println!("{}", e.payload.message);
+    for event in er.read() {
+        println!("{}", event.payload.message);
+    }
+}
+
+fn log_event(mut er: EventReader<IpcEvent<RequestLog>>) {
+    for event in er.read() {
+        let message = &event.payload.message;
+        match event.payload.level {
+            RequestLogLevel::Trace => log::trace!(message),
+            RequestLogLevel::Debug => log::debug!(message),
+            RequestLogLevel::Info => log::info!(message),
+            RequestLogLevel::Warn => log::warn!(message),
+            RequestLogLevel::Error => log::error!(message),
+        }
     }
 }
