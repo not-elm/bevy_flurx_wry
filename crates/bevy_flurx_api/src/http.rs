@@ -6,8 +6,7 @@ use crate::macros::api_plugin;
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::{In, PluginGroup, Reflect, ReflectDefault, ReflectDeserialize, ReflectResource, ReflectSerialize, Res, Resource, Update};
 use bevy::utils::HashMap;
-use bevy_flurx::action::once;
-use bevy_flurx::prelude::{effect, Pipe};
+use bevy_flurx::prelude::{once, side_effect, Pipe};
 use bevy_flurx::task::ReactorTask;
 use bevy_flurx_ipc::prelude::*;
 use reqwest::header::{HeaderMap, HeaderName};
@@ -116,7 +115,7 @@ async fn fetch(In(args): In<Args>, task: ReactorTask) -> ApiResult<Output> {
     task.will(
         Update,
         once::run(error_if_deny_access).with(args)
-            .pipe(effect::tokio::spawn(|args: ApiResult<Args>| async move {
+            .pipe(side_effect::tokio::spawn(|args: ApiResult<Args>| async move {
                 let args = args?;
                 let response = args.fetch().await?;
                 let status = response.status();
