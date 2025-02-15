@@ -13,7 +13,7 @@ export namespace log {
     });
 
     /**
-     * Requests to execute `log!` on main process.
+     * Requests to execute `log::trace!` on main process.
      *
      * @example
      * import {log} from "bevy_flurx_api";
@@ -22,7 +22,7 @@ export namespace log {
     export const trace = (message: any) => emitLog(message, "trace");
 
     /**
-     * Requests to execute `log!` on main process.
+     * Requests to execute `log::info!` on main process.
      *
      * @example
      * import {log} from "bevy_flurx_api";
@@ -31,7 +31,7 @@ export namespace log {
     export const info = (message: any) => emitLog(message, "info");
 
     /**
-     * Requests to execute `log!` on main process.
+     * Requests to execute `log::warn!` on main process.
      *
      * @example
      * import {log} from "bevy_flurx_api";
@@ -40,7 +40,7 @@ export namespace log {
     export const warn = (message: any) => emitLog(message, "warn");
 
     /**
-     * Requests to execute `log!` on main process.
+     * Requests to execute `log::error!` on main process.
      *
      * @example
      * import {log} from "bevy_flurx_api";
