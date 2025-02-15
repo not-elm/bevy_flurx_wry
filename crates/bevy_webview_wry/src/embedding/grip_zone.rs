@@ -55,7 +55,7 @@ struct MouseDelta<'w, 's> {
     #[cfg(not(target_os = "linux"))]
     er: EventReader<'w, 's, MouseMotion>,
     /// I was testing on Ubuntu 24.04 ARM64 in Parallels, but `MouseMotion` was getting clearly abnormal coordinates,
-    /// so I switched to getting Delta from Webview.
+    /// so I switched to getting delta from webview.
     #[cfg(target_os = "linux")]
     er: EventReader<'w, 's, IpcEvent<OnGribDrag>>,
 }

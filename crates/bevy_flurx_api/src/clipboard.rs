@@ -82,6 +82,7 @@ mod tests {
     use bevy_flurx::prelude::{Reactor, Then};
 
     #[test]
+    #[cfg_attr(target_os = "linux", ignore)]
     fn test_clipboard() {
         let mut app = test_app();
         app.add_systems(Startup, |mut commands: Commands| {
