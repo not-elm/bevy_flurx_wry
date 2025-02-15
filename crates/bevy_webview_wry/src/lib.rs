@@ -45,7 +45,7 @@ pub mod prelude {
 pub(crate) struct WryLocalRoot(pub PathBuf);
 
 /// Provides a mechanism for drawing a webview
-/// in a [`Window`](Window) using [`wry`].
+/// in a [`Window`] using [`wry`].
 pub struct WebviewWryPlugin {
     /// Represents the root directory of the local resource.
     /// This value affects [`WebviewUri`](prelude::WebviewUri).
