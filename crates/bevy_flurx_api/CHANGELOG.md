@@ -3,10 +3,13 @@
 ### Breaking Changes
 
 - Rename `ClipboardPlugins` to `AllClipboardPlugins`
+- Rename `LogApiPlugin` to `AllLogPlugins`
 
 ### New Features
 
 - Add `AllAppPlugins`
+- Provides a way to use `bevy_log`
+  from webview
 
 ## v0.2.0
 
