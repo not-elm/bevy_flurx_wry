@@ -1,13 +1,14 @@
 use crate::bundle::embedding::resize::ResizeMode;
 use bevy::prelude::{Component, ReflectComponent};
 use bevy::prelude::{Rect, Vec2};
-use bevy::prelude::{Reflect, ReflectDefault};
+use bevy::prelude::{Reflect, ReflectDefault, ReflectDeserialize, ReflectSerialize};
+use serde::{Deserialize, Serialize};
 
 /// Represents the display area of a webview within the parent [`Window`](bevy::prelude::Window).
 ///
 /// All data in the field is represented by logical pixels.
-#[derive(Component, PartialEq, Reflect, Default, Debug, Copy, Clone)]
-#[reflect(Component, Default)]
+#[derive(Component, PartialEq, Reflect, Default, Debug, Copy, Clone, Serialize, Deserialize)]
+#[reflect(Component, Default, Serialize, Deserialize)]
 pub struct Bounds {
     /// Webview size
     pub size: Vec2,
