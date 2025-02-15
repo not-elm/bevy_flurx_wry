@@ -4,7 +4,6 @@
         writable: true,
         configurable: false,
     });
-
     window.onmousedown = (e) => {
         if (e.clientY <= window.__FLURX__.gripZoneHeight && e.button === 0) {
             window.__FLURX__.emit("FLURX|grip::grab", {

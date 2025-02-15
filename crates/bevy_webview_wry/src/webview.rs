@@ -17,6 +17,14 @@ mod visible;
 
 #[cfg(debug_assertions)]
 mod devtools;
+#[cfg(any(
+    target_os = "linux",
+    target_os = "dragonfly",
+    target_os = "freebsd",
+    target_os = "netbsd",
+    target_os = "openbsd",
+))]
+mod linux;
 
 #[allow(missing_docs)]
 pub mod prelude {
@@ -41,6 +49,14 @@ impl Plugin for WebviewPlugin {
                 EventEmitterPlugin,
                 IpcResolvePlugin,
                 WryHandlersPlugin,
+                #[cfg(any(
+                    target_os = "linux",
+                    target_os = "dragonfly",
+                    target_os = "freebsd",
+                    target_os = "netbsd",
+                    target_os = "openbsd",
+                ))]
+                linux::WebviewSupportLinuxPlugin,
             ))
             .init_non_send_resource::<WryWebViews>();
 

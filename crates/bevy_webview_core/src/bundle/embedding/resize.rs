@@ -1,10 +1,11 @@
-use bevy::prelude::{Component, Reflect};
+use bevy::prelude::{Component, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize};
 use bevy::window::SystemCursorIcon;
-
+use serde::{Deserialize, Serialize};
 
 /// Represents the resize direction of the embedded webview.
 /// To enable resizing, [`Resizable`](crate::bundle::embedding::Resizable) must be true.
-#[derive(Component, Reflect, Eq, PartialEq, Debug, Copy, Clone)]
+#[derive(Component, Reflect, Eq, PartialEq, Debug, Copy, Clone, Serialize, Deserialize)]
+#[reflect(Component, Serialize, Deserialize)]
 pub enum ResizeMode {
     /// Resize to the left.
     Left,

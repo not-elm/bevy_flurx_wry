@@ -2,15 +2,14 @@ use crate::embedding::CurrentMoving;
 use crate::prelude::{DragEntered, GripZone, WryWebViews};
 #[cfg(any(target_os = "windows", target_os = "macos"))]
 use crate::util::WryResultLog;
+use bevy::ecs::system::SystemParam;
 use bevy::input::common_conditions::input_just_released;
-use bevy::prelude::{
-    on_event, App, Changed, Commands, Condition, Entity, EventReader, IVec2, IntoSystemConfigs,
-    MouseButton, NonSend, Plugin, Query, Update, Vec2, Window, With,
-};
+#[cfg(not(target_os = "linux"))]
+use bevy::input::mouse::MouseMotion;
+use bevy::prelude::{any_with_component, on_event, App, Changed, Commands, Condition, Entity, EventReader, IntoSystemConfigs, MouseButton, NonSend, Plugin, Query, Update, Vec2, Window, With};
 use bevy::winit::WinitWindows;
 use bevy_flurx_ipc::ipc_events::{IpcEvent, IpcEventExt};
 use bevy_webview_core::bundle::embedding::{Bounds, EmbedWithin};
-use mouse_rs::Mouse;
 use serde::Deserialize;
 use wry::raw_window_handle::HasWindowHandle;
 #[cfg(any(target_os = "windows", target_os = "macos"))]
@@ -22,27 +21,28 @@ pub struct GripZonePlugin;
 
 impl Plugin for GripZonePlugin {
     fn build(&self, app: &mut App) {
-        app.add_ipc_event::<OnGripGrab>("FLURX|grip::grab")
+        app
+            .add_ipc_event::<OnGripGrab>("FLURX|grip::grab")
             .add_ipc_event::<OnGripRelease>("FLURX|grip::release")
-            .add_systems(
-                Update,
-                (
-                    move_webview,
-                    all_remove_current_moving.run_if(input_just_released(MouseButton::Left).or(on_event::<DragEntered>)),
-                    resize_grip_zone,
-                    grip_zone_grab,
-                    grip_zone_release,
-                ),
-            );
+            .add_systems(Update, (
+                drag_start.run_if(on_event::<IpcEvent<OnGripGrab>>),
+                drag.run_if(any_with_component::<CurrentMoving>),
+                drag_end.run_if(any_with_component::<CurrentMoving>),
+                resize_grip_zone,
+                all_remove_current_moving.run_if(input_just_released(MouseButton::Left).or(on_event::<DragEntered>)),
+            ).run_if(any_with_component::<GripZone>));
+
+        #[cfg(target_os = "linux")]
+        app.add_ipc_event::<OnGribDrag>("FLURX|grip::drag");
     }
 }
 
 fn resize_grip_zone(
-    views: Query<(Entity, &GripZone), Changed<GripZone>>,
-    web_views: NonSend<WryWebViews>,
+    webviews: Query<(Entity, &GripZone), Changed<GripZone>>,
+    wry_webviews: NonSend<WryWebViews>,
 ) {
-    for (entity, grip_zone) in views.iter() {
-        if let Some(webview) = web_views.0.get(&entity) {
+    for (entity, grip_zone) in webviews.iter() {
+        if let Some(webview) = wry_webviews.0.get(&entity) {
             if let Err(e) = webview.evaluate_script(&format!("window.__FLURX__.gripZoneHeight={}", grip_zone.0)) {
                 bevy::log::warn!("Failed to grip zone height: {}", e);
             }
@@ -50,35 +50,54 @@ fn resize_grip_zone(
     }
 }
 
-fn move_webview(
-    mut views: Query<(&mut Bounds, &mut CurrentMoving, &EmbedWithin), With<CurrentMoving>>,
-    winit_windows: NonSend<WinitWindows>,
+#[derive(SystemParam)]
+struct MouseDelta<'w, 's> {
+    #[cfg(not(target_os = "linux"))]
+    er: EventReader<'w, 's, MouseMotion>,
+    /// I was testing on Ubuntu 24.04 ARM64 in Parallels, but `MouseMotion` was getting clearly abnormal coordinates,
+    /// so I switched to getting Delta from Webview.
+    #[cfg(target_os = "linux")]
+    er: EventReader<'w, 's, IpcEvent<OnGribDrag>>,
+}
+
+impl MouseDelta<'_, '_> {
+    #[cfg(not(target_os = "linux"))]
+    pub fn delta(&mut self) -> Option<Vec2> {
+        self
+            .er
+            .read()
+            .map(|event| event.delta)
+            .reduce(|d1, d2| d1 + d2)
+    }
+
+    #[cfg(target_os = "linux")]
+    pub fn delta(&mut self) -> Option<Vec2> {
+        self
+            .er
+            .read()
+            .map(|event| {
+                Vec2::new(event.payload.x, event.payload.y)
+            })
+            .reduce(|d1, d2| d1 + d2)
+    }
+}
+
+fn drag(
+    mut mouse_delta: MouseDelta,
+    mut webviews: Query<(&mut Bounds, &mut CurrentMoving, &EmbedWithin), With<CurrentMoving>>,
     windows: Query<&Window>,
 ) {
-    let mouse = Mouse::new();
-    let Ok(pos) = mouse.get_position() else {
+    let Some(delta) = mouse_delta.delta() else {
         return;
     };
-    let cursor_pos = IVec2::new(pos.x, pos.y).as_vec2();
 
-    for (mut bounds, mut moving, parent) in views.iter_mut() {
-        let Ok(window_size) = windows
-            .get(parent.0)
-            .map(|w| Vec2::new(w.resolution.width(), w.resolution.height()))
-        else {
+    for (mut bounds, mut moving, parent) in webviews.iter_mut() {
+        let Ok(window) = windows.get(parent.0) else {
             continue;
         };
-        let Some(winit_window) = winit_windows.get_window(parent.0) else {
-            continue;
-        };
-        let Ok(window_position) = winit_window.inner_position() else {
-            continue;
-        };
-        let window_position = window_position.cast::<f32>();
-        let window_position = Vec2::new(window_position.x, window_position.y);
-        let cursor_pos = cursor_pos - window_position;
-        move_bounds(&mut bounds, cursor_pos - moving.0, window_size, None);
-        moving.0 = cursor_pos;
+        let window_size = Vec2::new(window.width(), window.height());
+        moving.0 = delta;
+        move_bounds(&mut bounds, moving.0, window_size, None);
     }
 }
 
@@ -90,7 +109,7 @@ fn all_remove_current_moving(mut commands: Commands, views: Query<Entity, With<C
 
 fn move_bounds(
     bounds: &mut Bounds,
-    cursor_pos: Vec2,
+    offset: Vec2,
     window_size: Vec2,
     toolbar_height: Option<f32>,
 ) {
@@ -99,73 +118,74 @@ fn move_bounds(
         .unwrap_or_default();
     let max_pos = (window_size - bounds.size).max(Vec2::ZERO);
     let new_pos = if cfg!(target_os = "macos") {
-        Vec2::new(cursor_pos.x, -cursor_pos.y)
+        Vec2::new(offset.x, -offset.y)
     } else {
-        cursor_pos
+        offset
     };
     bounds.position = (bounds.position + new_pos).min(max_pos).max(max);
 }
 
 #[derive(Deserialize)]
-#[allow(unused)]
 struct OnGripGrab {
     x: f32,
     y: f32,
 }
 
-fn grip_zone_grab(
+#[cfg(target_os = "linux")]
+#[derive(Deserialize)]
+struct OnGribDrag {
+    x: f32,
+    y: f32,
+}
+
+fn drag_start(
     mut er: EventReader<IpcEvent<OnGripGrab>>,
     mut commands: Commands,
-    web_views: NonSend<WryWebViews>,
+    wry_webviews: NonSend<WryWebViews>,
     winit_windows: NonSend<WinitWindows>,
-    views: Query<&EmbedWithin>,
+    webviews: Query<&EmbedWithin>,
 ) {
     for event in er.read() {
-        let mouse = Mouse::new();
-        let Ok(pos) = mouse.get_position() else {
-            return;
-        };
-        let Some(winit_window) = views
-            .get(event.webview_entity)
-            .ok()
-            .and_then(|p| winit_windows.get_window(p.0)) else {
+        let Ok(EmbedWithin(window_entity)) = webviews.get(event.webview_entity) else {
             continue;
         };
-        let cursor_pos = IVec2::new(pos.x, pos.y).as_vec2();
-        let Ok(window_position) = winit_window.inner_position() else {
-            continue;
-        };
-        let window_position = window_position.cast::<f32>();
-        let window_position = Vec2::new(window_position.x, window_position.y);
-        let cursor_pos = cursor_pos - window_position;
+
         commands
             .entity(event.webview_entity)
-            .insert(CurrentMoving(cursor_pos));
-        let Some(_webview) = web_views.0.get(&event.webview_entity) else {
-            continue;
-        };
-        let Some(window_handle) = views
-            .get(event.webview_entity)
-            .ok()
-            .and_then(|p| winit_windows.get_window(p.0))
-            .and_then(|w| w.window_handle().ok())
-            .map(|h| h.as_raw())
-        else {
-            continue;
-        };
-        match window_handle {
-            #[cfg(target_os = "windows")]
-            RawWindowHandle::Win32(handle) => {
-                _webview.reparent(handle.hwnd.get()).output_log_if_failed();
-            }
-            #[cfg(any(target_os = "macos", target_os = "ios"))]
-            RawWindowHandle::AppKit(_) => {
-                use wry::WebViewExtMacOS;
-                use objc2::rc::Retained;
-                _webview.reparent(Retained::into_raw(_webview.ns_window())).output_log_if_failed();
-            }
-            _ => {}
+            .insert(CurrentMoving(Vec2::new(event.payload.x, event.payload.y)));
+
+        bring_to_front(event.webview_entity, window_entity, &wry_webviews, &winit_windows);
+    }
+}
+
+fn bring_to_front(
+    window_entity: Entity,
+    webview_entity: &Entity,
+    wry_webviews: &WryWebViews,
+    winit_windows: &WinitWindows,
+) {
+    let Some(_webview) = wry_webviews.0.get(webview_entity) else {
+        return;
+    };
+    let Some(window_handle) = winit_windows
+        .get_window(window_entity)
+        .and_then(|w| w.window_handle().ok())
+        .map(|h| h.as_raw())
+    else {
+        return;
+    };
+    match window_handle {
+        #[cfg(target_os = "windows")]
+        RawWindowHandle::Win32(handle) => {
+            _webview.reparent(handle.hwnd.get()).output_log_if_failed();
         }
+        #[cfg(any(target_os = "macos", target_os = "ios"))]
+        RawWindowHandle::AppKit(_) => {
+            use wry::WebViewExtMacOS;
+            use objc2::rc::Retained;
+            _webview.reparent(Retained::into_raw(_webview.ns_window())).output_log_if_failed();
+        }
+        _ => {}
     }
 }
 
@@ -175,7 +195,7 @@ struct OnGripRelease {
     __FLURX__grip_release: u8,
 }
 
-fn grip_zone_release(mut er: EventReader<IpcEvent<OnGripRelease>>, mut commands: Commands) {
+fn drag_end(mut er: EventReader<IpcEvent<OnGripRelease>>, mut commands: Commands) {
     for IpcEvent { webview_entity, .. } in er.read() {
         commands.entity(*webview_entity).remove::<CurrentMoving>();
     }
