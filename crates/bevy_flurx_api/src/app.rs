@@ -1,6 +1,7 @@
 //! Provides mechanism to control the application such as reading metadata, exiting the application, etc.
 
 use crate::macros::api_plugin;
+use bevy::app::{PluginGroup, PluginGroupBuilder};
 use bevy::prelude::AppExit;
 use bevy_flurx::action::{once, Action};
 use bevy_flurx::prelude::ActionSeed;
@@ -41,6 +42,23 @@ api_plugin!(
     AppExitApiPlugin,
     command: exit
 );
+
+/// Allows you to use all app plugins.
+///
+/// ## Plugins
+/// - [AppGetNameApiPlugin]
+/// - [AppGetVersionApiPlugin]
+/// - [AppExitApiPlugin]
+pub struct AllAppPlugins;
+
+impl PluginGroup for AllAppPlugins {
+    fn build(self) -> PluginGroupBuilder {
+        PluginGroupBuilder::start::<Self>()
+            .add(AppGetNameApiPlugin)
+            .add(AppGetVersionApiPlugin)
+            .add(AppExitApiPlugin)
+    }
+}
 
 #[command(id = "FLURX|app::get_name")]
 fn get_name() -> ActionSeed<(), String> {
