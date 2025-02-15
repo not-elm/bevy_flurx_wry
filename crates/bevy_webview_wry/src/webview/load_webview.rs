@@ -79,13 +79,12 @@ fn load_web_views(
     local_root: Res<WryLocalRoot>,
     windows: NonSend<WinitWindows>,
 ) {
-    for (webview_entity, handlers, configs1, configs2, configs_platform, parent_window, bounds) in
+    for (webview_entity, handlers, configs1, configs2, configs_platform, embed_within, bounds) in
         views.iter_mut()
     {
-        let Some(builder) = new_builder(parent_window.is_some(), &bounds) else {
+        let Some(builder) = new_builder(embed_within.is_some(), &bounds) else {
             continue;
         };
-
         let builder = ipc_params.feed_ipc(webview_entity, builder);
         let builder = event_params.feed_handlers(webview_entity, handlers, builder);
         let builder = feed_configs1(builder, configs1);
@@ -95,16 +94,17 @@ fn load_web_views(
             webview_entity,
             configs2,
             &local_root,
+            embed_within.is_some(),
         );
         let builder = feed_platform_configs(builder, configs_platform);
-        let Some(Ok(webview)) = build_webview(builder, webview_entity, parent_window, &windows)
+        let Some(Ok(webview)) = build_webview(builder, webview_entity, embed_within, &windows)
         else {
             continue;
         };
         #[cfg(target_os = "macos")]
         // Safety: Ensure that attach the winit window to webview.
         unsafe {
-            if parent_window.is_none() {
+            if embed_within.is_none() {
                 attach_inner_window(configs1.4.is_transparent(), &webview.ns_window(), &webview.webview());
             }
         }
@@ -154,6 +154,7 @@ fn feed_configs2<'a>(
     entity: Entity,
     (focused, hotkeys_zoom, user_agent, uri, initialization_scripts, csp, name): Configs2,
     local_root: &WryLocalRoot,
+    is_embedded: bool,
 ) -> WebViewBuilder<'a> {
     let identifier = if let Some(name) = name {
         name.to_string()
@@ -168,19 +169,32 @@ fn feed_configs2<'a>(
     let mut builder = builder
         .with_focused(focused.0)
         .with_hotkeys_zoom(hotkeys_zoom.0)
-        .with_initialization_script(&format!(
-            "{};{};{};{}",
-            include_str!("../../scripts/bevy_flurx_api.js"),
-            include_str!("../../scripts/gripZone.js"),
-            include_str!("../../scripts/windowIdentifier.js")
-                .replace("<WINDOW_IDENTIFIER>", &identifier),
-            initialization_scripts.to_scripts(),
-        ));
+        .with_initialization_script(&initialization_script(initialization_scripts, &identifier, is_embedded));
     if let Some(user_agent) = user_agent.0.as_ref() {
         builder = builder.with_user_agent(user_agent);
     }
 
     feed_uri(builder, uri, local_root, csp.cloned())
+}
+
+fn initialization_script(
+    initialization_scripts: &InitializationScripts,
+    identifier: &str,
+    is_embedded: bool,
+) -> String {
+    let s1 = include_str!("../../scripts/windowIdentifier.js").replace("<WINDOW_IDENTIFIER>", identifier);
+    let mut scripts = vec![
+        include_str!("../../scripts/bevy_flurx_api.js"),
+        &s1,
+    ];
+    if is_embedded {
+        scripts.push(include_str!("../../scripts/gripZone.js"));
+        #[cfg(target_os = "linux")]
+        scripts.push(include_str!("../../scripts/gripZoneOnLinux.js"));
+    };
+    let s2 = initialization_scripts.to_scripts();
+    scripts.push(&s2);
+    scripts.join(";")
 }
 
 #[allow(clippy::needless_return, unreachable_code, unused_variables)]

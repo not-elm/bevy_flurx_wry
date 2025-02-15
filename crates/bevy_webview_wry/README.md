@@ -13,12 +13,15 @@ and [wry](https://github.com/tauri-apps/wry) using [bevy_flurx](https://github.c
 
 ## Supported platforms
 
-| Platform | usable |
-|----------|--------|
-| Windows  | ✅      |
-| MacOS    | ✅      |
-| Linux    | ❌      |
-| Web      | ❌      |
+| Platform       | usable |
+|----------------|--------|
+| Windows        | ✅      |
+| MacOS          | ✅      |
+| Linux(X11)     | ✅      |
+| Linux(Wayland) | ❌      |
+| Web            | ❌      |
+| Android        | ❌      |
+| iOS            | ❌      |
 
 ## Setup
 
@@ -188,5 +191,4 @@ This crate is licensed under the MIT License or the Apache License 2.0.
 
 ## Todo
 
-- [ ] Support Linux(X11)
 - [ ] Support Linux(Wayland)
