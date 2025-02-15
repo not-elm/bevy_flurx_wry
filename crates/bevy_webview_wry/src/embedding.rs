@@ -1,11 +1,11 @@
 //! Provides the mechanism to spawn a webview as a child of an existing window using [`wry::WebViewBuilder::build_as_child`].
 
 use bevy::prelude::{App, Plugin};
-use bevy::prelude::{Component, ReflectComponent};
+use bevy::prelude::{Component, ReflectComponent, ReflectDeserialize, ReflectSerialize};
 use bevy::prelude::{Reflect, Vec2};
-use bevy_webview_core::bundle::embedding::{Bounds, EmbedWithin, Resizable};
 use grip_zone::GripZonePlugin;
 use resize::ResizePlugin;
+use serde::{Deserialize, Serialize};
 
 mod resize;
 mod grip_zone;
@@ -21,9 +21,6 @@ pub(crate) struct EmbeddingWebviewPlugin;
 impl Plugin for EmbeddingWebviewPlugin {
     fn build(&self, app: &mut App) {
         app
-            .register_type::<EmbedWithin>()
-            .register_type::<Bounds>()
-            .register_type::<Resizable>()
             .register_type::<CurrentMoving>()
             .add_plugins((
                 ResizePlugin,
@@ -31,8 +28,9 @@ impl Plugin for EmbeddingWebviewPlugin {
             ));
     }
 }
-#[derive(Component, Reflect)]
-#[reflect(Component)]
+
+#[derive(Component, Reflect, Serialize, Deserialize)]
+#[reflect(Component, Serialize, Deserialize)]
 struct CurrentMoving(pub Vec2);
 
 

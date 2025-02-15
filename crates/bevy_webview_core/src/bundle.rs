@@ -20,9 +20,9 @@ pub mod prelude {
 pub struct WebviewInitialized(pub ());
 
 /// Register all core bundles to the [`AppTypeRegistry`](bevy::prelude::AppTypeRegistry).
-pub struct WebViewCoreBundlesPlugin;
+pub struct WebViewBundlesPlugin;
 
-impl Plugin for WebViewCoreBundlesPlugin {
+impl Plugin for WebViewBundlesPlugin {
     fn build(&self, app: &mut App) {
         app
             .register_type::<WebviewInitialized>()
@@ -44,16 +44,19 @@ impl Plugin for WebViewCoreBundlesPlugin {
             .register_type::<Incognito>()
             .register_type::<UseHttpsScheme>()
             .register_type::<PassedUrl>()
-            .add_event::<DragDropEvent>()
-            .add_event::<DragEntered>()
-            .add_event::<DragOver>()
-            .add_event::<DragLeave>()
-            .add_event::<Dropped>()
             .register_type::<DragDropEvent>()
             .register_type::<DragEntered>()
             .register_type::<DragOver>()
             .register_type::<DragLeave>()
-            .register_type::<Dropped>();
+            .register_type::<Dropped>()
+            .register_type::<EmbedWithin>()
+            .register_type::<Bounds>()
+            .register_type::<Resizable>()
+            .add_event::<DragDropEvent>()
+            .add_event::<DragEntered>()
+            .add_event::<DragOver>()
+            .add_event::<DragLeave>()
+            .add_event::<Dropped>();
     }
 }
 

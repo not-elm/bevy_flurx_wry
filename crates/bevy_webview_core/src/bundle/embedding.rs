@@ -1,12 +1,12 @@
 //! Declares the components which creates the webview as child.
 
-use bevy::prelude::{Component, Entity, Reflect, ReflectComponent};
+use bevy::prelude::{Component, Entity, Reflect, ReflectComponent, ReflectDeserialize, ReflectSerialize};
 pub use bounds::Bounds;
 pub use grip_zone::GripZone;
 pub use resize::ResizeMode;
+use serde::{Deserialize, Serialize};
 
 mod resize;
-
 mod bounds;
 mod grip_zone;
 
@@ -33,17 +33,17 @@ mod grip_zone;
 ///     ));
 /// }
 #[repr(transparent)]
-#[derive(Component, Copy, Clone, Eq, PartialEq, Reflect)]
+#[derive(Component, Copy, Clone, Eq, PartialEq, Reflect, Serialize, Deserialize)]
 #[require(Bounds, Resizable, GripZone)]
-#[reflect(Component)]
+#[reflect(Component, Serialize, Deserialize)]
 pub struct EmbedWithin(pub Entity);
 
 /// Whether to allow the webview to be resized.
 ///
 /// Default is `true`.
 #[repr(transparent)]
-#[derive(Component, Copy, Clone, Eq, PartialEq, Reflect)]
-#[reflect(Component)]
+#[derive(Component, Copy, Clone, Eq, PartialEq, Reflect, Serialize, Deserialize)]
+#[reflect(Component, Serialize, Deserialize)]
 pub struct Resizable(pub bool);
 
 impl Default for Resizable {
