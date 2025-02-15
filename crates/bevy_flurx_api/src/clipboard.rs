@@ -15,8 +15,8 @@ use bevy_flurx_ipc::prelude::*;
 ///
 /// - [ClipboardGetTextPlugin]
 /// - [ClipboardSetTextPlugin]
-pub struct ClipboardPlugins;
-impl PluginGroup for ClipboardPlugins {
+pub struct AllClipboardPlugins;
+impl PluginGroup for AllClipboardPlugins {
     fn build(self) -> PluginGroupBuilder {
         PluginGroupBuilder::start::<Self>()
             .add(ClipboardSetTextPlugin)
